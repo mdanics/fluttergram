@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'image_post.dart';
+import 'dart:async';
 
 class Feed extends StatefulWidget {
   _Feed createState() => new _Feed();
 }
 
 class _Feed extends State<Feed> {
-  List<ImagePost> posts = [];
-
   @override
   Widget build(BuildContext Context) {
     return new Scaffold(
@@ -16,10 +15,19 @@ class _Feed extends State<Feed> {
         title: const Text('Instagram'),
         centerTitle: true,
       ),
-      body: new Container(
+      body: new RefreshIndicator(
+        onRefresh: _refresh,
         child: new CoreFeed(),
       ),
     );
+  }
+
+  Future<Null> _refresh() {
+    final Completer<Null> completer = new Completer<Null>();
+    new Timer(const Duration(seconds: 1), () { completer.complete(null); });
+    return completer.future.then((_) {
+      setState((){});
+    });
   }
 }
 
