@@ -29,7 +29,9 @@ class CoreFeed extends StatelessWidget {
     return new StreamBuilder(
       stream: Firestore.instance.collection('insta_posts').snapshots,
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return new Text('Loading...');
+        if (!snapshot.hasData) return new Container(
+            alignment: FractionalOffset.center,
+            child: new CircularProgressIndicator());
         return new ListView(
           children: snapshot.data.documents.map((document) {
               return new
