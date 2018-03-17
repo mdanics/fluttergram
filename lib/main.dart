@@ -39,7 +39,6 @@ Future<Null> _silentLogin() async {
   GoogleSignInAccount user = googleSignIn.currentUser;
   if (user == null) {
     user = await googleSignIn.signInSilently();
-    print('cmon');
     ref.document(user.id).setData({
       "id": user.id,
       "username": user.displayName,
