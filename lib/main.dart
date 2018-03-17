@@ -20,10 +20,10 @@ Future<Null> _ensureLoggedIn() async {
     await googleSignIn.signIn();
     print('done');
     ref.add({
-      "id": "test"
-//      "username": user.displayName,
-//      "photoUrl": user.photoUrl,
-//      "email": user.email
+      "id": "test",
+      "username": user.displayName,
+      "photoUrl": user.photoUrl,
+      "email": user.email
     });
   }
 
