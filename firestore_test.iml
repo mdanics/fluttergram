@@ -45,7 +45,6 @@
       <excludeFolder url="file://$MODULE_DIR$/cloud_firestore/packages" />
       <excludeFolder url="file://$MODULE_DIR$/cloud_firestore/test/packages" />
       <excludeFolder url="file://$MODULE_DIR$/packages" />
-      <excludeFolder url="file://$MODULE_DIR$/test/packages" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Dart SDK" level="project" />
