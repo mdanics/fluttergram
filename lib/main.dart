@@ -4,9 +4,11 @@ import 'upload_page.dart';
 import 'dart:async';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final auth = FirebaseAuth.instance;
 final googleSignIn = new GoogleSignIn();
+final ref = Firestore.instance.collection('insta_users');
 
 Future<Null> _ensureLoggedIn() async {
   GoogleSignInAccount user = googleSignIn.currentUser;
@@ -14,7 +16,15 @@ Future<Null> _ensureLoggedIn() async {
     user = await googleSignIn.signInSilently();
   }
   if (user == null) {
+    print('waiting');
     await googleSignIn.signIn();
+    print('done');
+    ref.add({
+      "id": "test"
+//      "username": user.displayName,
+//      "photoUrl": user.photoUrl,
+//      "email": user.email
+    });
   }
 
   if (await auth.currentUser() == null) {
@@ -29,6 +39,13 @@ Future<Null> _silentLogin() async {
   GoogleSignInAccount user = googleSignIn.currentUser;
   if (user == null) {
     user = await googleSignIn.signInSilently();
+    print('cmon');
+    ref.document(user.id).setData({
+      "id": user.id,
+      "username": user.displayName,
+      "photoUrl": user.photoUrl,
+      "email": user.email
+    });
   }
 
   if (await auth.currentUser() == null && user != null) {
@@ -138,6 +155,7 @@ class _HomePageState extends State<HomePage> {
               onTap: navigationTapped,
               currentIndex: _page,
             ),
+
           );
   }
 
