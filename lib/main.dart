@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'profile_page.dart';
+
 
 final auth = FirebaseAuth.instance;
 final googleSignIn = new GoogleSignIn();
@@ -55,9 +57,7 @@ Future<Null> _silentLogin() async {
   }
 }
 
-void main() => runApp(new MyApp());
-
-class MyApp extends StatelessWidget {
+class Fluttergram extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 new Container(color: Colors.white, child: new Uploader()),
                 new Container(color: Colors.amber),
-                new Container(color: Colors.white, child: new Text('Test')),
+                new Container(color: Colors.white, child: new ProfilePage(userId: googleSignIn.currentUser.id,)),
               ],
               controller: _pageController,
               physics: new NeverScrollableScrollPhysics(),
@@ -132,27 +132,28 @@ class _HomePageState extends State<HomePage> {
               items: <BottomNavigationBarItem>[
                 new BottomNavigationBarItem(
                     icon: new Icon(Icons.home, color: Colors.grey),
-                    title: new Text(""),
+                    title: new Container(),
                     backgroundColor: Colors.white),
                 new BottomNavigationBarItem(
                     icon: new Icon(Icons.search, color: Colors.grey),
-                    title: new Text(""),
+                    title: new Container(),
                     backgroundColor: Colors.white),
                 new BottomNavigationBarItem(
                     icon: new Icon(Icons.add_circle, color: Colors.grey),
-                    title: new Text(""),
+                    title: new Container(),
                     backgroundColor: Colors.white),
                 new BottomNavigationBarItem(
                     icon: new Icon(Icons.star, color: Colors.grey),
-                    title: new Text(""),
+                    title: new Container(),
                     backgroundColor: Colors.white),
                 new BottomNavigationBarItem(
                     icon: new Icon(Icons.person_outline, color: Colors.grey),
-                    title: new Text(""),
+                    title: new Container(),
                     backgroundColor: Colors.white),
               ],
               onTap: navigationTapped,
               currentIndex: _page,
+              type: BottomNavigationBarType.fixed,
             ),
 
           );
@@ -193,3 +194,5 @@ class _HomePageState extends State<HomePage> {
     _pageController.dispose();
   }
 }
+
+void main() => runApp(new Fluttergram());
