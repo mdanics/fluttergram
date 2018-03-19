@@ -136,10 +136,12 @@ class _ProfilePage extends State<ProfilePage> {
                 alignment: FractionalOffset.center,
                 child: new CircularProgressIndicator());
 
+          User user = new User.fromDocument(snapshot.data);
+
           return new Scaffold(
             appBar: new AppBar(
               title: new Text(
-                snapshot.data['username'],
+                user.username,
                 style: const TextStyle(color: Colors.black),
               ),
               backgroundColor: Colors.white,
@@ -154,6 +156,8 @@ class _ProfilePage extends State<ProfilePage> {
                         children: <Widget>[
                           new CircleAvatar(
                             radius: 40.0,
+                            backgroundColor: Colors.grey,
+                            backgroundImage: new NetworkImage(user.photoUrl),
                           ),
                           new Expanded(
                             flex: 1,
@@ -183,21 +187,21 @@ class _ProfilePage extends State<ProfilePage> {
                           alignment: Alignment.centerLeft,
                           padding: const EdgeInsets.only(top: 15.0),
                           child: new Text(
-                            "The Weeknd",
+                            user.displayName,
                             style: new TextStyle(fontWeight: FontWeight.bold),
                           )),
                       new Container(
                         alignment: Alignment.centerLeft,
                         padding: const EdgeInsets.only(top: 1.0),
                         child: new Text(
-                            "This is a longer description that would describe the profileiption that"),
+                            user.bio),
                       ),
                     ],
                   ),
                 ),
                 new Divider(),
                 buildImageViewButtonBar(),
-                new Divider(),
+                new Divider(height: 0.0),
                 buildImageGrid(),
               ],
             ),
@@ -237,4 +241,29 @@ class ImageTile extends StatelessWidget {
         onTap: () => clickedImage(context),
         child: new Image.network(imagePost.mediaUrl, fit: BoxFit.cover));
   }
+}
+
+class User {
+
+  const User({this.username, this.id, this.photoUrl, this.email, this.displayName, this.bio});
+
+  final String email;
+  final String id;
+  final String photoUrl;
+  final String username;
+  final String displayName;
+  final String bio;
+
+  factory User.fromDocument(DocumentSnapshot document){
+    return new User(
+      email: document['email'],
+      username: document['username'],
+      photoUrl: document['photoUrl'],
+      id: document.documentID,
+      displayName: document['displayName'],
+      bio: document['bio'],
+    );
+
+  }
+
 }
