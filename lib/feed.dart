@@ -43,14 +43,7 @@ class CoreFeed extends StatelessWidget {
               child: new CircularProgressIndicator());
         return new ListView(
           children: snapshot.data.documents.map((document) {
-            return new ImagePost(
-              username: document['username'],
-              location: document['location'],
-              mediaUrl: document['mediaUrl'],
-              likes: document['likes'],
-              description: document['description'],
-              postId: document.documentID,
-            );
+            return new ImagePost.fromDocument(document);
           }).toList(),
         );
       },

@@ -2,24 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ImagePost extends StatefulWidget {
-  const ImagePost({
-    this.mediaUrl,
-    this.username,
-    this.location,
-    this.description,
-    this.likes,
-    this.postId
-  });
 
-  final String mediaUrl;
+
+  const ImagePost(
+      {this.mediaUrl,
+      this.username,
+      this.location,
+      this.description,
+      this.likes,
+      this.postId});
+
+  factory ImagePost.fromDocument(DocumentSnapshot document){
+    return new ImagePost(
+      username: document['username'],
+      location: document['location'],
+      mediaUrl: document['mediaUrl'],
+      likes: document['likes'],
+      description: document['description'],
+      postId: document.documentID,
+    );
+  }
+
+
+
+    final String mediaUrl;
   final String username;
   final String location;
   final String description;
   final int likes;
   final String postId;
 
+
   _ImagePost createState() => new _ImagePost(this.mediaUrl, this.username,
       this.location, this.description, this.likes, this.postId);
+
+
+
+
 }
 
 class _ImagePost extends State<ImagePost> {
@@ -62,7 +81,10 @@ class _ImagePost extends State<ImagePost> {
               new FlatButton(
                   child: const Icon(Icons.thumb_up), onPressed: () {}),
               new FlatButton(
-                  child: const Icon(Icons.comment), onPressed: () {_likePost(postId);}),
+                  child: const Icon(Icons.comment),
+                  onPressed: () {
+                    _likePost(postId);
+                  }),
             ],
           ),
           new Row(
@@ -93,7 +115,35 @@ class _ImagePost extends State<ImagePost> {
     );
   }
 
-  void _likePost(String postId){
-    reference.document(postId).updateData({'likes': likes + 1}); //make this more error proof maybe with cloud functions
+  void _likePost(String postId) {
+    reference.document(postId).updateData({
+      'likes': likes + 1
+    }); //make this more error proof maybe with cloud functions
+  }
+}
+
+class ImagePostFromId extends StatelessWidget{
+
+  final String id;
+  const ImagePostFromId({this.id});
+
+  getImagePost() async {
+    var document = await Firestore.instance.collection('insta_posts').document(id).get();
+    return new ImagePost.fromDocument(document);
+  }
+
+  @override
+  Widget build (BuildContext context){
+    return new FutureBuilder(
+        future: getImagePost() ,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData)
+            return new Container(
+                alignment: FractionalOffset.center,
+                padding: const EdgeInsets.only(top: 10.0),
+                child: new CircularProgressIndicator());
+          return snapshot.data;
+        }
+    );
   }
 }
