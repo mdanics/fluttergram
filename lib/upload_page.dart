@@ -4,6 +4,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:async';
+import 'main.dart';
+
 
 class Uploader extends StatefulWidget {
   _Uploader createState() => new _Uploader();
@@ -111,7 +113,7 @@ Future<String> uploadImage(var imageFile) async {
   return downloadUrl.toString();
 }
 
-void postToFireStore({String mediaUrl, String location, String description}) {
+void postToFireStore({String mediaUrl, String location, String description}) async {
   var reference = Firestore.instance.collection('insta_posts');
 
   reference.add({
@@ -119,6 +121,7 @@ void postToFireStore({String mediaUrl, String location, String description}) {
     "location": "nice location",
     "likes": 0,
     "mediaUrl": mediaUrl,
-    "description": description
+    "description": description,
+    "ownerId": googleSignIn.currentUser.id
   });
 }
