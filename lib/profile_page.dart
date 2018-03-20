@@ -4,6 +4,7 @@ import 'main.dart';
 import 'dart:async';
 import 'image_post.dart';
 
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({this.userId});
 
@@ -86,39 +87,42 @@ class _ProfilePage extends State<ProfilePage> {
     Container buildImageGrid() {
       getPosts() async {
         List<ImagePost> posts = [];
-        var snap = await Firestore.instance
-            .collection('insta_posts')
-            .where('ownerId', isEqualTo: googleSignIn.currentUser.id)
-            .getDocuments();
-        for (var doc in snap.documents) {
-          posts.add(new ImagePost.fromDocument(doc));
+        var snap = await Firestore.instance.collection('insta_posts').where('ownerId', isEqualTo: googleSignIn.currentUser.id).getDocuments();
+        for (var doc in snap.documents){
+          posts.add(
+              new ImagePost.fromDocument(doc)
+          );
         }
         return posts;
       }
 
       return new Container(
           child: new FutureBuilder(
-        future: getPosts(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData)
-            return new Container(
-                alignment: FractionalOffset.center,
-                padding: const EdgeInsets.only(top: 10.0),
-                child: new CircularProgressIndicator());
+              future: getPosts(),
+              builder: (context, snapshot){
+                if (!snapshot.hasData)
+                  return new Container(
+                      alignment: FractionalOffset.center,
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: new CircularProgressIndicator());
 
-          return new GridView.count(
-              crossAxisCount: 3,
-              childAspectRatio: 1.0,
+                return new GridView.count(
+                    crossAxisCount: 3,
+                    childAspectRatio: 1.0,
 //                    padding: const EdgeInsets.all(0.5),
-              mainAxisSpacing: 4.0,
-              crossAxisSpacing: 3.0,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: snapshot.data.map((ImagePost imagePost) {
-                return new GridTile(child: new ImageTile(imagePost));
-              }).toList());
-        },
-      ));
+                    mainAxisSpacing: 4.0,
+                    crossAxisSpacing: 3.0,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: snapshot.data.map((ImagePost imagePost ) {
+                      return new GridTile(
+                          child: new ImageTile(imagePost));
+                    }).toList());
+
+              },
+          )
+      );
+
     }
 
     return new StreamBuilder(
@@ -189,7 +193,8 @@ class _ProfilePage extends State<ProfilePage> {
                       new Container(
                         alignment: Alignment.centerLeft,
                         padding: const EdgeInsets.only(top: 1.0),
-                        child: new Text(user.bio),
+                        child: new Text(
+                            user.bio),
                       ),
                     ],
                   ),
@@ -206,30 +211,32 @@ class _ProfilePage extends State<ProfilePage> {
 }
 
 class ImageTile extends StatelessWidget {
+
   final ImagePost imagePost;
 
   ImageTile(this.imagePost);
 
   clickedImage(BuildContext context) {
-    Navigator
-        .of(context)
-        .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
-      return new Center(
-        child: new GestureDetector(
-          child: new Scaffold(
-            appBar: new AppBar(
-              title: new Text('Photo'),
+    Navigator.of(context).push(new MaterialPageRoute<bool>(
+        builder: (BuildContext context) {
+          return new Center(
+            child: new GestureDetector(
+                child: new Scaffold(
+                  appBar: new AppBar(
+                    title: new Text('Photo'),
+                  ),
+                  body: new Container(
+                    child: imagePost,
+                  ),
+                ),
             ),
-            body: new Container(
-              child: imagePost,
-            ),
-          ),
-        ),
-      );
-    }));
+          );
+        }
+    ));
+
   }
 
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return new GestureDetector(
         onTap: () => clickedImage(context),
         child: new Image.network(imagePost.mediaUrl, fit: BoxFit.cover));
@@ -237,13 +244,8 @@ class ImageTile extends StatelessWidget {
 }
 
 class User {
-  const User(
-      {this.username,
-      this.id,
-      this.photoUrl,
-      this.email,
-      this.displayName,
-      this.bio});
+
+  const User({this.username, this.id, this.photoUrl, this.email, this.displayName, this.bio});
 
   final String email;
   final String id;
@@ -252,7 +254,7 @@ class User {
   final String displayName;
   final String bio;
 
-  factory User.fromDocument(DocumentSnapshot document) {
+  factory User.fromDocument(DocumentSnapshot document){
     return new User(
       email: document['email'],
       username: document['username'],
@@ -261,5 +263,7 @@ class User {
       displayName: document['displayName'],
       bio: document['bio'],
     );
+
   }
+
 }
