@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'main.dart';
+import 'dart:async';
 
 class ImagePost extends StatefulWidget {
   const ImagePost(
@@ -65,6 +66,8 @@ class _ImagePost extends State<ImagePost> {
   final String postId;
   bool liked;
 
+  bool showHeart = false;
+
   TextStyle boldStyle = new TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.bold,
@@ -97,8 +100,34 @@ class _ImagePost extends State<ImagePost> {
         });
   }
 
+  GestureDetector buildLikeableImage() {
+    return new GestureDetector(
+      onDoubleTap: () => _likePost(postId),
+      child: new Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          new Image.network(
+            mediaUrl,
+            height: 250.0,
+          ),
+          showHeart
+              ? new Positioned(
+                  child: new Opacity(
+                      opacity: 0.85,
+                      child: new Icon(
+                        FontAwesomeIcons.heart,
+                        size: 80.0,
+                        color: Colors.white,
+                      )),
+                )
+              : new Container()
+        ],
+      ),
+    );
+  }
+
   @override
-  Widget build(BuildContext Context) {
+  Widget build(BuildContext context) {
     liked = (likes[googleSignIn.currentUser.id.toString()] == true);
 
     return new Container(
@@ -111,10 +140,7 @@ class _ImagePost extends State<ImagePost> {
             subtitle: new Text(this.location),
             trailing: const Icon(Icons.more_vert),
           ),
-          new Image.network(
-            mediaUrl,
-            height: 250.0,
-          ),
+          buildLikeableImage(),
           new Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
@@ -188,6 +214,12 @@ class _ImagePost extends State<ImagePost> {
         likeCount = likeCount + 1;
         liked = true;
         likes[userId] = true;
+        showHeart = true;
+      });
+      new Timer(const Duration(milliseconds: 500), () {
+        setState(() {
+          showHeart = false;
+        });
       });
     }
   }
