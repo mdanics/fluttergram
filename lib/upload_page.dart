@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart'; // new
+import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
@@ -17,6 +17,8 @@ class Uploader extends StatefulWidget {
 class _Uploader extends State<Uploader> {
   File file;
   TextEditingController descriptionController = new TextEditingController();
+
+  bool uploading = false;
 
   Widget build(BuildContext context) {
     return file == null
@@ -50,9 +52,8 @@ class _Uploader extends State<Uploader> {
                 new PostForm(
                   imageFile: file,
                   descriptionController: descriptionController,
+                  loading: uploading,
                 ),
-                new FlatButton(
-                    onPressed: compressImage, child: new Text('sketch'))
               ],
             ));
   }
@@ -75,7 +76,7 @@ class _Uploader extends State<Uploader> {
 
 //    image.format = Im.Image.RGBA;
 //    Im.Image newim = Im.remapColors(image, alpha: Im.LUMINANCE);
-    
+
     var newim2 = new File('$path/img_$rand.jpg')
       ..writeAsBytesSync(Im.encodeJpg(image, quality: 85));
 
@@ -92,10 +93,17 @@ class _Uploader extends State<Uploader> {
   }
 
   void postImage() {
+    setState(() {
+      uploading = true;
+    });
+    compressImage();
     Future<String> upload = uploadImage(file).then((String data) {
       postToFireStore(mediaUrl: data, description: descriptionController.text);
     }).then((_) {
-      setState((){file = null;});
+      setState(() {
+        file = null;
+        uploading = false;
+      });
     });
   }
 }
@@ -103,18 +111,20 @@ class _Uploader extends State<Uploader> {
 class PostForm extends StatelessWidget {
   var imageFile;
   TextEditingController descriptionController;
-  PostForm({this.imageFile, this.descriptionController});
+  bool loading;
+  PostForm({this.imageFile, this.descriptionController, this.loading});
 
   Widget build(BuildContext context) {
     return new Column(
       children: <Widget>[
-        new Padding(padding: new EdgeInsets.only(top: 10.0)),
+        loading
+            ? new LinearProgressIndicator()
+            : new Padding(padding: new EdgeInsets.only(top: 0.0)),
         new Container(
-            height: 250.0,
             child: new Image.file(
-              imageFile,
-              fit: BoxFit.fitHeight,
-            )),
+          imageFile,
+          fit: BoxFit.fitWidth,
+        )),
         new Divider(),
         new Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -153,7 +163,7 @@ void postToFireStore(
   reference.add({
     "username": "testeronslice",
     "location": "nice location",
-    "likes": 0,
+    "likes": {},
     "mediaUrl": mediaUrl,
     "description": description,
     "ownerId": googleSignIn.currentUser.id
