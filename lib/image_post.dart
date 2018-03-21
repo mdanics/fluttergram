@@ -108,8 +108,14 @@ class _ImagePost extends State<ImagePost> {
         children: <Widget>[
           new Image.network(
             mediaUrl,
-            height: 250.0,
+            fit: BoxFit.fitWidth,
           ),
+//          new CachedNetworkImage( // might cause performance issues
+//            imageUrl: mediaUrl,
+//            fit: BoxFit.fitWidth,
+//            placeholder: new Text("loading image"),
+//            errorWidget: new Icon(Icons.error),
+//          ),
           showHeart
               ? new Positioned(
                   child: new Opacity(
