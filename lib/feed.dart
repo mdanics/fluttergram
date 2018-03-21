@@ -12,8 +12,9 @@ class _Feed extends State<Feed> {
   Widget build(BuildContext Context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: const Text('Instagram'),
+        title: const Text('Instagram', style: const TextStyle(fontFamily: "Billabong", color: Colors.black, fontSize: 35.0) ),
         centerTitle: true,
+        backgroundColor: Colors.white,
       ),
       body: new RefreshIndicator(
         onRefresh: _refresh,
@@ -34,8 +35,8 @@ class _Feed extends State<Feed> {
 class CoreFeed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new StreamBuilder(
-      stream: Firestore.instance.collection('insta_posts').snapshots,
+    return new FutureBuilder(
+      future: Firestore.instance.collection('insta_posts').getDocuments(),
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return new Container(
