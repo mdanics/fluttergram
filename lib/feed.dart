@@ -12,7 +12,7 @@ class _Feed extends State<Feed> {
   Widget build(BuildContext Context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: const Text('Instagram', style: const TextStyle(fontFamily: "Billabong", color: Colors.black, fontSize: 35.0) ),
+        title: const Text('Fluttergram', style: const TextStyle(fontFamily: "Billabong", color: Colors.black, fontSize: 35.0) ),
         centerTitle: true,
         backgroundColor: Colors.white,
       ),

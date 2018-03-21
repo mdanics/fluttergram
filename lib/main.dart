@@ -17,9 +17,7 @@ Future<Null> _ensureLoggedIn() async {
     user = await googleSignIn.signInSilently();
   }
   if (user == null) {
-    await googleSignIn.signIn();
-
-    tryCreateUserRecord();
+    await googleSignIn.signIn().then((_) {tryCreateUserRecord();});
   }
 
   if (await auth.currentUser() == null) {
@@ -34,8 +32,7 @@ Future<Null> _silentLogin() async {
   GoogleSignInAccount user = googleSignIn.currentUser;
 
   if (user == null) {
-    user = await googleSignIn.signInSilently();
-    tryCreateUserRecord();
+    user = await googleSignIn.signInSilently().then((_) {tryCreateUserRecord();});
   }
 
   if (await auth.currentUser() == null && user != null) {
@@ -46,9 +43,11 @@ Future<Null> _silentLogin() async {
   }
 }
 
-void tryCreateUserRecord() async {
+tryCreateUserRecord() async {
   GoogleSignInAccount user = googleSignIn.currentUser;
-
+  if (user == null ){
+    return null;
+  }
   DocumentSnapshot userRecord = await ref.document(user.id).get();
   if (userRecord.data == null) {
     ref.document(user.id).setData({
@@ -65,7 +64,7 @@ class Fluttergram extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Instagram',
+      title: 'Fluttergram',
       theme: new ThemeData(
         // This is the theme of your application.
         //
@@ -96,31 +95,33 @@ class _HomePageState extends State<HomePage> {
   int _page = 0;
   bool triedSilentLogin = false;
 
-
-  Scaffold buildLoginPage(){
-
+  Scaffold buildLoginPage() {
     return new Scaffold(
-
       body: new Center(
         child: new Padding(
           padding: const EdgeInsets.only(top: 240.0),
           child: new Column(
             children: <Widget>[
-              new Text('Fluttergram', style: new TextStyle(fontSize: 60.0, fontFamily: "Billabong", color: Colors.black),),
+              new Text(
+                'Fluttergram',
+                style: new TextStyle(
+                    fontSize: 60.0,
+                    fontFamily: "Billabong",
+                    color: Colors.black),
+              ),
               new Padding(padding: const EdgeInsets.only(bottom: 100.0)),
-
               new GestureDetector(
                 onTap: login,
-
-                child: new Image.asset("assets/images/google_signin_button.png", width: 225.0,),
+                child: new Image.asset(
+                  "assets/images/google_signin_button.png",
+                  width: 225.0,
+                ),
               )
-
             ],
           ),
         ),
       ),
     );
-
   }
 
   @override
