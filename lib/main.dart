@@ -96,23 +96,40 @@ class _HomePageState extends State<HomePage> {
   int _page = 0;
   bool triedSilentLogin = false;
 
+
+  Scaffold buildLoginPage(){
+
+    return new Scaffold(
+
+      body: new Center(
+        child: new Padding(
+          padding: const EdgeInsets.only(top: 240.0),
+          child: new Column(
+            children: <Widget>[
+              new Text('Fluttergram', style: new TextStyle(fontSize: 60.0, fontFamily: "Billabong", color: Colors.black),),
+              new Padding(padding: const EdgeInsets.only(bottom: 100.0)),
+
+              new GestureDetector(
+                onTap: login,
+
+                child: new Image.asset("assets/images/google_signin_button.png", width: 225.0,),
+              )
+
+            ],
+          ),
+        ),
+      ),
+    );
+
+  }
+
   @override
   Widget build(BuildContext context) {
     if (triedSilentLogin == false) {
       silentLogin();
     } // might cause performance issues?
     return googleSignIn.currentUser == null
-        ? new Container(
-            alignment: FractionalOffset.center,
-            width: 20.0,
-            child: new RaisedButton(
-              onPressed: login,
-              child: new Row(children: <Widget>[
-                new Icon(Icons.business),
-                new Text("Sign in with Google")
-              ]),
-            ),
-          )
+        ? buildLoginPage()
         : new Scaffold(
             body: new PageView(
               children: [
