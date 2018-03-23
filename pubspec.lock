@@ -23,7 +23,7 @@ packages:
     source: hosted
     version: "1.3.0"
   async:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: async
       url: "https://pub.dartlang.org"
@@ -408,6 +408,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.3"
+  stream_transformers:
+    dependency: "direct main"
+    description:
+      name: stream_transformers
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0+3"
   string_scanner:
     dependency: transitive
     description:

@@ -79,6 +79,8 @@ class Fluttergram extends StatelessWidget {
         // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
         // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
+        buttonColor: Colors.pink,
+        primaryIconTheme: new IconThemeData(color: Colors.black)
       ),
       home: new HomePage(title: 'Fluttergram'),
     );
