@@ -49,12 +49,16 @@ tryCreateUserRecord() async {
     return null;
   }
   DocumentSnapshot userRecord = await ref.document(user.id).get();
-  if (userRecord.data == null) {
+  if (userRecord.data == null ) {
     ref.document(user.id).setData({
       "id": user.id,
       "username": user.displayName,
       "photoUrl": user.photoUrl,
-      "email": user.email
+      "email": user.email,
+      "displayName": user.displayName,
+      "bio": "",
+      "followers": {},
+      "following": {},
     });
   }
 }
