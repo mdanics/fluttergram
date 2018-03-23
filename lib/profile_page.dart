@@ -131,7 +131,7 @@ class _ProfilePage extends State<ProfilePage> {
         List<ImagePost> posts = [];
         var snap = await Firestore.instance
             .collection('insta_posts')
-            .where('ownerId', isEqualTo: googleSignIn.currentUser.id)
+            .where('ownerId', isEqualTo: profileId)
             .orderBy("timestamp")
             .getDocuments();
         for (var doc in snap.documents) {
