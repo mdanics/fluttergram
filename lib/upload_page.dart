@@ -166,6 +166,7 @@ void postToFireStore(
     "likes": {},
     "mediaUrl": mediaUrl,
     "description": description,
-    "ownerId": googleSignIn.currentUser.id
+    "ownerId": googleSignIn.currentUser.id,
+    "timestamp": new DateTime.now().toString()
   });
 }
