@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'main.dart';
-import 'dart:async';
 import 'image_post.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -88,7 +87,7 @@ class _ProfilePage extends State<ProfilePage> {
         List<ImagePost> posts = [];
         var snap = await Firestore.instance
             .collection('insta_posts')
-            .where('ownerId', isEqualTo: googleSignIn.currentUser.id)
+            .where('ownerId', isEqualTo: googleSignIn.currentUser.id).orderBy("timestamp")
             .getDocuments();
         for (var doc in snap.documents) {
           posts.add(new ImagePost.fromDocument(doc));
@@ -215,15 +214,17 @@ class ImageTile extends StatelessWidget {
         .of(context)
         .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
       return new Center(
-        child: new GestureDetector(
-          child: new Scaffold(
-            appBar: new AppBar(
-              title: new Text('Photo'),
-            ),
-            body: new Container(
-              child: imagePost,
-            ),
+        child: new Scaffold(
+          appBar: new AppBar(
+            title: new Text('Photo'),
           ),
+          body: new ListView(
+            children: <Widget>[
+              new Container(
+                child: imagePost,
+              ),
+            ],
+          )
         ),
       );
     }));
