@@ -12,9 +12,9 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePage extends State<ProfilePage> {
-  final String userId;
+  final String profileId;
 
-  _ProfilePage(this.userId);
+  _ProfilePage(this.profileId);
 
   @override
   Widget build(BuildContext context) {
@@ -40,22 +40,66 @@ class _ProfilePage extends State<ProfilePage> {
       );
     }
 
-    Container buildFollowButton() {
+    Container buildFollowButton(
+        {String text,
+        Color backgroundcolor,
+        Color textColor,
+        Color borderColor}) {
       return new Container(
         padding: const EdgeInsets.only(top: 2.0),
         child: new FlatButton(
             onPressed: null,
             child: new Container(
               decoration: new BoxDecoration(
-                  color: Colors.blue,
+                  color: backgroundcolor,
+                  border: new Border.all(color: borderColor),
                   borderRadius: new BorderRadius.circular(5.0)),
               alignment: Alignment.center,
-              child:
-                  new Text("Follow", style: new TextStyle(color: Colors.white)),
+              child: new Text(text,
+                  style: new TextStyle(
+                      color: textColor, fontWeight: FontWeight.bold)),
               width: 250.0,
               height: 27.0,
             )),
       );
+    }
+
+    Container buildProfileFollowButton(User user) {
+      String currentUserId = googleSignIn.currentUser.id;
+
+      // viewing your own profile - should show edit button
+      if (currentUserId == profileId) {
+        return buildFollowButton(
+            text: "Edit Profile",
+            backgroundcolor: Colors.white,
+            textColor: Colors.black,
+            borderColor: Colors.grey);
+      }
+
+      // already following user - should show unfollow button
+      bool userFollowsProfile = user.followers.containsKey(currentUserId);
+      if (userFollowsProfile) {
+        return buildFollowButton(
+            text: "Unfollow",
+            backgroundcolor: Colors.white,
+            textColor: Colors.black,
+            borderColor: Colors.grey);
+      }
+
+      // does not follow user - should show follow button
+      if (!userFollowsProfile) {
+        return buildFollowButton(
+            text: "Follow",
+            backgroundcolor: Colors.blue,
+            textColor: Colors.white,
+            borderColor: Colors.blue);
+      }
+
+      return buildFollowButton(
+          text: "loading...",
+          backgroundcolor: Colors.white,
+          textColor: Colors.black,
+          borderColor: Colors.grey);
     }
 
     Row buildImageViewButtonBar() {
@@ -87,7 +131,8 @@ class _ProfilePage extends State<ProfilePage> {
         List<ImagePost> posts = [];
         var snap = await Firestore.instance
             .collection('insta_posts')
-            .where('ownerId', isEqualTo: googleSignIn.currentUser.id).orderBy("timestamp")
+            .where('ownerId', isEqualTo: googleSignIn.currentUser.id)
+            .orderBy("timestamp")
             .getDocuments();
         for (var doc in snap.documents) {
           posts.add(new ImagePost.fromDocument(doc));
@@ -123,7 +168,7 @@ class _ProfilePage extends State<ProfilePage> {
     return new StreamBuilder(
         stream: Firestore.instance
             .collection('insta_users')
-            .document(userId)
+            .document(profileId)
             .snapshots,
         builder: (context, snapshot) {
           if (!snapshot.hasData)
@@ -169,10 +214,11 @@ class _ProfilePage extends State<ProfilePage> {
                                   ],
                                 ),
                                 new Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[buildFollowButton()],
-                                ),
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      buildProfileFollowButton(user)
+                                    ]),
                               ],
                             ),
                           )
@@ -215,17 +261,16 @@ class ImageTile extends StatelessWidget {
         .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
       return new Center(
         child: new Scaffold(
-          appBar: new AppBar(
-            title: new Text('Photo'),
-          ),
-          body: new ListView(
-            children: <Widget>[
-              new Container(
-                child: imagePost,
-              ),
-            ],
-          )
-        ),
+            appBar: new AppBar(
+              title: new Text('Photo'),
+            ),
+            body: new ListView(
+              children: <Widget>[
+                new Container(
+                  child: imagePost,
+                ),
+              ],
+            )),
       );
     }));
   }
@@ -244,7 +289,9 @@ class User {
       this.photoUrl,
       this.email,
       this.displayName,
-      this.bio});
+      this.bio,
+      this.followers,
+      this.following});
 
   final String email;
   final String id;
@@ -252,6 +299,8 @@ class User {
   final String username;
   final String displayName;
   final String bio;
+  final Map followers;
+  final Map following;
 
   factory User.fromDocument(DocumentSnapshot document) {
     return new User(
@@ -261,6 +310,8 @@ class User {
       id: document.documentID,
       displayName: document['displayName'],
       bio: document['bio'],
+      followers: document['followers'],
+      following: document['following'],
     );
   }
 }
