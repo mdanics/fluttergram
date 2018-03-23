@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'main.dart';
 import 'dart:async';
+import 'profile_page.dart';
+
 
 class ImagePost extends StatefulWidget {
   const ImagePost(
@@ -11,7 +13,8 @@ class ImagePost extends StatefulWidget {
       this.location,
       this.description,
       this.likes,
-      this.postId});
+      this.postId,
+      this.ownerId});
 
   factory ImagePost.fromDocument(DocumentSnapshot document) {
     return new ImagePost(
@@ -21,6 +24,7 @@ class ImagePost extends StatefulWidget {
       likes: document['likes'],
       description: document['description'],
       postId: document.documentID,
+      ownerId: document['ownerId'],
     );
   }
 
@@ -46,14 +50,18 @@ class ImagePost extends StatefulWidget {
   final String description;
   final likes;
   final String postId;
+  final String ownerId;
+
   _ImagePost createState() => new _ImagePost(
-      this.mediaUrl,
-      this.username,
-      this.location,
-      this.description,
-      this.likes,
-      this.postId,
-      getLikeCount(this.likes));
+        mediaUrl: this.mediaUrl,
+        username: this.username,
+        location: this.location,
+        description: this.description,
+        likes: this.likes,
+        likeCount: getLikeCount(this.likes),
+        ownerId: this.ownerId,
+        postId: this.postId,
+      );
 }
 
 class _ImagePost extends State<ImagePost> {
@@ -65,6 +73,7 @@ class _ImagePost extends State<ImagePost> {
   int likeCount;
   final String postId;
   bool liked;
+  final String ownerId;
 
   bool showHeart = false;
 
@@ -75,8 +84,15 @@ class _ImagePost extends State<ImagePost> {
 
   var reference = Firestore.instance.collection('insta_posts');
 
-  _ImagePost(this.mediaUrl, this.username, this.location, this.description,
-      this.likes, this.postId, this.likeCount);
+  _ImagePost(
+      {this.mediaUrl,
+      this.username,
+      this.location,
+      this.description,
+      this.likes,
+      this.postId,
+      this.likeCount,
+      this.ownerId});
 
   GestureDetector buildLikeIcon() {
     Color color;
@@ -142,7 +158,12 @@ class _ImagePost extends State<ImagePost> {
         children: <Widget>[
           new ListTile(
             leading: const CircleAvatar(),
-            title: new Text(this.username, style: boldStyle),
+            title: new GestureDetector(
+              child: new Text(this.username, style: boldStyle),
+              onTap: () {
+                openProfile(context, ownerId);
+              },
+            ),
             subtitle: new Text(this.location),
             trailing: const Icon(Icons.more_vert),
           ),
@@ -228,6 +249,15 @@ class _ImagePost extends State<ImagePost> {
         });
       });
     }
+  }
+
+
+  void openProfile(BuildContext context, String userId) {
+    Navigator
+        .of(context)
+        .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
+      return new ProfilePage(userId: userId);
+    }));
   }
 }
 
