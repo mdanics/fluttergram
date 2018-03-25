@@ -5,7 +5,6 @@ import 'main.dart';
 import 'dart:async';
 import 'profile_page.dart';
 
-
 class ImagePost extends StatefulWidget {
   const ImagePost(
       {this.mediaUrl,
@@ -30,7 +29,7 @@ class ImagePost extends StatefulWidget {
 
   int getLikeCount(var likes) {
     if (likes == null) {
-      return 2;
+      return 0;
     }
 // issue is below
     var vals = likes.values;
@@ -148,6 +147,42 @@ class _ImagePost extends State<ImagePost> {
     );
   }
 
+  buildPostHeader({String ownerId}) {
+    if (ownerId == null) {
+      return new Text("owner error");
+    }
+
+    return new FutureBuilder(
+        future: Firestore.instance
+            .collection('insta_users')
+            .document(ownerId)
+            .get(),
+        builder: (context, snapshot) {
+          String imageUrl = " ";
+          String username = "  ";
+
+          if (snapshot.data != null) {
+            imageUrl = snapshot.data.data['photoUrl'];
+            username = snapshot.data.data['username'];
+          }
+
+          return new ListTile(
+            leading: new CircleAvatar(
+              backgroundImage: new NetworkImage(imageUrl),
+              backgroundColor: Colors.grey,
+            ),
+            title: new GestureDetector(
+              child: new Text(username, style: boldStyle),
+              onTap: () {
+                openProfile(context, ownerId);
+              },
+            ),
+            subtitle: new Text(this.location),
+            trailing: const Icon(Icons.more_vert),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     liked = (likes[googleSignIn.currentUser.id.toString()] == true);
@@ -156,17 +191,7 @@ class _ImagePost extends State<ImagePost> {
       child: new Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          new ListTile(
-            leading: const CircleAvatar(),
-            title: new GestureDetector(
-              child: new Text(this.username, style: boldStyle),
-              onTap: () {
-                openProfile(context, ownerId);
-              },
-            ),
-            subtitle: new Text(this.location),
-            trailing: const Icon(Icons.more_vert),
-          ),
+          buildPostHeader(ownerId: ownerId),
           buildLikeableImage(),
           new Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -219,8 +244,8 @@ class _ImagePost extends State<ImagePost> {
     if (_liked) {
       print('removing like');
       reference.document(postId).updateData({
-        'likes.$userId':
-            false //firestore plugin doesnt support deleting, so it must be nulled / falsed
+        'likes.$userId': false
+        //firestore plugin doesnt support deleting, so it must be nulled / falsed
       });
 
       setState(() {
@@ -251,7 +276,6 @@ class _ImagePost extends State<ImagePost> {
     }
   }
 
-
   void openProfile(BuildContext context, String userId) {
     Navigator
         .of(context)
@@ -263,6 +287,7 @@ class _ImagePost extends State<ImagePost> {
 
 class ImagePostFromId extends StatelessWidget {
   final String id;
+
   const ImagePostFromId({this.id});
 
   getImagePost() async {
