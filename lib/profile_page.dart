@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'main.dart';
 import 'image_post.dart';
+import 'dart:async';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({this.userId});
@@ -13,8 +14,58 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePage extends State<ProfilePage> {
   final String profileId;
+  String currentUserId = googleSignIn.currentUser.id;
+  bool isFollowing = false;
 
   _ProfilePage(this.profileId);
+
+  Future editProfile() {
+    return showDialog(
+        context: context,
+        child: new AlertDialog(
+          title: new Text('Edit Profile'),
+          content: new SingleChildScrollView(
+            child: new ListBody(
+              children: <Widget>[
+                new Text('Editing does not work yet, sorry'),
+              ],
+            ),
+          ),
+        ));
+  }
+
+  followUser() {
+
+    setState((){this.isFollowing = true;});
+
+    Firestore.instance.document("insta_users/$profileId").updateData({
+      'followers.$currentUserId': true
+      //firestore plugin doesnt support deleting, so it must be nulled / falsed
+    });
+
+    Firestore.instance.document("insta_users/$currentUserId").updateData({
+      'following.$profileId': true
+      //firestore plugin doesnt support deleting, so it must be nulled / falsed
+    });
+  }
+
+  unfollowUser() {
+
+    Firestore.instance.document("insta_users/$profileId").updateData({
+    'followers.$currentUserId': false
+    //firestore plugin doesnt support deleting, so it must be nulled / falsed
+    });
+
+    Firestore.instance.document("insta_users/$currentUserId").updateData({
+      'following.$profileId': false
+      //firestore plugin doesnt support deleting, so it must be nulled / falsed
+    });
+    print('unfolliwin');
+    setState((){this.isFollowing = false;});
+    print('state should be set');
+    setState((){});
+    print(this.isFollowing);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +95,12 @@ class _ProfilePage extends State<ProfilePage> {
         {String text,
         Color backgroundcolor,
         Color textColor,
-        Color borderColor}) {
+        Color borderColor,
+        Function function}) {
       return new Container(
         padding: const EdgeInsets.only(top: 2.0),
         child: new FlatButton(
-            onPressed: null,
+            onPressed: function,
             child: new Container(
               decoration: new BoxDecoration(
                   color: backgroundcolor,
@@ -65,34 +117,38 @@ class _ProfilePage extends State<ProfilePage> {
     }
 
     Container buildProfileFollowButton(User user) {
-      String currentUserId = googleSignIn.currentUser.id;
-
       // viewing your own profile - should show edit button
       if (currentUserId == profileId) {
         return buildFollowButton(
-            text: "Edit Profile",
-            backgroundcolor: Colors.white,
-            textColor: Colors.black,
-            borderColor: Colors.grey);
+          text: "Edit Profile",
+          backgroundcolor: Colors.white,
+          textColor: Colors.black,
+          borderColor: Colors.grey,
+          function: editProfile,
+        );
       }
 
       // already following user - should show unfollow button
-      bool userFollowsProfile = user.followers.containsKey(currentUserId);
-      if (userFollowsProfile) {
+      if (this.isFollowing) {
         return buildFollowButton(
             text: "Unfollow",
             backgroundcolor: Colors.white,
             textColor: Colors.black,
-            borderColor: Colors.grey);
+            borderColor: Colors.grey,
+            function: unfollowUser,
+
+        );
       }
 
       // does not follow user - should show follow button
-      if (!userFollowsProfile) {
+      if (!this.isFollowing) {
         return buildFollowButton(
             text: "Follow",
             backgroundcolor: Colors.blue,
             textColor: Colors.white,
-            borderColor: Colors.blue);
+            borderColor: Colors.blue,
+            function: followUser,
+        );
       }
 
       return buildFollowButton(
@@ -165,6 +221,8 @@ class _ProfilePage extends State<ProfilePage> {
       ));
     }
 
+
+
     return new StreamBuilder(
         stream: Firestore.instance
             .collection('insta_users')
@@ -177,6 +235,12 @@ class _ProfilePage extends State<ProfilePage> {
                 child: new CircularProgressIndicator());
 
           User user = new User.fromDocument(snapshot.data);
+
+          if (user.followers.containsKey(currentUserId) && user.followers[currentUserId]){
+            isFollowing = true;
+          }
+
+
 
           return new Scaffold(
             appBar: new AppBar(
