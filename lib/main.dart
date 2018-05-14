@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'profile_page.dart';
+import 'search_page.dart';
 
 final auth = FirebaseAuth.instance;
 final googleSignIn = new GoogleSignIn();
@@ -150,6 +151,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 new Container(
                   color: Colors.green,
+                  child: new SearchPage(),
                 ),
                 new Container(color: Colors.white, child: new Uploader()),
                 new Container(color: Colors.amber),

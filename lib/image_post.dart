@@ -283,14 +283,6 @@ class _ImagePost extends State<ImagePost> {
       });
     }
   }
-
-  void openProfile(BuildContext context, String userId) {
-    Navigator
-        .of(context)
-        .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
-      return new ProfilePage(userId: userId);
-    }));
-  }
 }
 
 class ImagePostFromId extends StatelessWidget {
@@ -317,4 +309,12 @@ class ImagePostFromId extends StatelessWidget {
           return snapshot.data;
         });
   }
+}
+
+void openProfile(BuildContext context, String userId) {
+  Navigator
+      .of(context)
+      .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
+    return new ProfilePage(userId: userId);
+  }));
 }
