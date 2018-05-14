@@ -19,8 +19,16 @@ class _Uploader extends State<Uploader> {
   TextEditingController descriptionController = new TextEditingController();
 
   bool uploading = false;
+  bool promted = false;
+
 
   Widget build(BuildContext context) {
+
+    if (file == null && promted == false){
+      _selectImage();
+      setState(() {promted = true;});
+    }
+
     return file == null
         ? new IconButton(
             icon: new Icon(Icons.file_upload), onPressed: _selectImage)
