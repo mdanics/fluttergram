@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'main.dart';
 import 'dart:async';
 import 'profile_page.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class ImagePost extends StatefulWidget {
   const ImagePost(
@@ -131,10 +132,7 @@ class _ImagePost extends State<ImagePost> {
       child: new Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          new Image.network(
-            mediaUrl,
-            fit: BoxFit.fitWidth,
-          ),
+          new FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: mediaUrl),
 //          new CachedNetworkImage( // might cause performance issues
 //            imageUrl: mediaUrl,
 //            fit: BoxFit.fitWidth,
