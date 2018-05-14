@@ -27,6 +27,16 @@ class ImagePost extends StatefulWidget {
     );
   }
 
+  factory ImagePost.fromJSON(Map data){
+    return new ImagePost(
+      username: data['username'],
+      location: data['location'],
+      mediaUrl: data['mediaUrl'],
+      likes: data['likes'],
+      description: data['description'],
+      ownerId: data['ownerId'],
+    );
+  }
   int getLikeCount(var likes) {
     if (likes == null) {
       return 0;

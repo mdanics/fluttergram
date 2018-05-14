@@ -15,6 +15,8 @@ dependencies:
   font_awesome_flutter: 6.0.0
   async: "^2.0.4"
   stream_transformers: "^0.3.0+3"
+  http: "^0.11.3+16"
+  transparent_image: "^0.1.0"
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

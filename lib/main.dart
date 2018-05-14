@@ -11,6 +11,8 @@ final auth = FirebaseAuth.instance;
 final googleSignIn = new GoogleSignIn();
 final ref = Firestore.instance.collection('insta_users');
 
+User currentUserModel;
+
 Future<Null> _ensureLoggedIn() async {
   GoogleSignInAccount user = googleSignIn.currentUser;
   if (user == null) {
@@ -61,6 +63,8 @@ tryCreateUserRecord() async {
       "following": {},
     });
   }
+
+  currentUserModel = new User.fromDocument(userRecord);
 }
 
 class Fluttergram extends StatelessWidget {
