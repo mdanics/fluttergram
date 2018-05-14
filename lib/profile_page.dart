@@ -16,7 +16,7 @@ class _ProfilePage extends State<ProfilePage> {
   final String profileId;
   String currentUserId = googleSignIn.currentUser.id;
   bool isFollowing = false;
-
+  bool followButtonClicked = false;
   _ProfilePage(this.profileId);
 
   Future editProfile() {
@@ -35,8 +35,8 @@ class _ProfilePage extends State<ProfilePage> {
   }
 
   followUser() {
-
-    setState((){this.isFollowing = true;});
+    print('following user');
+    setState((){this.isFollowing = true; followButtonClicked = true;});
 
     Firestore.instance.document("insta_users/$profileId").updateData({
       'followers.$currentUserId': true
@@ -51,6 +51,8 @@ class _ProfilePage extends State<ProfilePage> {
 
   unfollowUser() {
 
+    setState((){isFollowing = false; followButtonClicked = true;});
+
     Firestore.instance.document("insta_users/$profileId").updateData({
     'followers.$currentUserId': false
     //firestore plugin doesnt support deleting, so it must be nulled / falsed
@@ -60,11 +62,6 @@ class _ProfilePage extends State<ProfilePage> {
       'following.$profileId': false
       //firestore plugin doesnt support deleting, so it must be nulled / falsed
     });
-    print('unfolliwin');
-    setState((){this.isFollowing = false;});
-    print('state should be set');
-    setState((){});
-    print(this.isFollowing);
   }
 
   @override
@@ -129,7 +126,7 @@ class _ProfilePage extends State<ProfilePage> {
       }
 
       // already following user - should show unfollow button
-      if (this.isFollowing) {
+      if (isFollowing) {
         return buildFollowButton(
             text: "Unfollow",
             backgroundcolor: Colors.white,
@@ -141,7 +138,7 @@ class _ProfilePage extends State<ProfilePage> {
       }
 
       // does not follow user - should show follow button
-      if (!this.isFollowing) {
+      if (!isFollowing) {
         return buildFollowButton(
             text: "Follow",
             backgroundcolor: Colors.blue,
@@ -236,7 +233,7 @@ class _ProfilePage extends State<ProfilePage> {
 
           User user = new User.fromDocument(snapshot.data);
 
-          if (user.followers.containsKey(currentUserId) && user.followers[currentUserId]){
+          if (user.followers.containsKey(currentUserId) && user.followers[currentUserId] && followButtonClicked == false){
             isFollowing = true;
           }
 
@@ -379,3 +376,4 @@ class User {
     );
   }
 }
+
