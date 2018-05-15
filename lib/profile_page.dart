@@ -17,6 +17,9 @@ class _ProfilePage extends State<ProfilePage> {
   String currentUserId = googleSignIn.currentUser.id;
   bool isFollowing = false;
   bool followButtonClicked = false;
+  int postCount = 0;
+  int followerCount = 0;
+  int followingCount = 0;
   _ProfilePage(this.profileId);
 
   Future editProfile() {
@@ -190,6 +193,7 @@ class _ProfilePage extends State<ProfilePage> {
         for (var doc in snap.documents) {
           posts.add(new ImagePost.fromDocument(doc));
         }
+        setState((){postCount = snap.documents.length;});
         return posts;
       }
 
@@ -237,8 +241,6 @@ class _ProfilePage extends State<ProfilePage> {
             isFollowing = true;
           }
 
-
-
           return new Scaffold(
             appBar: new AppBar(
               title: new Text(
@@ -269,12 +271,12 @@ class _ProfilePage extends State<ProfilePage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
-                                    buildStatColumn("posts", 234),
-                                    buildStatColumn("followers", 2630),
-                                    buildStatColumn("following", 47),
+                                    buildStatColumn("posts", postCount),
+                                    buildStatColumn("followers", _countFollowings(user.followers)),
+                                    buildStatColumn("following", _countFollowings(user.following)),
                                   ],
                                 ),
-                                new Row(
+                                new Row(  
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
@@ -308,6 +310,20 @@ class _ProfilePage extends State<ProfilePage> {
             ),
           );
         });
+  }
+
+  int _countFollowings(Map followings){
+    int count = 0;
+
+    void countValues(key, value){
+      if (value){
+        count +=1;
+      }
+    }
+
+    followings.forEach(countValues);
+    
+    return count;
   }
 }
 
