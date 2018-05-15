@@ -7,7 +7,7 @@ A new Flutter application.
 For help getting started with Flutter, view our online
 [documentation](https://flutter.io/).
 
-#Notes to improve Readme at some date
+# Notes to improve Readme at some date
 
 Steps to create your own instance:
 
