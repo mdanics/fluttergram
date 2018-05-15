@@ -43,6 +43,13 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
+    <key>NSCameraUsageDescription</key>
+    <string>Used to allow the user to take a photo to upload as a post</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Used to allow the user to select a photo to upload as a post</string>
+
+
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>
