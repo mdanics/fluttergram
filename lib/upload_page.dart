@@ -21,12 +21,12 @@ class _Uploader extends State<Uploader> {
   bool uploading = false;
   bool promted = false;
 
-
   Widget build(BuildContext context) {
-
-    if (file == null && promted == false){
+    if (file == null && promted == false) {
       _selectImage();
-      setState(() {promted = true;});
+      setState(() {
+        promted = true;
+      });
     }
 
     return file == null
@@ -66,11 +66,42 @@ class _Uploader extends State<Uploader> {
             ));
   }
 
-  Future<Null> _selectImage() async {
-    File imageFile = await ImagePicker.pickImage();
-    setState(() {
-      file = imageFile;
-    });
+  _selectImage() async {
+    return showDialog<Null>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+
+        child: new SimpleDialog(
+          title: const Text('Select assignment'),
+          children: <Widget>[
+            new SimpleDialogOption(
+                child: const Text('Take a photo'),
+                onPressed: () async {
+                  Navigator.pop(context);
+                  File imageFile =
+                      await ImagePicker.pickImage(source: ImageSource.camera);
+                  setState(() {
+                    file = imageFile;
+                  });
+                }),
+            new SimpleDialogOption(
+                child: const Text('Choose from Gallery'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  File imageFile =
+                      await ImagePicker.pickImage(source: ImageSource.gallery);
+                  setState(() {
+                    file = imageFile;
+                  });
+                }),
+            new SimpleDialogOption(
+              child: const Text("Cancel"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+        ));
   }
 
   void compressImage() async {
