@@ -15,6 +15,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePage extends State<ProfilePage> {
   final String profileId;
   String currentUserId = googleSignIn.currentUser.id;
+  String view = "grid"; // default view
   bool isFollowing = false;
   bool followButtonClicked = false;
   int postCount = 0;
@@ -39,7 +40,10 @@ class _ProfilePage extends State<ProfilePage> {
 
   followUser() {
     print('following user');
-    setState((){this.isFollowing = true; followButtonClicked = true;});
+    setState(() {
+      this.isFollowing = true;
+      followButtonClicked = true;
+    });
 
     Firestore.instance.document("insta_users/$profileId").updateData({
       'followers.$currentUserId': true
@@ -53,12 +57,14 @@ class _ProfilePage extends State<ProfilePage> {
   }
 
   unfollowUser() {
-
-    setState((){isFollowing = false; followButtonClicked = true;});
+    setState(() {
+      isFollowing = false;
+      followButtonClicked = true;
+    });
 
     Firestore.instance.document("insta_users/$profileId").updateData({
-    'followers.$currentUserId': false
-    //firestore plugin doesnt support deleting, so it must be nulled / falsed
+      'followers.$currentUserId': false
+      //firestore plugin doesnt support deleting, so it must be nulled / falsed
     });
 
     Firestore.instance.document("insta_users/$currentUserId").updateData({
@@ -131,23 +137,22 @@ class _ProfilePage extends State<ProfilePage> {
       // already following user - should show unfollow button
       if (isFollowing) {
         return buildFollowButton(
-            text: "Unfollow",
-            backgroundcolor: Colors.white,
-            textColor: Colors.black,
-            borderColor: Colors.grey,
-            function: unfollowUser,
-
+          text: "Unfollow",
+          backgroundcolor: Colors.white,
+          textColor: Colors.black,
+          borderColor: Colors.grey,
+          function: unfollowUser,
         );
       }
 
       // does not follow user - should show follow button
       if (!isFollowing) {
         return buildFollowButton(
-            text: "Follow",
-            backgroundcolor: Colors.blue,
-            textColor: Colors.white,
-            borderColor: Colors.blue,
-            function: followUser,
+          text: "Follow",
+          backgroundcolor: Colors.blue,
+          textColor: Colors.white,
+          borderColor: Colors.blue,
+          function: followUser,
         );
       }
 
@@ -159,30 +164,34 @@ class _ProfilePage extends State<ProfilePage> {
     }
 
     Row buildImageViewButtonBar() {
+      Color isActiveButtonColor(String viewName) {
+        if (view == viewName) {
+          return Colors.blueAccent;
+        } else {
+          return Colors.black26;
+        }
+      }
+
       return new Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           new IconButton(
-            icon: new Icon(Icons.grid_on),
-            onPressed: null,
+            icon: new Icon(Icons.grid_on, color: isActiveButtonColor("grid")),
+            onPressed: () {
+              changeView("grid");
+            },
           ),
           new IconButton(
-            icon: new Icon(Icons.list),
-            onPressed: null,
-          ),
-          new IconButton(
-            icon: new Icon(Icons.person_outline),
-            onPressed: null,
-          ),
-          new IconButton(
-            icon: new Icon(Icons.bookmark_border),
-            onPressed: null,
+            icon: new Icon(Icons.list, color: isActiveButtonColor("feed")),
+            onPressed: () {
+              changeView("feed");
+            },
           ),
         ],
       );
     }
 
-    Container buildImageGrid() {
+    Container buildUserPosts() {
       getPosts() async {
         List<ImagePost> posts = [];
         var snap = await Firestore.instance
@@ -193,7 +202,9 @@ class _ProfilePage extends State<ProfilePage> {
         for (var doc in snap.documents) {
           posts.add(new ImagePost.fromDocument(doc));
         }
-        setState((){postCount = snap.documents.length;});
+        setState(() {
+          postCount = snap.documents.length;
+        });
         return posts;
       }
 
@@ -206,23 +217,28 @@ class _ProfilePage extends State<ProfilePage> {
                 alignment: FractionalOffset.center,
                 padding: const EdgeInsets.only(top: 10.0),
                 child: new CircularProgressIndicator());
-
-          return new GridView.count(
-              crossAxisCount: 3,
-              childAspectRatio: 1.0,
+          else if (view == "grid") {
+            // build the grid
+            return new GridView.count(
+                crossAxisCount: 3,
+                childAspectRatio: 1.0,
 //                    padding: const EdgeInsets.all(0.5),
-              mainAxisSpacing: 1.5,
-              crossAxisSpacing: 1.5,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              children: snapshot.data.map((ImagePost imagePost) {
-                return new GridTile(child: new ImageTile(imagePost));
-              }).toList());
+                mainAxisSpacing: 1.5,
+                crossAxisSpacing: 1.5,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children: snapshot.data.map((ImagePost imagePost) {
+                  return new GridTile(child: new ImageTile(imagePost));
+                }).toList());
+          } else if (view == "feed") {
+            return new Column(
+                children: snapshot.data.map((ImagePost imagePost) {
+              return imagePost;
+            }).toList());
+          }
         },
       ));
     }
-
-
 
     return new StreamBuilder(
         stream: Firestore.instance
@@ -237,92 +253,101 @@ class _ProfilePage extends State<ProfilePage> {
 
           User user = new User.fromDocument(snapshot.data);
 
-          if (user.followers.containsKey(currentUserId) && user.followers[currentUserId] && followButtonClicked == false){
+          if (user.followers.containsKey(currentUserId) &&
+              user.followers[currentUserId] &&
+              followButtonClicked == false) {
             isFollowing = true;
           }
 
           return new Scaffold(
-            appBar: new AppBar(
-              title: new Text(
-                user.username,
-                style: const TextStyle(color: Colors.black),
+              appBar: new AppBar(
+                title: new Text(
+                  user.username,
+                  style: const TextStyle(color: Colors.black),
+                ),
+                backgroundColor: Colors.white,
               ),
-              backgroundColor: Colors.white,
-            ),
-            body: new ListView(
-              children: <Widget>[
-                new Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: new Column(
-                    children: <Widget>[
-                      new Row(
-                        children: <Widget>[
-                          new CircleAvatar(
-                            radius: 40.0,
-                            backgroundColor: Colors.grey,
-                            backgroundImage: new NetworkImage(user.photoUrl),
-                          ),
-                          new Expanded(
-                            flex: 1,
-                            child: new Column(
-                              children: <Widget>[
-                                new Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-                                    buildStatColumn("posts", postCount),
-                                    buildStatColumn("followers", _countFollowings(user.followers)),
-                                    buildStatColumn("following", _countFollowings(user.following)),
-                                  ],
-                                ),
-                                new Row(  
+              body: new ListView(
+                children: <Widget>[
+                  new Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: new Column(
+                      children: <Widget>[
+                        new Row(
+                          children: <Widget>[
+                            new CircleAvatar(
+                              radius: 40.0,
+                              backgroundColor: Colors.grey,
+                              backgroundImage: new NetworkImage(user.photoUrl),
+                            ),
+                            new Expanded(
+                              flex: 1,
+                              child: new Column(
+                                children: <Widget>[
+                                  new Row(
+                                    mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
-                                      buildProfileFollowButton(user)
-                                    ]),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      new Container(
+                                      buildStatColumn("posts", postCount),
+                                      buildStatColumn("followers",
+                                          _countFollowings(user.followers)),
+                                      buildStatColumn("following",
+                                          _countFollowings(user.following)),
+                                    ],
+                                  ),
+                                  new Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        buildProfileFollowButton(user)
+                                      ]),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        new Container(
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: new Text(
+                              user.displayName,
+                              style: new TextStyle(fontWeight: FontWeight.bold),
+                            )),
+                        new Container(
                           alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: new Text(
-                            user.displayName,
-                            style: new TextStyle(fontWeight: FontWeight.bold),
-                          )),
-                      new Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.only(top: 1.0),
-                        child: new Text(user.bio),
-                      ),
-                    ],
+                          padding: const EdgeInsets.only(top: 1.0),
+                          child: new Text(user.bio),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                new Divider(),
-                buildImageViewButtonBar(),
-                new Divider(height: 0.0),
-                buildImageGrid(),
-              ],
-            ),
-          );
+                  new Divider(),
+                  buildImageViewButtonBar(),
+                  new Divider(height: 0.0),
+                  buildUserPosts(),
+                ],
+              ));
         });
   }
 
-  int _countFollowings(Map followings){
+  changeView(String viewName) {
+    setState(() {
+      view = viewName;
+    });
+  }
+
+  int _countFollowings(Map followings) {
     int count = 0;
 
-    void countValues(key, value){
-      if (value){
-        count +=1;
+    void countValues(key, value) {
+      if (value) {
+        count += 1;
       }
     }
 
     followings.forEach(countValues);
-    
+
     return count;
   }
 }
@@ -392,4 +417,3 @@ class User {
     );
   }
 }
-
