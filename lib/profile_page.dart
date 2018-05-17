@@ -56,8 +56,13 @@ class _ProfilePage extends State<ProfilePage> {
     });
 
     //updates activity feed
-    Firestore.instance.collection("insta_a_feed").document(profileId).getCollection("items").document(currentUserId).setData({
-      "ownerId" : profileId,
+    Firestore.instance
+        .collection("insta_a_feed")
+        .document(profileId)
+        .getCollection("items")
+        .document(currentUserId)
+        .setData({
+      "ownerId": profileId,
       "username": currentUserModel.username,
       "userId": currentUserId,
       "type": "like",
@@ -82,8 +87,12 @@ class _ProfilePage extends State<ProfilePage> {
       //firestore plugin doesnt support deleting, so it must be nulled / falsed
     });
 
-    Firestore.instance.collection("insta_a_feed").document(profileId).getCollection("items").document(currentUserId).delete();
-
+    Firestore.instance
+        .collection("insta_a_feed")
+        .document(profileId)
+        .getCollection("items")
+        .document(currentUserId)
+        .delete();
   }
 
   @override

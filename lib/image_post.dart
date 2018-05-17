@@ -28,7 +28,7 @@ class ImagePost extends StatefulWidget {
     );
   }
 
-  factory ImagePost.fromJSON(Map data){
+  factory ImagePost.fromJSON(Map data) {
     return new ImagePost(
       username: data['username'],
       location: data['location'],
@@ -268,9 +268,7 @@ class _ImagePost extends State<ImagePost> {
     if (!_liked) {
       print('liking');
 
-      reference.document(postId).updateData({
-        'likes.$userId': true
-      });
+      reference.document(postId).updateData({'likes.$userId': true});
 
       addActivityFeedItem();
 
@@ -289,24 +287,31 @@ class _ImagePost extends State<ImagePost> {
   }
 
   void addActivityFeedItem() {
-    Firestore.instance.collection("insta_a_feed").document(ownerId).getCollection("items").document(postId).setData({
+    Firestore.instance
+        .collection("insta_a_feed")
+        .document(ownerId)
+        .getCollection("items")
+        .document(postId)
+        .setData({
       "username": currentUserModel.username,
       "userId": currentUserModel.id,
       "type": "like",
       "userProfileImg": currentUserModel.photoUrl,
       "mediaUrl": mediaUrl,
       "timestamp": new DateTime.now().toString(),
-      "postId" : postId,
+      "postId": postId,
     });
   }
 
   void removeActivityFeedItem() {
-    Firestore.instance.collection("insta_a_feed").document(ownerId).getCollection("items").document(postId).delete();
+    Firestore.instance
+        .collection("insta_a_feed")
+        .document(ownerId)
+        .getCollection("items")
+        .document(postId)
+        .delete();
   }
-
 }
-
-
 
 class ImagePostFromId extends StatelessWidget {
   final String id;
