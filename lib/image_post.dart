@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'main.dart';
 import 'dart:async';
 import 'profile_page.dart';
-import 'package:transparent_image/transparent_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ImagePost extends StatefulWidget {
   const ImagePost(
@@ -132,13 +132,13 @@ class _ImagePost extends State<ImagePost> {
       child: new Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          new FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: mediaUrl),
-//          new CachedNetworkImage( // might cause performance issues
-//            imageUrl: mediaUrl,
-//            fit: BoxFit.fitWidth,
-//            placeholder: new Text("loading image"),
-//            errorWidget: new Icon(Icons.error),
-//          ),
+//          new FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: mediaUrl),
+          new CachedNetworkImage(
+            imageUrl: mediaUrl,
+            fit: BoxFit.fitWidth,
+            placeholder: new Text("loading image"),
+            errorWidget: new Icon(Icons.error),
+          ),
           showHeart
               ? new Positioned(
                   child: new Opacity(
@@ -176,7 +176,7 @@ class _ImagePost extends State<ImagePost> {
 
           return new ListTile(
             leading: new CircleAvatar(
-              backgroundImage: new NetworkImage(imageUrl),
+              backgroundImage: new CachedNetworkImageProvider(imageUrl),
               backgroundColor: Colors.grey,
             ),
             title: new GestureDetector(

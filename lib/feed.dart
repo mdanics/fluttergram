@@ -7,6 +7,7 @@ import 'package:stream_transformers/stream_transformers.dart';
 import 'main.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Feed extends StatefulWidget {
   _Feed createState() => new _Feed();
@@ -14,12 +15,11 @@ class Feed extends StatefulWidget {
 
 class _Feed extends State<Feed> {
   var feedData;
-  var hasGottenData = false;
 
   @override
   void initState(){
     super.initState();
-    this._getFeed();
+    this._loadFeed();
   }
 
   buildFeed() {
@@ -62,7 +62,29 @@ class _Feed extends State<Feed> {
     });
   }
 
+  _loadFeed() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var json = prefs.getString("feed");
+
+    if (json != null){
+
+      var data = JSON.decode(json);
+      List<ImagePost> listOfPosts = _generateFeed(data);
+      setState((){
+        feedData = listOfPosts;
+      });
+
+    } else {
+      _getFeed();
+    }
+
+
+
+  }
+
   _getFeed() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    
     String userId = googleSignIn.currentUser.id.toString();
     var url =
         'https://us-central1-mp-rps.cloudfunctions.net/getFeed?uid=' + userId;
@@ -75,8 +97,8 @@ class _Feed extends State<Feed> {
       var response = await request.close();
       if (response.statusCode == HttpStatus.OK) {
         var json = await response.transform(UTF8.decoder).join();
+        prefs.setString("feed", json);
         var data = JSON.decode(json);
-//        result = data['quote'] + "\n-- " + data['person'];
         listOfPosts = _generateFeed(data);
       } else {
         result =
@@ -89,7 +111,6 @@ class _Feed extends State<Feed> {
 
     setState(() {
       feedData = listOfPosts;
-      hasGottenData = true;
     });
   }
 
