@@ -54,6 +54,16 @@ class _ProfilePage extends State<ProfilePage> {
       'following.$profileId': true
       //firestore plugin doesnt support deleting, so it must be nulled / falsed
     });
+
+    //updates activity feed
+    Firestore.instance.collection("insta_a_feed").document(profileId).getCollection("items").document(currentUserId).setData({
+      "ownerId" : profileId,
+      "username": currentUserModel.username,
+      "userId": currentUserId,
+      "type": "like",
+      "userProfileImg": currentUserModel.photoUrl,
+      "timestamp": new DateTime.now().toString()
+    });
   }
 
   unfollowUser() {
@@ -71,6 +81,9 @@ class _ProfilePage extends State<ProfilePage> {
       'following.$profileId': false
       //firestore plugin doesnt support deleting, so it must be nulled / falsed
     });
+
+    Firestore.instance.collection("insta_a_feed").document(profileId).getCollection("items").document(currentUserId).delete();
+
   }
 
   @override

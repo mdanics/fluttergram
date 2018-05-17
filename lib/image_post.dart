@@ -261,6 +261,8 @@ class _ImagePost extends State<ImagePost> {
         liked = false;
         likes[userId] = false;
       });
+
+      removeActivityFeedItem();
     }
 
     if (!_liked) {
@@ -268,7 +270,9 @@ class _ImagePost extends State<ImagePost> {
 
       reference.document(postId).updateData({
         'likes.$userId': true
-      }); //make this more error proof maybe with cloud functions
+      });
+
+      addActivityFeedItem();
 
       setState(() {
         likeCount = likeCount + 1;
@@ -283,7 +287,26 @@ class _ImagePost extends State<ImagePost> {
       });
     }
   }
+
+  void addActivityFeedItem() {
+    Firestore.instance.collection("insta_a_feed").document(ownerId).getCollection("items").document(postId).setData({
+      "username": currentUserModel.username,
+      "userId": currentUserModel.id,
+      "type": "like",
+      "userProfileImg": currentUserModel.photoUrl,
+      "mediaUrl": mediaUrl,
+      "timestamp": new DateTime.now().toString(),
+      "postId" : postId,
+    });
+  }
+
+  void removeActivityFeedItem() {
+    Firestore.instance.collection("insta_a_feed").document(ownerId).getCollection("items").document(postId).delete();
+  }
+
 }
+
+
 
 class ImagePostFromId extends StatelessWidget {
   final String id;
