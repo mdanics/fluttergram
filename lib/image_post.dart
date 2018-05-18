@@ -36,6 +36,7 @@ class ImagePost extends StatefulWidget {
       likes: data['likes'],
       description: data['description'],
       ownerId: data['ownerId'],
+      postId: data['postId'],
     );
   }
   int getLikeCount(var likes) {
@@ -244,8 +245,7 @@ class _ImagePost extends State<ImagePost> {
     );
   }
 
-  void _likePost(String postId) {
-    print('like attempt');
+  void _likePost(String postId2) {
     var userId = googleSignIn.currentUser.id;
     bool _liked = likes[userId] == true;
 
@@ -267,7 +267,6 @@ class _ImagePost extends State<ImagePost> {
 
     if (!_liked) {
       print('liking');
-
       reference.document(postId).updateData({'likes.$userId': true});
 
       addActivityFeedItem();
