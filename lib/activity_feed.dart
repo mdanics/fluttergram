@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'image_post.dart'; //needed to open image when clicked
 
 class ActivityFeedPage extends StatefulWidget {
   @override
@@ -60,6 +61,7 @@ class ActivityFeedItem extends StatelessWidget {
   final String
       type; // potetial types include liked photo, follow user, comment on photo
   final String mediaUrl;
+  final String mediaId;
   final String userProfileImg;
   final String commentData;
 
@@ -68,6 +70,7 @@ class ActivityFeedItem extends StatelessWidget {
       this.userId,
       this.type,
       this.mediaUrl,
+      this.mediaId,
       this.userProfileImg,
       this.commentData});
 
@@ -77,6 +80,7 @@ class ActivityFeedItem extends StatelessWidget {
       userId: document['userId'],
       type: document['type'],
       mediaUrl: document['mediaUrl'],
+      mediaId : document['postId'],
       userProfileImg: document['userProfileImg'],
       commentData: document["commentData"],
     );
@@ -85,27 +89,31 @@ class ActivityFeedItem extends StatelessWidget {
   Widget mediaPreview = new Container();
   String actionText;
 
-  void configureItem() {
+  void configureItem(BuildContext context) {
     if (type == "like") {
       actionText = "$username liked your post.";
 
-      mediaPreview = // new Image.network(mediaUrl, height: 100.0, fit: BoxFit.cover);
-
-          new Container(
-        height: 45.0,
-        width: 45.0,
-        child: new AspectRatio(
-          aspectRatio: 487 / 451,
-          child: new Container(
-            decoration: new BoxDecoration(
-                image: new DecorationImage(
-              fit: BoxFit.fill,
-              alignment: FractionalOffset.topCenter,
-              image: new NetworkImage(mediaUrl),
-            )),
+      mediaPreview = new GestureDetector(
+        onTap: () { openImage(context, mediaId);},
+        child: new Container(
+          height: 45.0,
+          width: 45.0,
+          child: new AspectRatio(
+            aspectRatio: 487 / 451,
+            child: new Container(
+              decoration: new BoxDecoration(
+                  image: new DecorationImage(
+                    fit: BoxFit.fill,
+                    alignment: FractionalOffset.topCenter,
+                    image: new NetworkImage(mediaUrl),
+                  )),
+            ),
           ),
         ),
       );
+
+
+
     } else if (type == "follow") {
       actionText = "$username starting following you.";
     } else if (type == "comment") {
@@ -119,7 +127,7 @@ class ActivityFeedItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    configureItem();
+    configureItem(context);
     return new Row(
       children: <Widget>[
         new Padding(
@@ -130,16 +138,37 @@ class ActivityFeedItem extends StatelessWidget {
           ),
         ),
         new Text(actionText),
-        new Expanded(child: new Align(
-            child: new Padding(
-              child: mediaPreview,
-              padding: new EdgeInsets.all(15.0),
-            ),
-            alignment: AlignmentDirectional.bottomEnd
-        ))
-
+        new Expanded(
+            child: new Align(
+                child: new Padding(
+                  child: mediaPreview,
+                  padding: new EdgeInsets.all(15.0),
+                ),
+                alignment: AlignmentDirectional.bottomEnd))
       ],
     );
-
   }
+}
+
+openImage(BuildContext context, String imageId) {
+  print("the image id is $imageId");
+  Navigator
+      .of(context)
+      .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
+    return new Center(
+      child: new Scaffold(
+          appBar: new AppBar(
+            title: new Text('Photo', style: new TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            backgroundColor: Colors.white,
+
+          ),
+          body: new ListView(
+            children: <Widget>[
+              new Container(
+                child: new ImagePostFromId(id: imageId),
+              ),
+            ],
+          )),
+    );
+  }));
 }
