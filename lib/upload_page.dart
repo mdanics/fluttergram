@@ -211,6 +211,9 @@ void postToFireStore(
     "mediaUrl": mediaUrl,
     "description": description,
     "ownerId": googleSignIn.currentUser.id,
-    "timestamp": new DateTime.now().toString()
+    "timestamp": new DateTime.now().toString(),
+  }).then((DocumentReference doc){
+    String docId = doc.documentID;
+    reference.document(docId).updateData({"postId" : docId});
   });
 }
