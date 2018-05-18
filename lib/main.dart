@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 new Container(color: Colors.white, child: new SearchPage()),
                 new Container(
-                  color: Colors.green,
+                  color: Colors.white,
                   child: new Uploader(),
                 ),
                 new Container(
