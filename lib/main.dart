@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'profile_page.dart';
 import 'search_page.dart';
 import 'activity_feed.dart';
+import 'create_account.dart';
 
 final auth = FirebaseAuth.instance;
 final googleSignIn = new GoogleSignIn();
@@ -15,14 +16,14 @@ final ref = Firestore.instance.collection('insta_users');
 
 User currentUserModel;
 
-Future<Null> _ensureLoggedIn() async {
+Future<Null> _ensureLoggedIn(BuildContext context) async {
   GoogleSignInAccount user = googleSignIn.currentUser;
   if (user == null) {
     user = await googleSignIn.signInSilently();
   }
   if (user == null) {
     await googleSignIn.signIn().then((_) {
-      tryCreateUserRecord();
+      tryCreateUserRecord(context);
     });
   }
 
@@ -34,12 +35,12 @@ Future<Null> _ensureLoggedIn() async {
   }
 }
 
-Future<Null> _silentLogin() async {
+Future<Null> _silentLogin(BuildContext context) async {
   GoogleSignInAccount user = googleSignIn.currentUser;
 
   if (user == null) {
     user = await googleSignIn.signInSilently().then((_) {
-      tryCreateUserRecord();
+      tryCreateUserRecord(context);
     });
   }
 
@@ -51,19 +52,49 @@ Future<Null> _silentLogin() async {
   }
 }
 
-tryCreateUserRecord() async {
+tryCreateUserRecord(BuildContext context) async {
   GoogleSignInAccount user = googleSignIn.currentUser;
   if (user == null) {
     return null;
   }
   DocumentSnapshot userRecord = await ref.document(user.id).get();
   if (userRecord.data == null) {
+    // no user record exists, time to create
+
+    String displayName = await Navigator.push(
+      context,
+      // We'll create the SelectionScreen in the next step!
+      new MaterialPageRoute(
+          builder: (context) => new Center(
+                child: new Scaffold(
+                    appBar: new AppBar(
+                      leading: new Container(),
+                      title: new Text('Fill out missing data',
+                          style: new TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                      backgroundColor: Colors.white,
+                    ),
+                    body: new ListView(
+                      children: <Widget>[
+                        new Container(
+                          child: new CreateAccount(),
+                        ),
+                      ],
+                    )),
+              )),
+    );
+
+    if (displayName == null || displayName.length == 0){
+      return;
+    }
+
     ref.document(user.id).setData({
       "id": user.id,
       "username": user.displayName,
       "photoUrl": user.photoUrl,
       "email": user.email,
-      "displayName": user.displayName,
+      "displayName": displayName,
       "bio": "",
       "followers": {},
       "following": {},
@@ -142,7 +173,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     if (triedSilentLogin == false) {
-      silentLogin();
+      silentLogin(context);
     }
     return googleSignIn.currentUser == null
         ? buildLoginPage()
@@ -201,14 +232,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   void login() async {
-    await _ensureLoggedIn();
+    await _ensureLoggedIn(context);
     setState(() {
       triedSilentLogin = true;
     });
   }
 
-  void silentLogin() async {
-    await _silentLogin();
+  void silentLogin(BuildContext context) async {
+    await _silentLogin(context);
     setState(() {});
   }
 
