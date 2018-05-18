@@ -22,22 +22,18 @@ class _Uploader extends State<Uploader> {
   bool promted = false;
 
   @override
-  initState(){
-
-
-    if (file == null && promted == false) {
+  initState() {
+    if (file == null && promted == false && pageController.page == 2) {
       _selectImage();
       setState(() {
         promted = true;
       });
     }
-    print("ss");
+
     super.initState();
   }
 
   Widget build(BuildContext context) {
-
-
     return file == null
         ? new IconButton(
             icon: new Icon(Icons.file_upload), onPressed: _selectImage)

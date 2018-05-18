@@ -104,9 +104,9 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => new _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  PageController _pageController;
+PageController pageController;
 
+class _HomePageState extends State<HomePage> {
   int _page = 0;
   bool triedSilentLogin = false;
 
@@ -154,19 +154,19 @@ class _HomePageState extends State<HomePage> {
                   child: new Feed(),
                 ),
                 new Container(color: Colors.white, child: new SearchPage()),
-
                 new Container(
                   color: Colors.green,
                   child: new Uploader(),
                 ),
-                new Container(color: Colors.white, child: new ActivityFeedPage()),
+                new Container(
+                    color: Colors.white, child: new ActivityFeedPage()),
                 new Container(
                     color: Colors.white,
                     child: new ProfilePage(
                       userId: googleSignIn.currentUser.id,
                     )),
               ],
-              controller: _pageController,
+              controller: pageController,
               physics: new NeverScrollableScrollPhysics(),
               onPageChanged: onPageChanged,
             ),
@@ -214,7 +214,7 @@ class _HomePageState extends State<HomePage> {
 
   void navigationTapped(int page) {
     //Animating Page
-    _pageController.jumpToPage(page);
+    pageController.jumpToPage(page);
   }
 
   void onPageChanged(int page) {
@@ -226,13 +226,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _pageController = new PageController();
+    pageController = new PageController();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _pageController.dispose();
+    pageController.dispose();
   }
 }
 
