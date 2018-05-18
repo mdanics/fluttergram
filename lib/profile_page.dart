@@ -65,7 +65,7 @@ class _ProfilePage extends State<ProfilePage> {
       "ownerId": profileId,
       "username": currentUserModel.username,
       "userId": currentUserId,
-      "type": "like",
+      "type": "follow",
       "userProfileImg": currentUserModel.photoUrl,
       "timestamp": new DateTime.now().toString()
     });

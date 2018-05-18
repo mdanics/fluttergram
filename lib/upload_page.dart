@@ -21,13 +21,22 @@ class _Uploader extends State<Uploader> {
   bool uploading = false;
   bool promted = false;
 
-  Widget build(BuildContext context) {
+  @override
+  initState(){
+
+
     if (file == null && promted == false) {
       _selectImage();
       setState(() {
         promted = true;
       });
     }
+    print("ss");
+    super.initState();
+  }
+
+  Widget build(BuildContext context) {
+
 
     return file == null
         ? new IconButton(
@@ -72,7 +81,7 @@ class _Uploader extends State<Uploader> {
         barrierDismissible: false, // user must tap button!
 
         child: new SimpleDialog(
-          title: const Text('Select assignment'),
+          title: const Text('Create a Post'),
           children: <Widget>[
             new SimpleDialogOption(
                 child: const Text('Take a photo'),

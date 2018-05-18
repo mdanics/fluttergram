@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'profile_page.dart';
 import 'search_page.dart';
+import 'activity_feed.dart';
 
 final auth = FirebaseAuth.instance;
 final googleSignIn = new GoogleSignIn();
@@ -20,7 +21,9 @@ Future<Null> _ensureLoggedIn() async {
     user = await googleSignIn.signInSilently();
   }
   if (user == null) {
-    await googleSignIn.signIn().then((_) {tryCreateUserRecord();});
+    await googleSignIn.signIn().then((_) {
+      tryCreateUserRecord();
+    });
   }
 
   if (await auth.currentUser() == null) {
@@ -35,7 +38,9 @@ Future<Null> _silentLogin() async {
   GoogleSignInAccount user = googleSignIn.currentUser;
 
   if (user == null) {
-    user = await googleSignIn.signInSilently().then((_) {tryCreateUserRecord();});
+    user = await googleSignIn.signInSilently().then((_) {
+      tryCreateUserRecord();
+    });
   }
 
   if (await auth.currentUser() == null && user != null) {
@@ -48,11 +53,11 @@ Future<Null> _silentLogin() async {
 
 tryCreateUserRecord() async {
   GoogleSignInAccount user = googleSignIn.currentUser;
-  if (user == null ){
+  if (user == null) {
     return null;
   }
   DocumentSnapshot userRecord = await ref.document(user.id).get();
-  if (userRecord.data == null ) {
+  if (userRecord.data == null) {
     ref.document(user.id).setData({
       "id": user.id,
       "username": user.displayName,
@@ -75,18 +80,17 @@ class Fluttergram extends StatelessWidget {
     return new MaterialApp(
       title: 'Fluttergram',
       theme: new ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-        // counter didn't reset back to zero; the application is not restarted.
-        primarySwatch: Colors.blue,
-        buttonColor: Colors.pink,
-        primaryIconTheme: new IconThemeData(color: Colors.black)
-      ),
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
+          // counter didn't reset back to zero; the application is not restarted.
+          primarySwatch: Colors.blue,
+          buttonColor: Colors.pink,
+          primaryIconTheme: new IconThemeData(color: Colors.black)),
       home: new HomePage(title: 'Fluttergram'),
     );
   }
@@ -139,7 +143,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     if (triedSilentLogin == false) {
       silentLogin();
-    } // might cause performance issues?
+    }
     return googleSignIn.currentUser == null
         ? buildLoginPage()
         : new Scaffold(
@@ -149,12 +153,13 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.white,
                   child: new Feed(),
                 ),
+                new Container(color: Colors.white, child: new SearchPage()),
+
                 new Container(
                   color: Colors.green,
-                  child: new SearchPage(),
+                  child: new Uploader(),
                 ),
-                new Container(color: Colors.white, child: new Uploader()),
-                new Container(color: Colors.amber),
+                new Container(color: Colors.white, child: new ActivityFeedPage()),
                 new Container(
                     color: Colors.white,
                     child: new ProfilePage(
