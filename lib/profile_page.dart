@@ -386,7 +386,8 @@ class ImageTile extends StatelessWidget {
       return new Center(
         child: new Scaffold(
             appBar: new AppBar(
-              title: new Text('Photo'),
+              title: new Text('Photo', style: new TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+              backgroundColor: Colors.white,
             ),
             body: new ListView(
               children: <Widget>[
