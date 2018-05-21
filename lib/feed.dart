@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'image_post.dart';
 import 'dart:async';
 import 'package:async/async.dart';
-import 'package:stream_transformers/stream_transformers.dart';
 import 'main.dart';
 import 'dart:io';
 import 'dart:convert';
