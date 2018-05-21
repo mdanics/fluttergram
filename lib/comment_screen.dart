@@ -35,14 +35,32 @@ class _CommentScreenState extends State<CommentScreen> {
         ),
         backgroundColor: Colors.white,
       ),
-      body: buildComments(),
-      bottomNavigationBar: new TextFormField(
-        controller: _commentController,
-        decoration: new InputDecoration(labelText: 'Add comment...'),
-        onFieldSubmitted: addComment,
-      ),
+      body: buildPage(),
     );
   }
+
+  Widget buildPage() {
+    return new Column(
+      children: [
+        new Expanded(
+          child:
+            buildComments(),
+        ),
+        new Divider(),
+        new ListTile(
+          title: new TextFormField(
+            controller: _commentController,
+            decoration: new InputDecoration(labelText: 'Write a comment...'),
+            onFieldSubmitted: addComment,
+          ),
+          trailing: new OutlineButton(onPressed: (){addComment(_commentController.text);}, borderSide: BorderSide.none, child: new Text("Post"),),
+        ),
+
+      ],
+    );
+
+  }
+
 
   Widget buildComments() {
     return new FutureBuilder<List<Comment>>(
