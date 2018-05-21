@@ -25,8 +25,9 @@ class _ProfilePage extends State<ProfilePage> {
 
   Future editProfile() {
     return showDialog(
-        context: context,
-        child: new AlertDialog(
+      context: context,
+      builder: (BuildContext context) {
+        new AlertDialog(
           title: new Text('Edit Profile'),
           content: new SingleChildScrollView(
             child: new ListBody(
@@ -35,7 +36,9 @@ class _ProfilePage extends State<ProfilePage> {
               ],
             ),
           ),
-        ));
+        );
+      },
+    );
   }
 
   followUser() {
@@ -214,7 +217,7 @@ class _ProfilePage extends State<ProfilePage> {
     }
 
     Container buildUserPosts() {
-      getPosts() async {
+      Future<List<ImagePost>> getPosts() async {
         List<ImagePost> posts = [];
         var snap = await Firestore.instance
             .collection('insta_posts')
@@ -231,7 +234,7 @@ class _ProfilePage extends State<ProfilePage> {
       }
 
       return new Container(
-          child: new FutureBuilder(
+          child: new FutureBuilder<List<ImagePost>>(
         future: getPosts(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
@@ -386,7 +389,9 @@ class ImageTile extends StatelessWidget {
       return new Center(
         child: new Scaffold(
             appBar: new AppBar(
-              title: new Text('Photo', style: new TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+              title: new Text('Photo',
+                  style: new TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold)),
               backgroundColor: Colors.white,
             ),
             body: new ListView(

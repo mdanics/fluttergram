@@ -73,10 +73,11 @@ class _Uploader extends State<Uploader> {
 
   _selectImage() async {
     return showDialog<Null>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
+      context: context,
+      barrierDismissible: false, // user must tap button!
 
-        child: new SimpleDialog(
+      builder: (BuildContext context) {
+        return new SimpleDialog(
           title: const Text('Create a Post'),
           children: <Widget>[
             new SimpleDialogOption(
@@ -106,7 +107,9 @@ class _Uploader extends State<Uploader> {
               },
             )
           ],
-        ));
+        );
+      },
+    );
   }
 
   void compressImage() async {
@@ -212,8 +215,8 @@ void postToFireStore(
     "description": description,
     "ownerId": googleSignIn.currentUser.id,
     "timestamp": new DateTime.now().toString(),
-  }).then((DocumentReference doc){
+  }).then((DocumentReference doc) {
     String docId = doc.documentID;
-    reference.document(docId).updateData({"postId" : docId});
+    reference.document(docId).updateData({"postId": docId});
   });
 }

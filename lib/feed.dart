@@ -12,16 +12,16 @@ class Feed extends StatefulWidget {
 }
 
 class _Feed extends State<Feed> {
-  var feedData;
+  List<ImagePost> feedData;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     this._loadFeed();
   }
 
   buildFeed() {
-    if (feedData != null){
+    if (feedData != null) {
       return new ListView(
         children: feedData,
       );
@@ -33,7 +33,7 @@ class _Feed extends State<Feed> {
   }
 
   @override
-  Widget build(BuildContext Context) {
+  Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         title: const Text('Fluttergram',
@@ -62,27 +62,23 @@ class _Feed extends State<Feed> {
 
   _loadFeed() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var json = prefs.getString("feed");
+    String json = prefs.getString("feed");
 
-    if (json != null){
-
-      var data = JSON.decode(json);
+    if (json != null) {
+      List<Map<String, dynamic>> data =
+          jsonDecode(json).cast<Map<String, dynamic>>();
       List<ImagePost> listOfPosts = _generateFeed(data);
-      setState((){
+      setState(() {
         feedData = listOfPosts;
       });
-
     } else {
       _getFeed();
     }
-
-
-
   }
 
   _getFeed() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    
+
     String userId = googleSignIn.currentUser.id.toString();
     var url =
         'https://us-central1-mp-rps.cloudfunctions.net/getFeed?uid=' + userId;
@@ -94,17 +90,17 @@ class _Feed extends State<Feed> {
       var request = await httpClient.getUrl(Uri.parse(url));
       var response = await request.close();
       if (response.statusCode == HttpStatus.OK) {
-        var json = await response.transform(UTF8.decoder).join();
+        String json = await response.transform(utf8.decoder).join();
         prefs.setString("feed", json);
-        var data = JSON.decode(json);
+        List<Map> data = jsonDecode(json);
         listOfPosts = _generateFeed(data);
       } else {
         result =
-        'Error getting a random quote:\nHttp status ${response.statusCode}';
+            'Error getting a random quote:\nHttp status ${response.statusCode}';
       }
     } catch (exception) {
       result =
-      'Failed invoking the getRandomQuote function. Exception: $exception';
+          'Failed invoking the getRandomQuote function. Exception: $exception';
     }
 
     setState(() {
@@ -112,14 +108,13 @@ class _Feed extends State<Feed> {
     });
   }
 
-  _generateFeed(List<Map> feedData) {
+  List<ImagePost> _generateFeed(List<Map<String, dynamic>> feedData) {
     List<ImagePost> listOfPosts = [];
 
-    for (Map postData in feedData) {
+    for (var postData in feedData) {
       listOfPosts.add(new ImagePost.fromJSON(postData));
     }
 
     return listOfPosts;
   }
-
 }

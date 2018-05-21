@@ -59,7 +59,7 @@ class _CommentScreenState extends State<CommentScreen> {
         });
   }
 
-  getComments() async {
+  Future<List<Comment>> getComments() async {
     List<Comment> comments = [];
 
     QuerySnapshot data = await Firestore.instance
