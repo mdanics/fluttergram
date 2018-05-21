@@ -138,7 +138,7 @@ class _ImagePost extends State<ImagePost> {
           new CachedNetworkImage(
             imageUrl: mediaUrl,
             fit: BoxFit.fitWidth,
-            placeholder: new Text("loading image"),
+            placeholder: loadingPlaceHolder,
             errorWidget: new Icon(Icons.error),
           ),
           showHeart
@@ -192,6 +192,11 @@ class _ImagePost extends State<ImagePost> {
           );
         });
   }
+
+  Container loadingPlaceHolder = Container(
+    height: 400.0,
+    child: new Center(child: new CircularProgressIndicator()),
+  );
 
   @override
   Widget build(BuildContext context) {
