@@ -5,6 +5,7 @@ import 'main.dart';
 import 'dart:async';
 import 'profile_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'comment_screen.dart';
 
 class ImagePost extends StatefulWidget {
   const ImagePost(
@@ -204,8 +205,7 @@ class _ImagePost extends State<ImagePost> {
         new Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            new Padding(
-                padding: const EdgeInsets.only(left: 20.0, top: 40.0)),
+            new Padding(padding: const EdgeInsets.only(left: 20.0, top: 40.0)),
             buildLikeIcon(),
             new Padding(padding: const EdgeInsets.only(right: 20.0)),
             new GestureDetector(
@@ -213,7 +213,13 @@ class _ImagePost extends State<ImagePost> {
                   FontAwesomeIcons.commentO,
                   size: 25.0,
                 ),
-                onTap: () {}),
+                onTap: () {
+                  goToComments(
+                      context: context,
+                      postId: postId,
+                      ownerId: ownerId,
+                      mediaUrl: mediaUrl);
+                }),
           ],
         ),
         new Row(
@@ -341,5 +347,18 @@ void openProfile(BuildContext context, String userId) {
       .of(context)
       .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
     return new ProfilePage(userId: userId);
+  }));
+}
+
+void goToComments(
+    {BuildContext context, String postId, String ownerId, String mediaUrl}) {
+  Navigator
+      .of(context)
+      .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
+    return new CommentScreen(
+      postId: postId,
+      postOwner: ownerId,
+      postMediaUrl: mediaUrl,
+    );
   }));
 }

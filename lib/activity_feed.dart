@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'image_post.dart'; //needed to open image when clicked
 import 'main.dart'; //needed for currentuser id
+
 class ActivityFeedPage extends StatefulWidget {
   @override
   _ActivityFeedPageState createState() => new _ActivityFeedPageState();
@@ -80,7 +81,7 @@ class ActivityFeedItem extends StatelessWidget {
       userId: document['userId'],
       type: document['type'],
       mediaUrl: document['mediaUrl'],
-      mediaId : document['postId'],
+      mediaId: document['postId'],
       userProfileImg: document['userProfileImg'],
       commentData: document["commentData"],
     );
@@ -90,11 +91,11 @@ class ActivityFeedItem extends StatelessWidget {
   String actionText;
 
   void configureItem(BuildContext context) {
-    if (type == "like") {
-      actionText = "$username liked your post.";
-
+    if (type == "like" || type == "comment") {
       mediaPreview = new GestureDetector(
-        onTap: () { openImage(context, mediaId);},
+        onTap: () {
+          openImage(context, mediaId);
+        },
         child: new Container(
           height: 45.0,
           width: 45.0,
@@ -103,23 +104,22 @@ class ActivityFeedItem extends StatelessWidget {
             child: new Container(
               decoration: new BoxDecoration(
                   image: new DecorationImage(
-                    fit: BoxFit.fill,
-                    alignment: FractionalOffset.topCenter,
-                    image: new NetworkImage(mediaUrl),
-                  )),
+                fit: BoxFit.fill,
+                alignment: FractionalOffset.topCenter,
+                image: new NetworkImage(mediaUrl),
+              )),
             ),
           ),
         ),
       );
+    }
 
-
-
+    if (type == "like") {
+      actionText = "$username liked your post.";
     } else if (type == "follow") {
       actionText = "$username starting following you.";
     } else if (type == "comment") {
       actionText = "$username commented: $commentData";
-
-      mediaPreview = new Image.network(mediaUrl);
     } else {
       actionText = "Error - invalid activityFeed type: $type";
     }
@@ -158,9 +158,10 @@ openImage(BuildContext context, String imageId) {
     return new Center(
       child: new Scaffold(
           appBar: new AppBar(
-            title: new Text('Photo', style: new TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            title: new Text('Photo',
+                style: new TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold)),
             backgroundColor: Colors.white,
-
           ),
           body: new ListView(
             children: <Widget>[
