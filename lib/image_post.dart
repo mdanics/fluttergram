@@ -196,52 +196,50 @@ class _ImagePost extends State<ImagePost> {
   Widget build(BuildContext context) {
     liked = (likes[googleSignIn.currentUser.id.toString()] == true);
 
-    return new Container(
-      child: new Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          buildPostHeader(ownerId: ownerId),
-          buildLikeableImage(),
-          new Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Padding(
-                  padding: const EdgeInsets.only(left: 20.0, top: 40.0)),
-              buildLikeIcon(),
-              new Padding(padding: const EdgeInsets.only(right: 20.0)),
-              new GestureDetector(
-                  child: const Icon(
-                    FontAwesomeIcons.commentO,
-                    size: 25.0,
-                  ),
-                  onTap: () {}),
-            ],
-          ),
-          new Row(
-            children: <Widget>[
-              new Container(
+    return new Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        buildPostHeader(ownerId: ownerId),
+        buildLikeableImage(),
+        new Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            new Padding(
+                padding: const EdgeInsets.only(left: 20.0, top: 40.0)),
+            buildLikeIcon(),
+            new Padding(padding: const EdgeInsets.only(right: 20.0)),
+            new GestureDetector(
+                child: const Icon(
+                  FontAwesomeIcons.commentO,
+                  size: 25.0,
+                ),
+                onTap: () {}),
+          ],
+        ),
+        new Row(
+          children: <Widget>[
+            new Container(
+              margin: const EdgeInsets.only(left: 20.0),
+              child: new Text(
+                "$likeCount likes",
+                style: boldStyle,
+              ),
+            )
+          ],
+        ),
+        new Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            new Container(
                 margin: const EdgeInsets.only(left: 20.0),
                 child: new Text(
-                  "$likeCount likes",
+                  "$username ",
                   style: boldStyle,
-                ),
-              )
-            ],
-          ),
-          new Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              new Container(
-                  margin: const EdgeInsets.only(left: 20.0),
-                  child: new Text(
-                    "$username ",
-                    style: boldStyle,
-                  )),
-              new Expanded(child: new Text(description)),
-            ],
-          )
-        ],
-      ),
+                )),
+            new Expanded(child: new Text(description)),
+          ],
+        )
+      ],
     );
   }
 
