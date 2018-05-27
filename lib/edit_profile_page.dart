@@ -1,7 +1,13 @@
 import "package:flutter/material.dart";
-import 'main.dart'; //for currentuser model
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'main.dart'; //for currentuser
+import 'profile_page.dart'; //for the user class
 
 class EditProfilePage extends StatelessWidget {
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController bioController = new TextEditingController();
+
   changeProfilePhoto(BuildContext Context) {
     return showDialog(
       context: Context,
@@ -19,6 +25,16 @@ class EditProfilePage extends StatelessWidget {
         );
       },
     );
+  }
+
+  Function applyChanges() {
+    Firestore.instance
+        .collection('insta_users')
+        .document(currentUserModel.id)
+        .updateData({
+      "displayName": nameController.text,
+      "bio": bioController.text,
+    });
   }
 
   Widget buildTextField({String name, TextEditingController controller}) {
@@ -44,37 +60,53 @@ class EditProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Column(
-      children: <Widget>[
-        new Padding(
-          padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
-          child: new CircleAvatar(
-            backgroundImage: NetworkImage(currentUserModel.photoUrl),
-            radius: 50.0,
-          ),
-        ),
-        new FlatButton(
-            onPressed: () {
-              changeProfilePhoto(context);
-            },
-            child: new Text(
-              "Change Photo",
-              style: const TextStyle(
-                  color: Colors.blue,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold),
-            )),
-        new Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: new Column(
+    return new FutureBuilder(
+        future: Firestore.instance
+            .collection('insta_users')
+            .document(currentUserModel.id)
+            .get(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData)
+            return new Container(
+                alignment: FractionalOffset.center,
+                child: new CircularProgressIndicator());
+
+          User user = new User.fromDocument(snapshot.data);
+
+          nameController.text = user.displayName;
+          bioController.text = user.bio;
+
+          return new Column(
             children: <Widget>[
-              buildTextField(name: "Name", controller: null),
-              buildTextField(name: "Website", controller: null),
-              buildTextField(name: "Bio", controller: null),
+              new Padding(
+                padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+                child: new CircleAvatar(
+                  backgroundImage: NetworkImage(currentUserModel.photoUrl),
+                  radius: 50.0,
+                ),
+              ),
+              new FlatButton(
+                  onPressed: () {
+                    changeProfilePhoto(context);
+                  },
+                  child: new Text(
+                    "Change Photo",
+                    style: const TextStyle(
+                        color: Colors.blue,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
+                  )),
+              new Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: new Column(
+                  children: <Widget>[
+                    buildTextField(name: "Name", controller: nameController),
+                    buildTextField(name: "Bio", controller: bioController),
+                  ],
+                ),
+              )
             ],
-          ),
-        )
-      ],
-    );
+          );
+        });
   }
 }
