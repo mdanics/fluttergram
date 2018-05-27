@@ -255,7 +255,8 @@ class _ProfilePage extends State<ProfilePage> {
         setState(() {
           postCount = snap.documents.length;
         });
-        return posts;
+
+        return posts.reversed.toList();
       }
 
       return new Container(
