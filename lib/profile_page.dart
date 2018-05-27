@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'main.dart';
 import 'image_post.dart';
 import 'dart:async';
+import  'edit_profile_page.dart';
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({this.userId});
@@ -24,21 +26,34 @@ class _ProfilePage extends State<ProfilePage> {
   _ProfilePage(this.profileId);
 
   Future editProfile() {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        new AlertDialog(
-          title: new Text('Edit Profile'),
-          content: new SingleChildScrollView(
-            child: new ListBody(
-              children: <Widget>[
-                new Text('Editing does not work yet, sorry'),
+
+
+
+    Navigator
+        .of(context)
+        .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
+      return new Center(
+        child: new Scaffold(
+            appBar: new AppBar(
+              leading: new IconButton(icon: new Icon(Icons.close), onPressed: (){Navigator.maybePop(context);},),
+              title: new Text('Edit Profile',
+                  style: new TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold)),
+              backgroundColor: Colors.white,
+              actions: <Widget>[
+                new IconButton(icon: new Icon(Icons.check, color: Colors.blueAccent,), onPressed: null)
+                
               ],
             ),
-          ),
-        );
-      },
-    );
+            body: new ListView(
+              children: <Widget>[
+                new Container(
+                  child: new EditProfilePage(),
+                ),
+              ],
+            )),
+      );
+    }));
   }
 
   followUser() {
