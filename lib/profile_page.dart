@@ -24,7 +24,7 @@ class _ProfilePage extends State<ProfilePage> {
   int followingCount = 0;
   _ProfilePage(this.profileId);
 
-  Future editProfile() {
+  editProfile() {
     EditProfilePage editPage = new EditProfilePage();
 
     Navigator
