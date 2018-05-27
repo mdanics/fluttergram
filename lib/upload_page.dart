@@ -17,6 +17,7 @@ class Uploader extends StatefulWidget {
 class _Uploader extends State<Uploader> {
   File file;
   TextEditingController descriptionController = new TextEditingController();
+  TextEditingController locationController = new TextEditingController();
 
   bool uploading = false;
   bool promted = false;
@@ -60,11 +61,12 @@ class _Uploader extends State<Uploader> {
                     ))
               ],
             ),
-            body: new Column(
+            body: new ListView(
               children: <Widget>[
                 new PostForm(
                   imageFile: file,
                   descriptionController: descriptionController,
+                  locationController: locationController,
                   loading: uploading,
                 ),
               ],
@@ -119,7 +121,7 @@ class _Uploader extends State<Uploader> {
     int rand = new Math.Random().nextInt(10000);
 
     Im.Image image = Im.decodeImage(file.readAsBytesSync());
-    Im.Image s = Im.copyResize(image, 500);
+    Im.copyResize(image, 500);
 
 //    image.format = Im.Image.RGBA;
 //    Im.Image newim = Im.remapColors(image, alpha: Im.LUMINANCE);
@@ -145,7 +147,7 @@ class _Uploader extends State<Uploader> {
     });
     compressImage();
     Future<String> upload = uploadImage(file).then((String data) {
-      postToFireStore(mediaUrl: data, description: descriptionController.text);
+      postToFireStore(mediaUrl: data, description: descriptionController.text, location: locationController.text);
     }).then((_) {
       setState(() {
         file = null;
@@ -156,10 +158,11 @@ class _Uploader extends State<Uploader> {
 }
 
 class PostForm extends StatelessWidget {
-  var imageFile;
-  TextEditingController descriptionController;
-  bool loading;
-  PostForm({this.imageFile, this.descriptionController, this.loading});
+  final imageFile;
+  final TextEditingController descriptionController;
+  final TextEditingController locationController;
+  final bool loading;
+  PostForm({this.imageFile, this.descriptionController, this.loading, this.locationController});
 
   Widget build(BuildContext context) {
     return new Column(
@@ -167,17 +170,12 @@ class PostForm extends StatelessWidget {
         loading
             ? new LinearProgressIndicator()
             : new Padding(padding: new EdgeInsets.only(top: 0.0)),
-        new Container(
-            child: new Image.file(
-          imageFile,
-          fit: BoxFit.fitWidth,
-        )),
         new Divider(),
         new Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             new CircleAvatar(
-              child: new Text("d"),
+              backgroundImage: new NetworkImage(currentUserModel.photoUrl),
             ),
             new Container(
               width: 250.0,
@@ -187,9 +185,37 @@ class PostForm extends StatelessWidget {
                     hintText: "Write a caption...", border: InputBorder.none),
               ),
             ),
+            new Container(
+              height: 45.0,
+              width: 45.0,
+              child: new AspectRatio(
+                aspectRatio: 487 / 451,
+                child: new Container(
+                  decoration: new BoxDecoration(
+                      image: new DecorationImage(
+                    fit: BoxFit.fill,
+                    alignment: FractionalOffset.topCenter,
+                    image: new FileImage(imageFile),
+                  )),
+                ),
+              ),
+            ),
           ],
         ),
-        new Divider()
+        new Divider(),
+
+        new ListTile(
+          leading: new Icon(Icons.pin_drop),
+          title: new Container(
+            width: 250.0,
+            child: new TextField(
+              controller: locationController,
+              decoration: new InputDecoration(
+                  hintText: "Where was this photo taken?",
+                  border: InputBorder.none),
+            ),
+          ),
+        )
       ],
     );
   }
@@ -208,8 +234,8 @@ void postToFireStore(
   var reference = Firestore.instance.collection('insta_posts');
 
   reference.add({
-    "username": "testeronslice",
-    "location": "nice location",
+    "username": currentUserModel.username,
+    "location": location,
     "likes": {},
     "mediaUrl": mediaUrl,
     "description": description,
