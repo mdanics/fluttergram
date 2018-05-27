@@ -23,7 +23,7 @@ class _CreateAccountState extends State<CreateAccount> {
         padding: const EdgeInsets.only(top: 25.0),
         child: new Center(
           child: new Text(
-            "What Is Your Name?",
+            "Create a username",
             style: new TextStyle(fontSize: 25.0),
           ),
         ),
@@ -39,7 +39,7 @@ class _CreateAccountState extends State<CreateAccount> {
             decoration: new InputDecoration(
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.all(10.0),
-                labelText: "Full Name",
+                labelText: "Username",
                 labelStyle: new TextStyle(fontSize: 15.0)),
           ),
         ),

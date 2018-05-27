@@ -61,7 +61,7 @@ tryCreateUserRecord(BuildContext context) async {
   if (userRecord.data == null) {
     // no user record exists, time to create
 
-    String displayName = await Navigator.push(
+    String userName = await Navigator.push(
       context,
       // We'll create the SelectionScreen in the next step!
       new MaterialPageRoute(
@@ -85,20 +85,18 @@ tryCreateUserRecord(BuildContext context) async {
               )),
     );
 
-    if (displayName == null || displayName.length == 0){
-      return;
+    if (userName != null || userName.length != 0){
+      ref.document(user.id).setData({
+        "id": user.id,
+        "username": userName,
+        "photoUrl": user.photoUrl,
+        "email": user.email,
+        "displayName": user.displayName,
+        "bio": "",
+        "followers": {},
+        "following": {},
+      });
     }
-
-    ref.document(user.id).setData({
-      "id": user.id,
-      "username": user.displayName,
-      "photoUrl": user.photoUrl,
-      "email": user.email,
-      "displayName": displayName,
-      "bio": "",
-      "followers": {},
-      "following": {},
-    });
   }
 
   currentUserModel = new User.fromDocument(userRecord);
