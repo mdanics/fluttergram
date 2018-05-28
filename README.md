@@ -41,6 +41,8 @@ For help getting started with Flutter, view our online
 
 
 
-# todo list
--remove sensative items from git
+# What's Next?
+ - remove sensative items from git
  - googleservice-info.plist from both  android and ios folders
+ - Improve Caching of Profiles, Images, Etc.
+ - Clean up Code
