@@ -1,3 +1,18 @@
+## Features
+
+ * Custom photo feed based on who you follow (using firebase cloud functions)
+ * Post photo posts from camera or gallery
+   * Like posts
+   * Comment on posts 
+        * View all comments on a post
+ * Search for users
+ * Profile Pages
+   * Follow / Unfollow Users
+   * Change image view from grid layout to feed layout
+   * Add your own bio 
+ * Activity Feed showing recent likes / comments of your posts + new followers
+ 
+
 
 ## Dependencies
 
@@ -19,7 +34,7 @@
 
 #### 1. [Setup Flutter](https://flutter.io/setup/)
 
-#### 2. Clone the repo
+#### 2. Clone the repoz
 
 ```sh
 $ git clone https://github.com/mdanics/fluttergram.git
