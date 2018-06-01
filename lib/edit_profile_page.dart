@@ -27,7 +27,7 @@ class EditProfilePage extends StatelessWidget {
     );
   }
 
-  Function applyChanges() {
+  applyChanges() {
     Firestore.instance
         .collection('insta_users')
         .document(currentUserModel.id)
