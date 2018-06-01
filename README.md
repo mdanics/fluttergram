@@ -1,46 +1,52 @@
-# firestore_test
 
-A new Flutter application.
-
-## Getting Started
-
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
-
-## Notes to improve Readme at some date
-
-# Steps to create your own instance:
-
--Enable FireStore
-  - https://pub.dartlang.org/packages/cloud_firestore
-    - follow the instructions in the above link to set up your firebase console to be able use firestore / login for both iOS and Android
-    - Create clound functions
-
-- Enable googleSignIn
-  - https://pub.dartlang.org/packages/firebase_auth
-  - which when u look at instructions then takes you to https://pub.dartlang.org/packages/google_sign_in#-readme-tab-
-  - copy the google-serivies.plist into runner
-    -which says to paste this code into info.plst in iOS:
-    
-
-				    <!-- Google Sign-in Section -->
-				<key>CFBundleURLTypes</key>
-				<array>
-					<dict>
-						<key>CFBundleTypeRole</key>
-						<string>Editor</string>
-						<key>CFBundleURLSchemes</key>
-						<array>
-							<!-- TODO Replace this value: -->
-							<!-- Copied from GoogleServices-Info.plist key REVERSE_CLIENT_ID -->
-							<string>com.googleusercontent.apps.861823949799-vc35cprkp249096uujjn0vvnmcvjppkn</string>
-						</array>
-					</dict>
-				</array>
-				<!-- End of the Google Sign-in Section -->
-   
+## Getting started 
 
 
+#### 1. [Setup Flutter](https://flutter.io/setup/)
+
+#### 2. Clone the repo
+
+```sh
+$ git clone https://github.com/mdanics/fluttergram.git
+$ cd fluttergram/
+```
+
+#### 3. Setup the firebase app
+
+1. You'll need to create a Firebase instance. Follow the instructions at https://console.firebase.google.com.
+2. Once your Firebase instance is created, you'll need to enable anonymous authentication.
+
+* Go to the Firebase Console for your new instance.
+* Click "Authentication" in the left-hand menu
+* Click the "sign-in method" tab
+* Click "Google" and enable it
+
+3. (skip if not running on Android)
+
+* Create an app within your Firebase instance for Android, with package name com.yourcompany.news
+* Run the following command to get your SHA-1 key:
+
+```
+keytool -exportcert -list -v \
+-alias androiddebugkey -keystore ~/.android/debug.keystore
+```
+
+* In the Firebase console, in the settings of your Android app, add your SHA-1 key by clicking "Add Fingerprint".
+* Follow instructions to download google-services.json
+* place `google-services.json` into `/android/app/`.
+
+
+4. (skip if not running on iOS)
+
+* Create an app within your Firebase instance for iOS, with your app package name 
+* Follow instructions to download GoogleService-Info.plist, and place it into /ios/Runner in XCode
+* Open /ios/Runner/Info.plist. Locate the CFBundleURLSchemes key. The second item in the array value of this key is specific to the Firebase instance. Replace it with the value for REVERSED_CLIENT_ID from GoogleService-Info.plist
+
+Double check install instructions for both
+   - Google Auth Plugin
+     - https://pub.dartlang.org/packages/firebase_auth 
+   - Firestore Plugin
+     -  https://pub.dartlang.org/packages/cloud_firestore 
 
 # What's Next?
  - remove sensative items from git
