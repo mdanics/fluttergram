@@ -8,3 +8,4 @@ build/
 ios/.generated/
 packages
 .flutter-plugins
+functions/node_modules
