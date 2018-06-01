@@ -19,6 +19,7 @@ For help getting started with Flutter, view our online
 - Enable googleSignIn
   - https://pub.dartlang.org/packages/firebase_auth
   - which when u look at instructions then takes you to https://pub.dartlang.org/packages/google_sign_in#-readme-tab-
+  - copy the google-serivies.plist into runner
     -which says to paste this code into info.plst in iOS:
     
 
@@ -41,6 +42,8 @@ For help getting started with Flutter, view our online
 
 
 
-# todo list
--remove sensative items from git
+# What's Next?
+ - remove sensative items from git
  - googleservice-info.plist from both  android and ios folders
+ - Improve Caching of Profiles, Images, Etc.
+ - Clean up Code
