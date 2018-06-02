@@ -34,7 +34,7 @@
 
 #### 1. [Setup Flutter](https://flutter.io/setup/)
 
-#### 2. Clone the repoz
+#### 2. Clone the repo
 
 ```sh
 $ git clone https://github.com/mdanics/fluttergram.git
@@ -51,7 +51,12 @@ $ cd fluttergram/
 * Click the "sign-in method" tab
 * Click "Google" and enable it
 
-3. (skip if not running on Android)
+
+3. Create Cloud Functions (to make the Feed work)
+* Create cloud functions in your firebase console and push the function `getFeed`. 
+* Replace the url in the `_getFeed` function in `upload_page.dart` with your cloud function url.  
+
+4. (skip if not running on Android)
 
 * Create an app within your Firebase instance for Android, with package name com.yourcompany.news
 * Run the following command to get your SHA-1 key:
@@ -66,7 +71,7 @@ keytool -exportcert -list -v \
 * place `google-services.json` into `/android/app/`.
 
 
-4. (skip if not running on iOS)
+5. (skip if not running on iOS)
 
 * Create an app within your Firebase instance for iOS, with your app package name 
 * Follow instructions to download GoogleService-Info.plist, and place it into /ios/Runner in XCode
