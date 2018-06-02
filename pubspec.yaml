@@ -15,7 +15,6 @@ dependencies:
   font_awesome_flutter: 6.0.0
   async: "^2.0.4"
   http: "^0.11.3+16"
-  transparent_image: "^0.1.0"
   shared_preferences: "^0.4.1"
   cached_network_image: "^0.4.1"
 
