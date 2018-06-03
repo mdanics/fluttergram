@@ -1,3 +1,12 @@
+## Screenshots
+<p>
+<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/feed.webp" alt="feed example" width="250">
+<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/upload photo.webp" alt="upload photo example" width="250">
+<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/profile_from_feed.webp" alt="go to a profile from feed" width="250">
+<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/edit_profile.webp" alt="edit profile example" width="250">
+<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/comment_and_activity_feed.webp" alt="comment and activity feed example" width="250">
+
+</p>
 ## Features
 
  * Custom photo feed based on who you follow (using firebase cloud functions)
