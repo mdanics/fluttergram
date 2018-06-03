@@ -101,6 +101,8 @@ Double check install instructions for both
 # What's Next?
  - [ ] Improve Caching of Profiles, Images, Etc.
  - [ ] Better post creation, add filters to your image
+ - [ ] Animations (heart when liking image)
+ - [ ] Firebase Security Rules
  - [ ] Delete Posts
  - [ ] Registration without Google SignIn 
  - [ ] Clean up code
