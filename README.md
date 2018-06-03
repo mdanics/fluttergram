@@ -1,12 +1,8 @@
-## Screenshots
-<p>
-<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/feed.webp" alt="feed example" width="250">
-<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/upload photo.webp" alt="upload photo example" width="250">
-<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/profile_from_feed.webp" alt="go to a profile from feed" width="250">
-<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/edit_profile.webp" alt="edit profile example" width="250">
-<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/comment_and_activity_feed.webp" alt="comment and activity feed example" width="250">
+# Fluttergram
+A working Instagram clone written in Flutter using Firebase / Firestore
 
-</p>
+# Demo
+[Download the release APK to try out Fluttergram](https://github.com/mdanics/fluttergram/raw/master/app-release.apk)
 
 ## Features
 
@@ -23,6 +19,15 @@
  * Activity Feed showing recent likes / comments of your posts + new followers
  
 
+## Screenshots
+<p>
+<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/feed.webp" alt="feed example" width="250">
+<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/upload photo.webp" alt="upload photo example" width="250">
+<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/profile_from_feed.webp" alt="go to a profile from feed" width="250">
+<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/edit_profile.webp" alt="edit profile example" width="250">
+<img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/comment_and_activity_feed.webp" alt="comment and activity feed example" width="250">
+
+</p>
 
 ## Dependencies
 
@@ -94,7 +99,8 @@ Double check install instructions for both
      -  https://pub.dartlang.org/packages/cloud_firestore 
 
 # What's Next?
- - remove sensative items from git
- - googleservice-info.plist from both  android and ios folders
- - Improve Caching of Profiles, Images, Etc.
- - Clean up Code
+ - [ ] Improve Caching of Profiles, Images, Etc.
+ - [ ] Better post creation, add filters to your image
+ - [ ] Delete Posts
+ - [ ] Registration without Google SignIn 
+ - [ ] Clean up code
