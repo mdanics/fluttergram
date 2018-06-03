@@ -7,6 +7,7 @@
 <img src="https://github.com/mdanics/fluttergram/blob/master/screenshots/comment_and_activity_feed.webp" alt="comment and activity feed example" width="250">
 
 </p>
+
 ## Features
 
  * Custom photo feed based on who you follow (using firebase cloud functions)
