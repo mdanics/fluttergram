@@ -50,14 +50,13 @@ class _Feed extends State<Feed> {
   }
 
   Future<Null> _refresh() async {
-    final Completer<Null> completer = new Completer<Null>();
-
     await _getFeed();
-    completer.complete(null);
 
-    return completer.future.then((_) {
-      setState(() {});
+    setState(() {
+
     });
+
+    return;
   }
 
   _loadFeed() async {
@@ -92,16 +91,18 @@ class _Feed extends State<Feed> {
       if (response.statusCode == HttpStatus.OK) {
         String json = await response.transform(utf8.decoder).join();
         prefs.setString("feed", json);
-        List<Map> data = jsonDecode(json);
+        List<Map<String, dynamic>> data =
+        jsonDecode(json).cast<Map<String, dynamic>>();
         listOfPosts = _generateFeed(data);
       } else {
         result =
-            'Error getting a random quote:\nHttp status ${response.statusCode}';
+            'Error getting a feed:\nHttp status ${response.statusCode}';
       }
     } catch (exception) {
       result =
-          'Failed invoking the getRandomQuote function. Exception: $exception';
+          'Failed invoking the getFeed function. Exception: $exception';
     }
+    print(result);
 
     setState(() {
       feedData = listOfPosts;
