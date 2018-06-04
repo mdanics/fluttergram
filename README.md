@@ -33,6 +33,7 @@ A working Instagram clone written in Flutter using Firebase / Firestore
 
 * [Flutter](https://flutter.io/)
 * [Firestore](https://github.com/flutter/plugins/tree/master/packages/cloud_firestore)
+* [Image Picker](https://github.com/flutter/plugins/tree/master/packages/image_picker)
 * [Google Sign In](https://github.com/flutter/plugins/tree/master/packages/google_sign_in)
 * [Firebase Auth](https://github.com/flutter/plugins/tree/master/packages/firebase_auth)
 * [UUID](https://github.com/Daegalus/dart-uuid)
@@ -101,8 +102,11 @@ Double check install instructions for both
 # What's Next?
  - [ ] Improve Caching of Profiles, Images, Etc.
  - [ ] Better post creation, add filters to your image
+ - [ ] Custom Camera Implementation
  - [ ] Animations (heart when liking image)
  - [ ] Firebase Security Rules
  - [ ] Delete Posts
  - [ ] Registration without Google SignIn 
+ - [ ] Direct Messaging 
+ - [ ] Stories
  - [ ] Clean up code
