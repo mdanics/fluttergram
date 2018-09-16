@@ -87,7 +87,7 @@ class _ProfilePage extends State<ProfilePage> {
     Firestore.instance
         .collection("insta_a_feed")
         .document(profileId)
-        .getCollection("items")
+        .collection("items")
         .document(currentUserId)
         .setData({
       "ownerId": profileId,
@@ -118,7 +118,7 @@ class _ProfilePage extends State<ProfilePage> {
     Firestore.instance
         .collection("insta_a_feed")
         .document(profileId)
-        .getCollection("items")
+        .collection("items")
         .document(currentUserId)
         .delete();
   }
@@ -295,7 +295,7 @@ class _ProfilePage extends State<ProfilePage> {
         stream: Firestore.instance
             .collection('insta_users')
             .document(profileId)
-            .snapshots,
+            .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
             return new Container(
