@@ -83,7 +83,7 @@ class _CommentScreenState extends State<CommentScreen> {
     QuerySnapshot data = await Firestore.instance
         .collection("insta_comments")
         .document(postId)
-        .getCollection("comments")
+        .collection("comments")
         .getDocuments();
     data.documents.forEach((DocumentSnapshot doc) {
       comments.add(new Comment.fromDocument(doc));
@@ -97,7 +97,7 @@ class _CommentScreenState extends State<CommentScreen> {
     Firestore.instance
         .collection("insta_comments")
         .document(postId)
-        .getCollection("comments")
+        .collection("comments")
         .add({
       "username": currentUserModel.username,
       "comment": comment,
@@ -110,7 +110,7 @@ class _CommentScreenState extends State<CommentScreen> {
     Firestore.instance
         .collection("insta_a_feed")
         .document(postOwner)
-        .getCollection("items")
+        .collection("items")
         .add({
       "username": currentUserModel.username,
       "userId": currentUserModel.id,

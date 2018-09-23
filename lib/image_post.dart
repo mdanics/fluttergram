@@ -112,9 +112,9 @@ class _ImagePost extends State<ImagePost> {
 
     if (liked) {
       color = Colors.pink;
-      icon = FontAwesomeIcons.heart;
+      icon = FontAwesomeIcons.solidHeart;
     } else {
-      icon = FontAwesomeIcons.heartO;
+      icon = FontAwesomeIcons.heart;
     }
 
     return new GestureDetector(
@@ -215,7 +215,7 @@ class _ImagePost extends State<ImagePost> {
             new Padding(padding: const EdgeInsets.only(right: 20.0)),
             new GestureDetector(
                 child: const Icon(
-                  FontAwesomeIcons.commentO,
+                  FontAwesomeIcons.comment,
                   size: 25.0,
                 ),
                 onTap: () {
@@ -298,7 +298,7 @@ class _ImagePost extends State<ImagePost> {
     Firestore.instance
         .collection("insta_a_feed")
         .document(ownerId)
-        .getCollection("items")
+        .collection("items")
         .document(postId)
         .setData({
       "username": currentUserModel.username,
@@ -315,7 +315,7 @@ class _ImagePost extends State<ImagePost> {
     Firestore.instance
         .collection("insta_a_feed")
         .document(ownerId)
-        .getCollection("items")
+        .collection("items")
         .document(postId)
         .delete();
   }

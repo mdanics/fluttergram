@@ -45,7 +45,7 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
     var snap = await Firestore.instance
         .collection('insta_a_feed')
         .document(currentUserModel.id)
-        .getCollection("items")
+        .collection("items")
         .orderBy("timestamp")
         .getDocuments();
 
