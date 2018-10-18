@@ -147,7 +147,10 @@ class _Uploader extends State<Uploader> {
     });
     compressImage();
     Future<String> upload = uploadImage(file).then((String data) {
-      postToFireStore(mediaUrl: data, description: descriptionController.text, location: locationController.text);
+      postToFireStore(
+          mediaUrl: data,
+          description: descriptionController.text,
+          location: locationController.text);
     }).then((_) {
       setState(() {
         file = null;
@@ -162,7 +165,11 @@ class PostForm extends StatelessWidget {
   final TextEditingController descriptionController;
   final TextEditingController locationController;
   final bool loading;
-  PostForm({this.imageFile, this.descriptionController, this.loading, this.locationController});
+  PostForm(
+      {this.imageFile,
+      this.descriptionController,
+      this.loading,
+      this.locationController});
 
   Widget build(BuildContext context) {
     return new Column(
@@ -203,7 +210,6 @@ class PostForm extends StatelessWidget {
           ],
         ),
         new Divider(),
-
         new ListTile(
           leading: new Icon(Icons.pin_drop),
           title: new Container(
@@ -224,9 +230,10 @@ class PostForm extends StatelessWidget {
 Future<String> uploadImage(var imageFile) async {
   var uuid = new Uuid().v1();
   StorageReference ref = FirebaseStorage.instance.ref().child("post_$uuid.jpg");
-  StorageUploadTask uploadTask = ref.put(imageFile);
-  Uri downloadUrl = (await uploadTask.future).downloadUrl;
-  return downloadUrl.toString();
+  StorageUploadTask uploadTask = ref.putFile(imageFile);
+
+  String downloadUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+  return downloadUrl;
 }
 
 void postToFireStore(

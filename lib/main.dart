@@ -16,6 +16,12 @@ final ref = Firestore.instance.collection('insta_users');
 
 User currentUserModel;
 
+
+Future<void> main() async {
+  await Firestore.instance.settings(timestampsInSnapshotsEnabled: true);
+  runApp(new Fluttergram());
+}
+
 Future<Null> _ensureLoggedIn(BuildContext context) async {
   GoogleSignInAccount user = googleSignIn.currentUser;
   if (user == null) {
@@ -85,7 +91,7 @@ tryCreateUserRecord(BuildContext context) async {
               )),
     );
 
-    if (userName != null || userName.length != 0){
+    if (userName != null || userName.length != 0) {
       ref.document(user.id).setData({
         "id": user.id,
         "username": userName,
@@ -265,4 +271,4 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-void main() => runApp(new Fluttergram());
+

@@ -4,11 +4,11 @@ description: A new Flutter application.
 dependencies:
   flutter:
     sdk: flutter
-  cloud_firestore: 0.8.0
+  cloud_firestore: ^0.8.2+1
   image_picker: 0.4.1
-  firebase_storage: 1.0.2
-  firebase_auth: 0.5.20
-  google_sign_in: 3.0.5
+  firebase_storage: 1.0.4
+  firebase_auth: 0.6.2+1
+  google_sign_in: ^3.2.1
   uuid: 1.0.3
   image: 2.0.4
   path_provider: 0.4.1
