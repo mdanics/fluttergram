@@ -109,6 +109,7 @@ Double check install instructions for both
 
 # What's Next?
  - [ ] Improve Caching of Profiles, Images, Etc.
+ - [ ] Notificaitons for likes, comments, follows, etc
  - [ ] Better post creation, add filters to your image
  - [ ] Custom Camera Implementation
  - [ ] Animations (heart when liking image)
