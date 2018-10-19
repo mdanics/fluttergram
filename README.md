@@ -71,7 +71,7 @@ $ cd fluttergram/
 * Create a new firebase project with `firebase init`
 * Copy this project's `functions/lib/index.js` to your firebase project's `functions/index.js`
 * Push the function `getFeed` with `firebase deploy --only functions`  In the output, you'll see the getFeed URL, copy that.
-* Replace the url in the `_getFeed` function in `upload_page.dart` with your cloud function url from the previous step.
+* Replace the url in the `_getFeed` function in `feed.dart` with your cloud function url from the previous step.
 
 4. Enable the Firebase Database
 * Go to the Firebase Console
