@@ -347,18 +347,9 @@ class ImagePostFromId extends StatelessWidget {
   }
 }
 
-void openProfile(BuildContext context, String userId) {
-  Navigator
-      .of(context)
-      .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
-    return new ProfilePage(userId: userId);
-  }));
-}
-
 void goToComments(
     {BuildContext context, String postId, String ownerId, String mediaUrl}) {
-  Navigator
-      .of(context)
+  Navigator.of(context)
       .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
     return new CommentScreen(
       postId: postId,

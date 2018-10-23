@@ -27,8 +27,7 @@ class _ProfilePage extends State<ProfilePage> {
   editProfile() {
     EditProfilePage editPage = new EditProfilePage();
 
-    Navigator
-        .of(context)
+    Navigator.of(context)
         .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
       return new Center(
         child: new Scaffold(
@@ -409,8 +408,7 @@ class ImageTile extends StatelessWidget {
   ImageTile(this.imagePost);
 
   clickedImage(BuildContext context) {
-    Navigator
-        .of(context)
+    Navigator.of(context)
         .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
       return new Center(
         child: new Scaffold(
@@ -470,4 +468,11 @@ class User {
       following: document['following'],
     );
   }
+}
+
+void openProfile(BuildContext context, String userId) {
+  Navigator.of(context)
+      .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
+    return new ProfilePage(userId: userId);
+  }));
 }
