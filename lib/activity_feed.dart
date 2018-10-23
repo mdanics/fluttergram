@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'image_post.dart'; //needed to open image when clicked
+import 'profile_page.dart'; // to open the profile page when username clicked
 import 'main.dart'; //needed for currentuser id
 
 class ActivityFeedPage extends StatefulWidget {
@@ -115,11 +116,11 @@ class ActivityFeedItem extends StatelessWidget {
     }
 
     if (type == "like") {
-      actionText = "$username liked your post.";
+      actionText = " liked your post.";
     } else if (type == "follow") {
-      actionText = "$username starting following you.";
+      actionText = " starting following you.";
     } else if (type == "comment") {
-      actionText = "$username commented: $commentData";
+      actionText = " commented: $commentData";
     } else {
       actionText = "Error - invalid activityFeed type: $type";
     }
@@ -129,6 +130,7 @@ class ActivityFeedItem extends StatelessWidget {
   Widget build(BuildContext context) {
     configureItem(context);
     return new Row(
+      mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         new Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 15.0),
@@ -137,8 +139,31 @@ class ActivityFeedItem extends StatelessWidget {
             backgroundImage: new NetworkImage(userProfileImg),
           ),
         ),
-        new Text(actionText),
-        new Expanded(
+        Expanded(
+          child: new Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              GestureDetector(
+                child: Text(
+                  username,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  openProfile(context, userId);
+                },
+              ),
+              Flexible(
+                child: Container(
+                  child: Text(
+                    actionText,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        new Container(
             child: new Align(
                 child: new Padding(
                   child: mediaPreview,
@@ -152,8 +177,7 @@ class ActivityFeedItem extends StatelessWidget {
 
 openImage(BuildContext context, String imageId) {
   print("the image id is $imageId");
-  Navigator
-      .of(context)
+  Navigator.of(context)
       .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
     return new Center(
       child: new Scaffold(
