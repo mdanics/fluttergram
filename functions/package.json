@@ -2,7 +2,7 @@
   "name": "functions",
   "scripts": {
     "lint": "tslint --project tsconfig.json",
-    "build": "tsc",
+    "build": "tsc --skipLibCheck ",
     "serve": "npm run build && firebase serve --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
@@ -11,8 +11,8 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "firebase-admin": "~5.12.0",
-    "firebase-functions": "^1.0.1"
+    "firebase-admin": "^6.1.0",
+    "firebase-functions": "^2.1.0"
   },
   "devDependencies": {
     "tslint": "^5.8.0",

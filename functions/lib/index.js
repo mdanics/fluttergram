@@ -10,52 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const notificationHandlerModule = require('./notificationHandler');
+const getFeedModule = require('./getFeed');
 admin.initializeApp();
+exports.notificationHandler = functions.firestore.document("/insta_a_feed/{userId}/items/{activityFeedItem}")
+    .onCreate((snapshot, context) => __awaiter(this, void 0, void 0, function* () {
+    notificationHandlerModule.notificationHandler(snapshot, context);
+}));
 exports.getFeed = functions.https.onRequest((req, res) => {
-    const uid = String(req.query.uid);
-    function compileFeedPost() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const following = yield getFollowing(uid, res);
-            let listOfPosts = yield getAllPosts(following, res);
-            listOfPosts = [].concat.apply([], listOfPosts); // flattens list
-            res.send(listOfPosts);
-        });
-    }
-    compileFeedPost().then().catch();
+    exports.getFeed(req, res);
 });
-function getAllPosts(following, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let listOfPosts = [];
-        for (let user in following) {
-            listOfPosts.push(yield getUserPosts(following[user], res));
-        }
-        return listOfPosts;
-    });
-}
-function getUserPosts(userId, res) {
-    const posts = admin.firestore().collection("insta_posts").where("ownerId", "==", userId).orderBy("timestamp");
-    return posts.get()
-        .then(function (querySnapshot) {
-        let listOfPosts = [];
-        querySnapshot.forEach(function (doc) {
-            listOfPosts.push(doc.data());
-        });
-        return listOfPosts;
-    });
-}
-function getFollowing(uid, res) {
-    const doc = admin.firestore().doc(`insta_users/${uid}`);
-    return doc.get().then(snapshot => {
-        const followings = snapshot.data().following;
-        let following_list = [];
-        for (const following in followings) {
-            if (followings[following] === true) {
-                following_list.push(following);
-            }
-        }
-        return following_list;
-    }).catch(error => {
-        res.status(500).send(error);
-    });
-}
 //# sourceMappingURL=index.js.map

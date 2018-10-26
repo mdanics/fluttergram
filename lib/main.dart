@@ -9,16 +9,19 @@ import 'profile_page.dart';
 import 'search_page.dart';
 import 'activity_feed.dart';
 import 'create_account.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:io' show Platform;
 
 final auth = FirebaseAuth.instance;
 final googleSignIn = new GoogleSignIn();
 final ref = Firestore.instance.collection('insta_users');
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
 User currentUserModel;
 
-
 Future<void> main() async {
   await Firestore.instance.settings(timestampsInSnapshotsEnabled: true);
+
   runApp(new Fluttergram());
 }
 
@@ -38,6 +41,31 @@ Future<Null> _ensureLoggedIn(BuildContext context) async {
         await googleSignIn.currentUser.authentication;
     await auth.signInWithGoogle(
         idToken: credentials.idToken, accessToken: credentials.accessToken);
+  }
+}
+
+Future<Null> _setUpNotifications() async {
+  if (Platform.isAndroid) {
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('on message $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('on resume $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('on launch $message');
+      },
+    );
+
+    _firebaseMessaging.getToken().then((token) {
+      print("Firebase Messaging Token: " + token);
+
+      Firestore.instance
+          .collection("insta_users")
+          .document(currentUserModel.id)
+          .updateData({"androidNotificationToken": token});
+    });
   }
 }
 
@@ -144,6 +172,7 @@ PageController pageController;
 class _HomePageState extends State<HomePage> {
   int _page = 0;
   bool triedSilentLogin = false;
+  bool setupNotifications = false;
 
   Scaffold buildLoginPage() {
     return new Scaffold(
@@ -179,6 +208,11 @@ class _HomePageState extends State<HomePage> {
     if (triedSilentLogin == false) {
       silentLogin(context);
     }
+
+    if (setupNotifications == false) {
+      setUpNotifications();
+    }
+
     return googleSignIn.currentUser == null
         ? buildLoginPage()
         : new Scaffold(
@@ -242,6 +276,13 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void setUpNotifications() {
+    _setUpNotifications();
+    setState(() {
+      setupNotifications = true;
+    });
+  }
+
   void silentLogin(BuildContext context) async {
     await _silentLogin(context);
     setState(() {});
@@ -270,5 +311,3 @@ class _HomePageState extends State<HomePage> {
     pageController.dispose();
   }
 }
-
-
