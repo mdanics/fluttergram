@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
 
-export const getFeed = function(req, res) {
+export const getFeedModule = function(req, res) {
     const uid = String(req.query.uid);
     
     async function compileFeedPost() {
