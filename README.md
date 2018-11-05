@@ -108,8 +108,8 @@ Double check install instructions for both
      -  https://pub.dartlang.org/packages/cloud_firestore
 
 # What's Next?
+ - [x] Notificaitons for likes, comments, follows, etc
  - [ ] Improve Caching of Profiles, Images, Etc.
- - [ ] Notificaitons for likes, comments, follows, etc
  - [ ] Better post creation, add filters to your image
  - [ ] Custom Camera Implementation
  - [ ] Animations (heart when liking image)
