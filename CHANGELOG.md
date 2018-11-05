@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2018-11-04
+### Changes
+- Changed `BottomNavigationBar` to `CupertinoTabBar` to remove empty space underneath icons
+- Added highlighting for the active page on the `CupertinoTabBar` 
+
+
+
 ## [1.2.0] - 2018-10-26
 ### Changes
 - Added push notifications with Cloud Functions (Android)

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'feed.dart';
 import 'upload_page.dart';
 import 'dart:async';
@@ -239,32 +240,32 @@ class _HomePageState extends State<HomePage> {
               physics: new NeverScrollableScrollPhysics(),
               onPageChanged: onPageChanged,
             ),
-            bottomNavigationBar: new BottomNavigationBar(
+            bottomNavigationBar: new CupertinoTabBar(
+              activeColor: Colors.orange,
               items: <BottomNavigationBarItem>[
                 new BottomNavigationBarItem(
-                    icon: new Icon(Icons.home, color: Colors.grey),
-                    title: new Container(),
+                    icon: new Icon(Icons.home, color: (_page == 0) ? Colors.black : Colors.grey),
+                    title: new Container(height: 0.0),
                     backgroundColor: Colors.white),
                 new BottomNavigationBarItem(
-                    icon: new Icon(Icons.search, color: Colors.grey),
-                    title: new Container(),
+                    icon: new Icon(Icons.search, color: (_page == 1) ? Colors.black : Colors.grey),
+                    title: new Container(height: 0.0),
                     backgroundColor: Colors.white),
                 new BottomNavigationBarItem(
-                    icon: new Icon(Icons.add_circle, color: Colors.grey),
-                    title: new Container(),
+                    icon: new Icon(Icons.add_circle, color: (_page == 2) ? Colors.black : Colors.grey),
+                    title: new Container(height: 0.0),
                     backgroundColor: Colors.white),
                 new BottomNavigationBarItem(
-                    icon: new Icon(Icons.star, color: Colors.grey),
-                    title: new Container(),
+                    icon: new Icon(Icons.star, color: (_page == 3) ? Colors.black : Colors.grey),
+                    title: new Container(height: 0.0),
                     backgroundColor: Colors.white),
                 new BottomNavigationBarItem(
-                    icon: new Icon(Icons.person_outline, color: Colors.grey),
-                    title: new Container(),
+                    icon: new Icon(Icons.person, color: (_page == 4) ? Colors.black : Colors.grey),
+                    title: new Container(height: 0.0),
                     backgroundColor: Colors.white),
               ],
               onTap: navigationTapped,
               currentIndex: _page,
-              type: BottomNavigationBarType.fixed,
             ),
           );
   }
