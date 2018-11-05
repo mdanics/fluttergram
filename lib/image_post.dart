@@ -146,7 +146,7 @@ class _ImagePost extends State<ImagePost> {
                   child: new Opacity(
                       opacity: 0.85,
                       child: new Icon(
-                        FontAwesomeIcons.heart,
+                        FontAwesomeIcons.solidHeart,
                         size: 80.0,
                         color: Colors.white,
                       )),
