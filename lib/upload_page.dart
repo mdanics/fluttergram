@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:image/image.dart' as Im;
 import 'package:path_provider/path_provider.dart';
 import 'dart:math' as Math;
+import 'location.dart';
 
 class Uploader extends StatefulWidget {
   _Uploader createState() => new _Uploader();
@@ -16,6 +17,13 @@ class Uploader extends StatefulWidget {
 
 class _Uploader extends State<Uploader> {
   File file;
+  String featureName;
+  String subLocality;
+  String locality;
+  String subAdminArea;
+  String adminArea;
+  String country;
+  Map<String, double> currentLocation = new Map();
   TextEditingController descriptionController = new TextEditingController();
   TextEditingController locationController = new TextEditingController();
 
@@ -30,8 +38,23 @@ class _Uploader extends State<Uploader> {
         promted = true;
       });
     }
-
+    currentLocation['latitude'] = 0.0;
+    currentLocation['longitude'] = 0.0;
+    initPlatformState();
     super.initState();
+  }
+
+  //method to get Location and save into variables
+  initPlatformState() async {
+    var first = await getUserLocation();
+    setState(() {
+      featureName = first.featureName;
+      subLocality = first.subLocality;
+      locality = first.locality;
+      subAdminArea = first.subAdminArea;
+      adminArea = first.adminArea;
+      country = first.countryName;
+    });
   }
 
   Widget build(BuildContext context) {
@@ -69,8 +92,47 @@ class _Uploader extends State<Uploader> {
                   locationController: locationController,
                   loading: uploading,
                 ),
+                new Divider(),
+                new SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: <Widget>[
+                      buildLocationButton(featureName),
+                      buildLocationButton(subLocality),
+                      buildLocationButton(locality),
+                      buildLocationButton(subAdminArea),
+                      buildLocationButton(adminArea),
+                      buildLocationButton(country),
+                    ],
+                  ),
+                ),
               ],
             ));
+  }
+
+  //method to build buttons with location.
+  buildLocationButton(String locationName) {
+    return InkWell(
+      onTap: () {
+        locationController.text = locationName;
+      },
+      child: new Container(
+        //width: 100.0,
+        height: 40.0,
+        decoration: new BoxDecoration(
+          color: Colors.grey[350],
+          border: new Border.all(color: Colors.white, width: 2.0),
+          borderRadius: new BorderRadius.circular(10.0),
+        ),
+        padding: EdgeInsets.only(left: 5.0, right: 5.0),
+        child: new Center(
+          child: new Text(
+            locationName,
+            style: new TextStyle(color: Colors.black),
+          ),
+        ),
+      ),
+    );
   }
 
   _selectImage() async {
