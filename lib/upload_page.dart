@@ -17,12 +17,14 @@ class Uploader extends StatefulWidget {
 
 class _Uploader extends State<Uploader> {
   File file;
+  //Strings required to save address
   String featureName;
   String subLocality;
   String locality;
   String subAdminArea;
   String adminArea;
   String country;
+
   Map<String, double> currentLocation = new Map();
   TextEditingController descriptionController = new TextEditingController();
   TextEditingController locationController = new TextEditingController();
@@ -38,9 +40,10 @@ class _Uploader extends State<Uploader> {
         promted = true;
       });
     }
+    //variables with location assigned as 0.0
     currentLocation['latitude'] = 0.0;
     currentLocation['longitude'] = 0.0;
-    initPlatformState();
+    initPlatformState();//method to call location
     super.initState();
   }
 
@@ -92,7 +95,7 @@ class _Uploader extends State<Uploader> {
                   locationController: locationController,
                   loading: uploading,
                 ),
-                new Divider(),
+                new Divider(),//scroll view where we will show location to users
                 new SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
