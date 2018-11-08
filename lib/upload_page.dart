@@ -9,6 +9,8 @@ import 'dart:io';
 import 'package:image/image.dart' as Im;
 import 'package:path_provider/path_provider.dart';
 import 'dart:math' as Math;
+import 'location.dart';
+import 'package:geocoder/geocoder.dart';
 
 class Uploader extends StatefulWidget {
   _Uploader createState() => new _Uploader();
@@ -16,6 +18,10 @@ class Uploader extends StatefulWidget {
 
 class _Uploader extends State<Uploader> {
   File file;
+  //Strings required to save address
+  Address address;
+
+  Map<String, double> currentLocation = new Map();
   TextEditingController descriptionController = new TextEditingController();
   TextEditingController locationController = new TextEditingController();
 
@@ -30,8 +36,19 @@ class _Uploader extends State<Uploader> {
         promted = true;
       });
     }
-
+    //variables with location assigned as 0.0
+    currentLocation['latitude'] = 0.0;
+    currentLocation['longitude'] = 0.0;
+    initPlatformState(); //method to call location
     super.initState();
+  }
+
+  //method to get Location and save into variables
+  initPlatformState() async {
+    Address first = await getUserLocation();
+    setState(() {
+      address = first;
+    });
   }
 
   Widget build(BuildContext context) {
@@ -69,8 +86,57 @@ class _Uploader extends State<Uploader> {
                   locationController: locationController,
                   loading: uploading,
                 ),
+                new Divider(), //scroll view where we will show location to users
+                (address == null)
+                    ? Container()
+                    : new SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        padding: EdgeInsets.only(right: 5.0, left: 5.0),
+                        child: Row(
+                          children: <Widget>[
+                            buildLocationButton(address.featureName),
+                            buildLocationButton(address.subLocality),
+                            buildLocationButton(address.locality),
+                            buildLocationButton(address.subAdminArea),
+                            buildLocationButton(address.adminArea),
+                            buildLocationButton(address.countryName),
+                          ],
+                        ),
+                      ),
+                (address == null) ? Container() : Divider(),
               ],
             ));
+  }
+
+  //method to build buttons with location.
+  buildLocationButton(String locationName) {
+    if (locationName != null ?? locationName.isNotEmpty) {
+      return InkWell(
+        onTap: () {
+          locationController.text = locationName;
+        },
+        child: Center(
+          child: new Container(
+            //width: 100.0,
+            height: 30.0,
+            padding: EdgeInsets.only(left: 8.0, right: 8.0),
+            margin: EdgeInsets.only(right: 3.0, left: 3.0),
+            decoration: new BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: new BorderRadius.circular(5.0),
+            ),
+            child: new Center(
+              child: new Text(
+                locationName,
+                style: new TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 
   _selectImage() async {
@@ -115,7 +181,7 @@ class _Uploader extends State<Uploader> {
   }
 
   void compressImage() async {
-    print('startin');
+    print('starting compression');
     final tempDir = await getTemporaryDirectory();
     final path = tempDir.path;
     int rand = new Math.Random().nextInt(10000);
@@ -146,7 +212,7 @@ class _Uploader extends State<Uploader> {
       uploading = true;
     });
     compressImage();
-    Future<String> upload = uploadImage(file).then((String data) {
+    uploadImage(file).then((String data) {
       postToFireStore(
           mediaUrl: data,
           description: descriptionController.text,
