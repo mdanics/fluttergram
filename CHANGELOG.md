@@ -1,11 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2018-11-07
+### Changes
+- New - Location suggestions on upload page 
+
+
 ## [1.2.1] - 2018-11-04
 ### Changes
 - Changed `BottomNavigationBar` to `CupertinoTabBar` to remove empty space underneath icons
 - Added highlighting for the active page on the `CupertinoTabBar` 
-
 
 
 ## [1.2.0] - 2018-10-26
