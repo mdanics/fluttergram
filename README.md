@@ -73,6 +73,11 @@ $ cd fluttergram/
 * Push the function `getFeed` with `firebase deploy --only functions`  In the output, you'll see the getFeed URL, copy that.
 * Replace the url in the `_getFeed` function in `feed.dart` with your cloud function url from the previous step.
 
+
+_**If this does not work**  and you get the error `Error: Error parsing triggers: Cannot find module './notificationHandler'` Try following [these steps](https://github.com/mdanics/fluttergram/issues/25#issuecomment-434031430). If you are still unable to get it to work please open a new issue._
+
+
+
 4. Enable the Firebase Database
 * Go to the Firebase Console
 * Click "Database" in the left-hand menu
