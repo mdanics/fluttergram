@@ -76,6 +76,8 @@ $ cd fluttergram/
 
 _**If this does not work**  and you get the error `Error: Error parsing triggers: Cannot find module './notificationHandler'` Try following [these steps](https://github.com/mdanics/fluttergram/issues/25#issuecomment-434031430). If you are still unable to get it to work please open a new issue._
 
+_**If you are getting no errors, but an empty feed** You must follow users with posts as the getFeed function only returns posts from people you follow._
+
 
 
 4. Enable the Firebase Database
