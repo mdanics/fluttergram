@@ -8,7 +8,7 @@ class SearchPage extends StatefulWidget {
   _SearchPage createState() => new _SearchPage();
 }
 
-class _SearchPage extends State<SearchPage> {
+class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin<SearchPage>{
   Future<QuerySnapshot> userDocs;
 
   buildSearchField() {
@@ -49,6 +49,8 @@ class _SearchPage extends State<SearchPage> {
   }
 
   Widget build(BuildContext context) {
+    super.build(context); // reloads state when opened again
+
     return new Scaffold(
       appBar: buildSearchField(),
       body: userDocs == null
@@ -66,6 +68,10 @@ class _SearchPage extends State<SearchPage> {
               }),
     );
   }
+
+  // ensures state is kept when switching pages
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class UserSearchItem extends StatelessWidget {
