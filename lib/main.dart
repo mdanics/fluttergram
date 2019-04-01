@@ -58,15 +58,16 @@ Future<Null> _setUpNotifications() async {
         print('on launch $message');
       },
     );
+    if (currentUserModel != null) {
+      _firebaseMessaging.getToken().then((token) {
+        print("Firebase Messaging Token: " + token);
 
-    _firebaseMessaging.getToken().then((token) {
-      print("Firebase Messaging Token: " + token);
-
-      Firestore.instance
-          .collection("insta_users")
-          .document(currentUserModel.id)
-          .updateData({"androidNotificationToken": token});
-    });
+        Firestore.instance
+            .collection("insta_users")
+            .document(currentUserModel.id)
+            .updateData({"androidNotificationToken": token});
+      });
+    }
   }
 }
 
