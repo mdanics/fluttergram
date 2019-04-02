@@ -138,8 +138,8 @@ class _ImagePost extends State<ImagePost> {
           new CachedNetworkImage(
             imageUrl: mediaUrl,
             fit: BoxFit.fitWidth,
-            placeholder: loadingPlaceHolder,
-            errorWidget: new Icon(Icons.error),
+            placeholder: (context, url) => loadingPlaceHolder,
+            errorWidget: (context, url, error) => Icon(Icons.error),
           ),
           showHeart
               ? new Positioned(

@@ -4,30 +4,30 @@ description: A new Flutter application.
 dependencies:
   flutter:
     sdk: flutter
-  cloud_firestore: ^0.8.2+1
-  image_picker: 0.4.1
-  firebase_storage: 1.0.4
-  firebase_auth: 0.6.2+1
-  google_sign_in: ^3.2.1
-  uuid: 1.0.3
-  image: 2.0.4
-  path_provider: 0.4.1
-  font_awesome_flutter: 8.0.1
-  async: "^2.0.4"
-  http: "^0.12.0"
-  shared_preferences: "^0.4.1"
-  cached_network_image: "^0.5.0"
-  firebase_messaging: ^2.0.2
-  location: ^1.4.1
-  geocoder: ^0.1.1
+  cloud_firestore: ^0.9.7+2
+  image_picker: ^0.5.0+9
+  firebase_storage: ^2.1.0+1
+  firebase_auth: ^0.8.3
+  google_sign_in: ^4.0.1+1
+  uuid: ^2.0.0
+  image: ^2.0.7
+  path_provider: ^0.5.0+1
+  font_awesome_flutter: ^8.4.0
+  async: ^2.1.0
+  http: ^0.12.0+1
+  shared_preferences: ^0.5.1+2
+  cached_network_image: ^0.7.0
+  firebase_messaging: ^4.0.0+1
+  location: ^2.3.3
+  geocoder: ^0.1.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.0
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
+#dev_dependencies:
+#  flutter_test:
+#    sdk: flutter
 
 
 # For information on the generic Dart part of this file, see the
@@ -41,11 +41,11 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   fonts:
-    - family: Billabong
-      fonts:
-        - asset: assets/fonts/Billabong.ttf
+  - family: Billabong
+    fonts:
+    - asset: assets/fonts/Billabong.ttf
   assets:
-    - assets/images/google_signin_button.png
+  - assets/images/google_signin_button.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg

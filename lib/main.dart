@@ -38,11 +38,45 @@ Future<Null> _ensureLoggedIn(BuildContext context) async {
   }
 
   if (await auth.currentUser() == null) {
-    GoogleSignInAuthentication credentials =
-        await googleSignIn.currentUser.authentication;
-    await auth.signInWithGoogle(
-        idToken: credentials.idToken, accessToken: credentials.accessToken);
+
+    final GoogleSignInAccount googleUser = await googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser
+        .authentication;
+
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    await auth.signInWithCredential(credential);
   }
+}
+
+Future<Null> _silentLogin(BuildContext context) async {
+  GoogleSignInAccount user = googleSignIn.currentUser;
+
+  if (user == null) {
+    user = await googleSignIn.signInSilently().then((_) {
+      tryCreateUserRecord(context);
+    });
+  }
+
+  if (await auth.currentUser() == null && user != null) {
+    final GoogleSignInAccount googleUser = await googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser
+        .authentication;
+
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    await auth.signInWithCredential(credential);
+  }
+
+
 }
 
 Future<Null> _setUpNotifications() async {
@@ -67,23 +101,6 @@ Future<Null> _setUpNotifications() async {
           .document(currentUserModel.id)
           .updateData({"androidNotificationToken": token});
     });
-  }
-}
-
-Future<Null> _silentLogin(BuildContext context) async {
-  GoogleSignInAccount user = googleSignIn.currentUser;
-
-  if (user == null) {
-    user = await googleSignIn.signInSilently().then((_) {
-      tryCreateUserRecord(context);
-    });
-  }
-
-  if (await auth.currentUser() == null && user != null) {
-    GoogleSignInAuthentication credentials =
-        await googleSignIn.currentUser.authentication;
-    await auth.signInWithGoogle(
-        idToken: credentials.idToken, accessToken: credentials.accessToken);
   }
 }
 
