@@ -11,7 +11,7 @@ class Feed extends StatefulWidget {
   _Feed createState() => new _Feed();
 }
 
-class _Feed extends State<Feed> {
+class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
   List<ImagePost> feedData;
 
   @override
@@ -34,6 +34,8 @@ class _Feed extends State<Feed> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // reloads state when opened again
+
     return new Scaffold(
       appBar: new AppBar(
         title: const Text('Fluttergram',
@@ -118,4 +120,8 @@ class _Feed extends State<Feed> {
 
     return listOfPosts;
   }
+
+  // ensures state is kept when switching pages
+  @override
+  bool get wantKeepAlive => true;
 }

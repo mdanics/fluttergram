@@ -13,7 +13,7 @@ class ProfilePage extends StatefulWidget {
   _ProfilePage createState() => new _ProfilePage(this.userId);
 }
 
-class _ProfilePage extends State<ProfilePage> {
+class _ProfilePage extends State<ProfilePage> with AutomaticKeepAliveClientMixin<ProfilePage> {
   final String profileId;
   String currentUserId = googleSignIn.currentUser.id;
   String view = "grid"; // default view
@@ -124,6 +124,8 @@ class _ProfilePage extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // reloads state when opened again
+
     Column buildStatColumn(String label, int number) {
       return new Column(
         mainAxisSize: MainAxisSize.min,
@@ -400,6 +402,10 @@ class _ProfilePage extends State<ProfilePage> {
 
     return count;
   }
+
+  // ensures state is kept when switching pages
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class ImageTile extends StatelessWidget {

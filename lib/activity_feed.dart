@@ -9,9 +9,11 @@ class ActivityFeedPage extends StatefulWidget {
   _ActivityFeedPageState createState() => new _ActivityFeedPageState();
 }
 
-class _ActivityFeedPageState extends State<ActivityFeedPage> {
+class _ActivityFeedPageState extends State<ActivityFeedPage> with AutomaticKeepAliveClientMixin<ActivityFeedPage> {
   @override
   Widget build(BuildContext context) {
+    super.build(context); // reloads state when opened again
+
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(
@@ -55,6 +57,11 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> {
     }
     return items;
   }
+
+  // ensures state is kept when switching pages
+  @override
+  bool get wantKeepAlive => true;
+
 }
 
 class ActivityFeedItem extends StatelessWidget {
