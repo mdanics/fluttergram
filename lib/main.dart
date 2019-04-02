@@ -18,11 +18,11 @@ final googleSignIn = new GoogleSignIn();
 final ref = Firestore.instance.collection('insta_users');
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
+
 User currentUserModel;
 
 Future<void> main() async {
   await Firestore.instance.settings(timestampsInSnapshotsEnabled: true);
-
   runApp(new Fluttergram());
 }
 
@@ -129,7 +129,7 @@ tryCreateUserRecord(BuildContext context) async {
         "displayName": user.displayName,
         "bio": "",
         "followers": {},
-        "following": {},
+        "following": {user.id: true}, // add current user so they can see their own posts in feed,
       });
     }
   }

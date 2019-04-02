@@ -13,7 +13,8 @@ class ProfilePage extends StatefulWidget {
   _ProfilePage createState() => new _ProfilePage(this.userId);
 }
 
-class _ProfilePage extends State<ProfilePage> with AutomaticKeepAliveClientMixin<ProfilePage> {
+class _ProfilePage extends State<ProfilePage>
+    with AutomaticKeepAliveClientMixin<ProfilePage> {
   final String profileId;
   String currentUserId = googleSignIn.currentUser.id;
   String view = "grid"; // default view
@@ -397,6 +398,9 @@ class _ProfilePage extends State<ProfilePage> with AutomaticKeepAliveClientMixin
         count += 1;
       }
     }
+
+    // hacky fix to enable a user's post to appear in their feed without skewing the follower/following count
+    if (followings[profileId] != null && followings[profileId]) count -= 1;
 
     followings.forEach(countValues);
 
