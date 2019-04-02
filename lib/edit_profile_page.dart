@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'main.dart'; //for currentuser
+import 'main.dart'; //for currentuser & google signin instance
 import 'profile_page.dart'; //for the user class
 
 class EditProfilePage extends StatelessWidget {
@@ -104,9 +104,25 @@ class EditProfilePage extends StatelessWidget {
                     buildTextField(name: "Bio", controller: bioController),
                   ],
                 ),
+              ),
+              new Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: new MaterialButton(
+                    onPressed: () => {_logout(context)},
+                    child: new Text("Logout")
+
+                )
               )
             ],
           );
         });
+  }
+
+  void _logout(BuildContext context) async {
+    print("logout");
+    await auth.signOut();
+    await googleSignIn.signOut();
+
+    Navigator.pop(context);
   }
 }
