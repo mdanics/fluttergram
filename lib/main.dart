@@ -244,23 +244,28 @@ class _HomePageState extends State<HomePage> {
               activeColor: Colors.orange,
               items: <BottomNavigationBarItem>[
                 new BottomNavigationBarItem(
-                    icon: new Icon(Icons.home, color: (_page == 0) ? Colors.black : Colors.grey),
+                    icon: new Icon(Icons.home,
+                        color: (_page == 0) ? Colors.black : Colors.grey),
                     title: new Container(height: 0.0),
                     backgroundColor: Colors.white),
                 new BottomNavigationBarItem(
-                    icon: new Icon(Icons.search, color: (_page == 1) ? Colors.black : Colors.grey),
+                    icon: new Icon(Icons.search,
+                        color: (_page == 1) ? Colors.black : Colors.grey),
                     title: new Container(height: 0.0),
                     backgroundColor: Colors.white),
                 new BottomNavigationBarItem(
-                    icon: new Icon(Icons.add_circle, color: (_page == 2) ? Colors.black : Colors.grey),
+                    icon: new Icon(Icons.add_circle,
+                        color: (_page == 2) ? Colors.black : Colors.grey),
                     title: new Container(height: 0.0),
                     backgroundColor: Colors.white),
                 new BottomNavigationBarItem(
-                    icon: new Icon(Icons.star, color: (_page == 3) ? Colors.black : Colors.grey),
+                    icon: new Icon(Icons.star,
+                        color: (_page == 3) ? Colors.black : Colors.grey),
                     title: new Container(height: 0.0),
                     backgroundColor: Colors.white),
                 new BottomNavigationBarItem(
-                    icon: new Icon(Icons.person, color: (_page == 4) ? Colors.black : Colors.grey),
+                    icon: new Icon(Icons.person,
+                        color: (_page == 4) ? Colors.black : Colors.grey),
                     title: new Container(height: 0.0),
                     backgroundColor: Colors.white),
               ],
