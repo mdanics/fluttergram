@@ -12,6 +12,7 @@ import 'activity_feed.dart';
 import 'create_account.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:io' show Platform;
+import 'dart:math';
 
 final auth = FirebaseAuth.instance;
 final googleSignIn = new GoogleSignIn();
@@ -96,29 +97,7 @@ tryCreateUserRecord(BuildContext context) async {
   if (userRecord.data == null) {
     // no user record exists, time to create
 
-    String userName = await Navigator.push(
-      context,
-      // We'll create the SelectionScreen in the next step!
-      new MaterialPageRoute(
-          builder: (context) => new Center(
-                child: new Scaffold(
-                    appBar: new AppBar(
-                      leading: new Container(),
-                      title: new Text('Fill out missing data',
-                          style: new TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold)),
-                      backgroundColor: Colors.white,
-                    ),
-                    body: new ListView(
-                      children: <Widget>[
-                        new Container(
-                          child: new CreateAccount(),
-                        ),
-                      ],
-                    )),
-              )),
-    );
+    String userName = user.displayName.toString().replaceAll(RegExp(r"\s+\b|\b\s"), "").toLowerCase().trim() + Random().nextInt(1000000).toString();
 
     if (userName != null || userName.length != 0) {
       ref.document(user.id).setData({
