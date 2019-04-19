@@ -22,7 +22,10 @@ final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 User currentUserModel;
 
 Future<void> main() async {
-  await Firestore.instance.settings(timestampsInSnapshotsEnabled: true);
+  Firestore.instance.settings(timestampsInSnapshotsEnabled: true).then((_) {
+    print('[Main] Firestore timestamps in snapshots set');},
+    onError: (_) => print('[Main] Error setting timestamps in snapshots')
+  );
   runApp(new Fluttergram());
 }
 
