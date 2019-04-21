@@ -153,7 +153,7 @@ class _Uploader extends State<Uploader> {
                 onPressed: () async {
                   Navigator.pop(context);
                   File imageFile =
-                      await ImagePicker.pickImage(source: ImageSource.camera);
+                      await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 1920, maxHeight: 1350);
                   setState(() {
                     file = imageFile;
                   });
