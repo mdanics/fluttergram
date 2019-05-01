@@ -7,12 +7,11 @@ import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
 
 getUserLocation() async {
-  Map<String, double> currentLocation = new Map();
-  Map<String, double> myLocation;
+  LocationData currentLocation;
   String error;
   Location location = new Location();
   try {
-    myLocation = await location.getLocation();
+    currentLocation = await location.getLocation();
   } on PlatformException catch (e) {
     if (e.code == 'PERMISSION_DENIED') {
       error = 'please grant permission';
@@ -22,11 +21,10 @@ getUserLocation() async {
       error = 'permission denied- please enable it from app settings';
       print(error);
     }
-    myLocation = null;
+    currentLocation = null;
   }
-  currentLocation = myLocation;
   final coordinates = new Coordinates(
-      currentLocation['latitude'], currentLocation['longitude']);
+      currentLocation.latitude, currentLocation.longitude);
   var addresses =
       await Geocoder.local.findAddressesFromCoordinates(coordinates);
   var first = addresses.first;
