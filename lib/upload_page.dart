@@ -26,16 +26,9 @@ class _Uploader extends State<Uploader> {
   TextEditingController locationController = new TextEditingController();
 
   bool uploading = false;
-  bool promted = false;
 
   @override
   initState() {
-    if (file == null && promted == false && pageController.page == 2) {
-      _selectImage();
-      setState(() {
-        promted = true;
-      });
-    }
     //variables with location assigned as 0.0
     currentLocation['latitude'] = 0.0;
     currentLocation['longitude'] = 0.0;
@@ -54,7 +47,7 @@ class _Uploader extends State<Uploader> {
   Widget build(BuildContext context) {
     return file == null
         ? new IconButton(
-            icon: new Icon(Icons.file_upload), onPressed: _selectImage)
+            icon: new Icon(Icons.file_upload), onPressed: () => {_selectImage(context)})
         : new Scaffold(
             resizeToAvoidBottomPadding: false,
             appBar: new AppBar(
@@ -139,9 +132,9 @@ class _Uploader extends State<Uploader> {
     }
   }
 
-  _selectImage() async {
+  _selectImage(BuildContext parentContext) async {
     return showDialog<Null>(
-      context: context,
+      context: parentContext,
       barrierDismissible: false, // user must tap button!
 
       builder: (BuildContext context) {
