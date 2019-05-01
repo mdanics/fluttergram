@@ -132,6 +132,7 @@ tryCreateUserRecord(BuildContext context) async {
         "following": {user.id: true}, // add current user so they can see their own posts in feed,
       });
     }
+    userRecord = await ref.document(user.id).get();
   }
 
   currentUserModel = new User.fromDocument(userRecord);
@@ -291,7 +292,9 @@ class _HomePageState extends State<HomePage> {
 
   void silentLogin(BuildContext context) async {
     await _silentLogin(context);
-    setState(() {});
+    setState(() {
+      triedSilentLogin = true;
+    });
   }
 
   void navigationTapped(int page) {
