@@ -47,7 +47,8 @@ class _Uploader extends State<Uploader> {
   Widget build(BuildContext context) {
     return file == null
         ? new IconButton(
-            icon: new Icon(Icons.file_upload), onPressed: () => {_selectImage(context)})
+            icon: new Icon(Icons.file_upload),
+            onPressed: () => {_selectImage(context)})
         : new Scaffold(
             resizeToAvoidBottomPadding: false,
             appBar: new AppBar(
