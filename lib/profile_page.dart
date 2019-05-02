@@ -4,6 +4,7 @@ import 'main.dart';
 import 'image_post.dart';
 import 'dart:async';
 import 'edit_profile_page.dart';
+import 'models/user.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({this.userId});
@@ -443,40 +444,6 @@ class ImageTile extends StatelessWidget {
     return new GestureDetector(
         onTap: () => clickedImage(context),
         child: new Image.network(imagePost.mediaUrl, fit: BoxFit.cover));
-  }
-}
-
-class User {
-  const User(
-      {this.username,
-      this.id,
-      this.photoUrl,
-      this.email,
-      this.displayName,
-      this.bio,
-      this.followers,
-      this.following});
-
-  final String email;
-  final String id;
-  final String photoUrl;
-  final String username;
-  final String displayName;
-  final String bio;
-  final Map followers;
-  final Map following;
-
-  factory User.fromDocument(DocumentSnapshot document) {
-    return new User(
-      email: document['email'],
-      username: document['username'],
-      photoUrl: document['photoUrl'],
-      id: document.documentID,
-      displayName: document['displayName'],
-      bio: document['bio'],
-      followers: document['followers'],
-      following: document['following'],
-    );
   }
 }
 

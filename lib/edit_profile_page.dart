@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'main.dart'; //for currentuser & google signin instance
-import 'profile_page.dart'; //for the user class
+import 'models/user.dart';
 
 class EditProfilePage extends StatelessWidget {
   TextEditingController nameController = new TextEditingController();

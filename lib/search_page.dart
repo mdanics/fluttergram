@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
-import "profile_page.dart"; // needed to import for User Class
-import "image_post.dart"; // needed to import for openProfile function
+import "profile_page.dart"; // needed to import for openProfile function
+import 'models/user.dart';
 
 class SearchPage extends StatefulWidget {
   _SearchPage createState() => new _SearchPage();
