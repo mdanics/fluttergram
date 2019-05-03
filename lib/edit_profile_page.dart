@@ -1,17 +1,16 @@
 import "package:flutter/material.dart";
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'main.dart'; //for currentuser & google signin instance
 import 'models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfilePage extends StatelessWidget {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController bioController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController bioController = TextEditingController();
 
-  changeProfilePhoto(BuildContext Context) {
+  changeProfilePhoto(BuildContext parentContext) {
     return showDialog(
-      context: Context,
+      context: parentContext,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Change Photo'),

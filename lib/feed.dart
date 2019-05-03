@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'image_post.dart';
 import 'dart:async';
-import 'package:async/async.dart';
 import 'main.dart';
 import 'dart:io';
 import 'dart:convert';
@@ -90,7 +89,7 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
     try {
       var request = await httpClient.getUrl(Uri.parse(url));
       var response = await request.close();
-      if (response.statusCode == HttpStatus.OK) {
+      if (response.statusCode == HttpStatus.ok) {
         String json = await response.transform(utf8.decoder).join();
         prefs.setString("feed", json);
         List<Map<String, dynamic>> data =
@@ -99,7 +98,7 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
         result = "Success in http request for feed";
       } else {
         result =
-            'Error getting a feed: Http status ${response.statusCode} | userId ${userId}';
+            'Error getting a feed: Http status ${response.statusCode} | userId $userId';
       }
     } catch (exception) {
       result = 'Failed invoking the getFeed function. Exception: $exception';
