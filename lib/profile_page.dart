@@ -157,6 +157,7 @@ class _ProfilePage extends State<ProfilePage>
         Color borderColor,
         Function function}) {
       return new Container(
+        width: 200.0,
         padding: const EdgeInsets.only(top: 2.0),
         child: new FlatButton(
             onPressed: function,
