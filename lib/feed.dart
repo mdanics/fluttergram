@@ -54,9 +54,7 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
   Future<Null> _refresh() async {
     await _getFeed();
 
-    setState(() {
-
-    });
+    setState(() {});
 
     return;
   }
@@ -78,6 +76,8 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
   }
 
   _getFeed() async {
+    print("Staring getFeed");
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String userId = googleSignIn.currentUser.id.toString();
@@ -94,15 +94,15 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
         String json = await response.transform(utf8.decoder).join();
         prefs.setString("feed", json);
         List<Map<String, dynamic>> data =
-        jsonDecode(json).cast<Map<String, dynamic>>();
+            jsonDecode(json).cast<Map<String, dynamic>>();
         listOfPosts = _generateFeed(data);
+        result = "Success in http request for feed";
       } else {
         result =
-            'Error getting a feed:\nHttp status ${response.statusCode}';
+            'Error getting a feed: Http status ${response.statusCode} | userId ${userId}';
       }
     } catch (exception) {
-      result =
-          'Failed invoking the getFeed function. Exception: $exception';
+      result = 'Failed invoking the getFeed function. Exception: $exception';
     }
     print(result);
 
