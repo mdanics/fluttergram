@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'main.dart'; //for currentuser & google signin instance
 import 'models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfilePage extends StatelessWidget {
   TextEditingController nameController = new TextEditingController();
@@ -122,6 +123,11 @@ class EditProfilePage extends StatelessWidget {
     print("logout");
     await auth.signOut();
     await googleSignIn.signOut();
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
+    currentUserModel = null;
 
     Navigator.pop(context);
   }

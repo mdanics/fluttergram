@@ -33,9 +33,8 @@ Future<Null> _ensureLoggedIn(BuildContext context) async {
     user = await googleSignIn.signInSilently();
   }
   if (user == null) {
-    await googleSignIn.signIn().then((_) {
-      tryCreateUserRecord(context);
-    });
+    await googleSignIn.signIn();
+    await tryCreateUserRecord(context);
   }
 
   if (await auth.currentUser() == null) {
@@ -58,9 +57,8 @@ Future<Null> _silentLogin(BuildContext context) async {
   GoogleSignInAccount user = googleSignIn.currentUser;
 
   if (user == null) {
-    user = await googleSignIn.signInSilently().then((_) {
-      tryCreateUserRecord(context);
-    });
+    user = await googleSignIn.signInSilently();
+    await tryCreateUserRecord(context);
   }
 
   if (await auth.currentUser() == null && user != null) {
@@ -105,7 +103,7 @@ Future<Null> _setUpNotifications() async {
   }
 }
 
-tryCreateUserRecord(BuildContext context) async {
+Future<void> tryCreateUserRecord(BuildContext context) async {
   GoogleSignInAccount user = googleSignIn.currentUser;
   if (user == null) {
     return null;
@@ -116,7 +114,6 @@ tryCreateUserRecord(BuildContext context) async {
 
     String userName = await Navigator.push(
       context,
-      // We'll create the SelectionScreen in the next step!
       new MaterialPageRoute(
           builder: (context) => new Center(
                 child: new Scaffold(
@@ -154,6 +151,7 @@ tryCreateUserRecord(BuildContext context) async {
   }
 
   currentUserModel = new User.fromDocument(userRecord);
+  return null;
 }
 
 class Fluttergram extends StatelessWidget {
@@ -233,7 +231,7 @@ class _HomePageState extends State<HomePage> {
       setUpNotifications();
     }
 
-    return googleSignIn.currentUser == null
+    return (googleSignIn.currentUser == null || currentUserModel == null)
         ? buildLoginPage()
         : new Scaffold(
             body: new PageView(
