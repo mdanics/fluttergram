@@ -5,18 +5,18 @@ import "profile_page.dart"; // needed to import for openProfile function
 import 'models/user.dart';
 
 class SearchPage extends StatefulWidget {
-  _SearchPage createState() => new _SearchPage();
+  _SearchPage createState() => _SearchPage();
 }
 
 class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin<SearchPage>{
   Future<QuerySnapshot> userDocs;
 
   buildSearchField() {
-    return new AppBar(
+    return AppBar(
       backgroundColor: Colors.white,
-      title: new Form(
-        child: new TextFormField(
-          decoration: new InputDecoration(labelText: 'Search for a user...'),
+      title: Form(
+        child: TextFormField(
+          decoration: InputDecoration(labelText: 'Search for a user...'),
           onFieldSubmitted: submit,
         ),
       ),
@@ -27,12 +27,12 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin<S
     List<UserSearchItem> userSearchItems = [];
 
     docs.forEach((DocumentSnapshot doc) {
-      User user = new User.fromDocument(doc);
-      UserSearchItem searchItem = new UserSearchItem(user);
+      User user = User.fromDocument(doc);
+      UserSearchItem searchItem = UserSearchItem(user);
       userSearchItems.add(searchItem);
     });
 
-    return new ListView(
+    return ListView(
       children: userSearchItems,
     );
   }
@@ -51,19 +51,19 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin<S
   Widget build(BuildContext context) {
     super.build(context); // reloads state when opened again
 
-    return new Scaffold(
+    return Scaffold(
       appBar: buildSearchField(),
       body: userDocs == null
-          ? new Text("")
-          : new FutureBuilder<QuerySnapshot>(
+          ? Text("")
+          : FutureBuilder<QuerySnapshot>(
               future: userDocs,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return buildSearchResults(snapshot.data.documents);
                 } else {
-                  return new Container(
+                  return Container(
                       alignment: FractionalOffset.center,
-                      child: new CircularProgressIndicator());
+                      child: CircularProgressIndicator());
                 }
               }),
     );
@@ -81,19 +81,19 @@ class UserSearchItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle boldStyle = new TextStyle(
+    TextStyle boldStyle = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.bold,
     );
 
-    return new GestureDetector(
-        child: new ListTile(
-          leading: new CircleAvatar(
-            backgroundImage: new NetworkImage(user.photoUrl),
+    return GestureDetector(
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(user.photoUrl),
             backgroundColor: Colors.grey,
           ),
-          title: new Text(user.username, style: boldStyle),
-          subtitle: new Text(user.displayName),
+          title: Text(user.username, style: boldStyle),
+          subtitle: Text(user.displayName),
         ),
         onTap: () {
           openProfile(context, user.id);

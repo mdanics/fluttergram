@@ -9,7 +9,7 @@ import 'package:location/location.dart';
 getUserLocation() async {
   LocationData currentLocation;
   String error;
-  Location location = new Location();
+  Location location = Location();
   try {
     currentLocation = await location.getLocation();
   } on PlatformException catch (e) {
@@ -23,7 +23,7 @@ getUserLocation() async {
     }
     currentLocation = null;
   }
-  final coordinates = new Coordinates(
+  final coordinates = Coordinates(
       currentLocation.latitude, currentLocation.longitude);
   var addresses =
       await Geocoder.local.findAddressesFromCoordinates(coordinates);

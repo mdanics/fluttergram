@@ -11,7 +11,7 @@ class ProfilePage extends StatefulWidget {
 
   final String userId;
 
-  _ProfilePage createState() => new _ProfilePage(this.userId);
+  _ProfilePage createState() => _ProfilePage(this.userId);
 }
 
 class _ProfilePage extends State<ProfilePage>
@@ -27,26 +27,26 @@ class _ProfilePage extends State<ProfilePage>
   _ProfilePage(this.profileId);
 
   editProfile() {
-    EditProfilePage editPage = new EditProfilePage();
+    EditProfilePage editPage = EditProfilePage();
 
     Navigator.of(context)
-        .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
-      return new Center(
-        child: new Scaffold(
-            appBar: new AppBar(
-              leading: new IconButton(
-                icon: new Icon(Icons.close),
+        .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
+      return Center(
+        child: Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.close),
                 onPressed: () {
                   Navigator.maybePop(context);
                 },
               ),
-              title: new Text('Edit Profile',
-                  style: new TextStyle(
+              title: Text('Edit Profile',
+                  style: TextStyle(
                       color: Colors.black, fontWeight: FontWeight.bold)),
               backgroundColor: Colors.white,
               actions: <Widget>[
-                new IconButton(
-                    icon: new Icon(
+                IconButton(
+                    icon: Icon(
                       Icons.check,
                       color: Colors.blueAccent,
                     ),
@@ -56,9 +56,9 @@ class _ProfilePage extends State<ProfilePage>
                     })
               ],
             ),
-            body: new ListView(
+            body: ListView(
               children: <Widget>[
-                new Container(
+                Container(
                   child: editPage,
                 ),
               ],
@@ -96,7 +96,7 @@ class _ProfilePage extends State<ProfilePage>
       "userId": currentUserId,
       "type": "follow",
       "userProfileImg": currentUserModel.photoUrl,
-      "timestamp": new DateTime.now().toString()
+      "timestamp": DateTime.now().toString()
     });
   }
 
@@ -129,19 +129,19 @@ class _ProfilePage extends State<ProfilePage>
     super.build(context); // reloads state when opened again
 
     Column buildStatColumn(String label, int number) {
-      return new Column(
+      return Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          new Text(
+          Text(
             number.toString(),
-            style: new TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
           ),
-          new Container(
+          Container(
               margin: const EdgeInsets.only(top: 4.0),
-              child: new Text(
+              child: Text(
                 label,
-                style: new TextStyle(
+                style: TextStyle(
                     color: Colors.grey,
                     fontSize: 15.0,
                     fontWeight: FontWeight.w400),
@@ -156,18 +156,18 @@ class _ProfilePage extends State<ProfilePage>
         Color textColor,
         Color borderColor,
         Function function}) {
-      return new Container(
-        padding: const EdgeInsets.only(top: 2.0),
-        child: new FlatButton(
+      return Container(
+        padding: EdgeInsets.only(top: 2.0),
+        child: FlatButton(
             onPressed: function,
-            child: new Container(
-              decoration: new BoxDecoration(
+            child: Container(
+              decoration: BoxDecoration(
                   color: backgroundcolor,
-                  border: new Border.all(color: borderColor),
-                  borderRadius: new BorderRadius.circular(5.0)),
+                  border: Border.all(color: borderColor),
+                  borderRadius: BorderRadius.circular(5.0)),
               alignment: Alignment.center,
-              child: new Text(text,
-                  style: new TextStyle(
+              child: Text(text,
+                  style: TextStyle(
                       color: textColor, fontWeight: FontWeight.bold)),
               width: 250.0,
               height: 27.0,
@@ -225,17 +225,17 @@ class _ProfilePage extends State<ProfilePage>
         }
       }
 
-      return new Row(
+      return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          new IconButton(
-            icon: new Icon(Icons.grid_on, color: isActiveButtonColor("grid")),
+          IconButton(
+            icon: Icon(Icons.grid_on, color: isActiveButtonColor("grid")),
             onPressed: () {
               changeView("grid");
             },
           ),
-          new IconButton(
-            icon: new Icon(Icons.list, color: isActiveButtonColor("feed")),
+          IconButton(
+            icon: Icon(Icons.list, color: isActiveButtonColor("feed")),
             onPressed: () {
               changeView("feed");
             },
@@ -253,7 +253,7 @@ class _ProfilePage extends State<ProfilePage>
             .orderBy("timestamp")
             .getDocuments();
         for (var doc in snap.documents) {
-          posts.add(new ImagePost.fromDocument(doc));
+          posts.add(ImagePost.fromDocument(doc));
         }
         setState(() {
           postCount = snap.documents.length;
@@ -262,18 +262,18 @@ class _ProfilePage extends State<ProfilePage>
         return posts.reversed.toList();
       }
 
-      return new Container(
-          child: new FutureBuilder<List<ImagePost>>(
+      return Container(
+          child: FutureBuilder<List<ImagePost>>(
         future: getPosts(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
-            return new Container(
+            return Container(
                 alignment: FractionalOffset.center,
                 padding: const EdgeInsets.only(top: 10.0),
-                child: new CircularProgressIndicator());
+                child: CircularProgressIndicator());
           else if (view == "grid") {
             // build the grid
-            return new GridView.count(
+            return GridView.count(
                 crossAxisCount: 3,
                 childAspectRatio: 1.0,
 //                    padding: const EdgeInsets.all(0.5),
@@ -282,10 +282,10 @@ class _ProfilePage extends State<ProfilePage>
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 children: snapshot.data.map((ImagePost imagePost) {
-                  return new GridTile(child: new ImageTile(imagePost));
+                  return GridTile(child: ImageTile(imagePost));
                 }).toList());
           } else if (view == "feed") {
-            return new Column(
+            return Column(
                 children: snapshot.data.map((ImagePost imagePost) {
               return imagePost;
             }).toList());
@@ -294,18 +294,18 @@ class _ProfilePage extends State<ProfilePage>
       ));
     }
 
-    return new StreamBuilder(
+    return StreamBuilder(
         stream: Firestore.instance
             .collection('insta_users')
             .document(profileId)
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
-            return new Container(
+            return Container(
                 alignment: FractionalOffset.center,
-                child: new CircularProgressIndicator());
+                child: CircularProgressIndicator());
 
-          User user = new User.fromDocument(snapshot.data);
+          User user = User.fromDocument(snapshot.data);
 
           if (user.followers.containsKey(currentUserId) &&
               user.followers[currentUserId] &&
@@ -313,32 +313,32 @@ class _ProfilePage extends State<ProfilePage>
             isFollowing = true;
           }
 
-          return new Scaffold(
-              appBar: new AppBar(
-                title: new Text(
+          return Scaffold(
+              appBar: AppBar(
+                title: Text(
                   user.username,
                   style: const TextStyle(color: Colors.black),
                 ),
                 backgroundColor: Colors.white,
               ),
-              body: new ListView(
+              body: ListView(
                 children: <Widget>[
-                  new Padding(
+                  Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: new Column(
+                    child: Column(
                       children: <Widget>[
-                        new Row(
+                        Row(
                           children: <Widget>[
-                            new CircleAvatar(
+                            CircleAvatar(
                               radius: 40.0,
                               backgroundColor: Colors.grey,
-                              backgroundImage: new NetworkImage(user.photoUrl),
+                              backgroundImage: NetworkImage(user.photoUrl),
                             ),
-                            new Expanded(
+                            Expanded(
                               flex: 1,
-                              child: new Column(
+                              child: Column(
                                 children: <Widget>[
-                                  new Row(
+                                  Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -350,7 +350,7 @@ class _ProfilePage extends State<ProfilePage>
                                           _countFollowings(user.following)),
                                     ],
                                   ),
-                                  new Row(
+                                  Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: <Widget>[
@@ -361,24 +361,24 @@ class _ProfilePage extends State<ProfilePage>
                             )
                           ],
                         ),
-                        new Container(
+                        Container(
                             alignment: Alignment.centerLeft,
                             padding: const EdgeInsets.only(top: 15.0),
-                            child: new Text(
+                            child: Text(
                               user.displayName,
-                              style: new TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             )),
-                        new Container(
+                        Container(
                           alignment: Alignment.centerLeft,
                           padding: const EdgeInsets.only(top: 1.0),
-                          child: new Text(user.bio),
+                          child: Text(user.bio),
                         ),
                       ],
                     ),
                   ),
-                  new Divider(),
+                  Divider(),
                   buildImageViewButtonBar(),
-                  new Divider(height: 0.0),
+                  Divider(height: 0.0),
                   buildUserPosts(),
                 ],
               ));
@@ -420,18 +420,18 @@ class ImageTile extends StatelessWidget {
 
   clickedImage(BuildContext context) {
     Navigator.of(context)
-        .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
-      return new Center(
-        child: new Scaffold(
-            appBar: new AppBar(
-              title: new Text('Photo',
-                  style: new TextStyle(
+        .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
+      return Center(
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text('Photo',
+                  style: TextStyle(
                       color: Colors.black, fontWeight: FontWeight.bold)),
               backgroundColor: Colors.white,
             ),
-            body: new ListView(
+            body: ListView(
               children: <Widget>[
-                new Container(
+                Container(
                   child: imagePost,
                 ),
               ],
@@ -441,15 +441,15 @@ class ImageTile extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
-    return new GestureDetector(
+    return GestureDetector(
         onTap: () => clickedImage(context),
-        child: new Image.network(imagePost.mediaUrl, fit: BoxFit.cover));
+        child: Image.network(imagePost.mediaUrl, fit: BoxFit.cover));
   }
 }
 
 void openProfile(BuildContext context, String userId) {
   Navigator.of(context)
-      .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
-    return new ProfilePage(userId: userId);
+      .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
+    return ProfilePage(userId: userId);
   }));
 }

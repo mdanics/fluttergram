@@ -15,7 +15,7 @@ import 'dart:io' show Platform;
 import 'models/user.dart';
 
 final auth = FirebaseAuth.instance;
-final googleSignIn = new GoogleSignIn();
+final googleSignIn = GoogleSignIn();
 final ref = Firestore.instance.collection('insta_users');
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
@@ -28,7 +28,7 @@ Future<void> main() async {
     print('[Main] Firestore timestamps in snapshots set');},
     onError: (_) => print('[Main] Error setting timestamps in snapshots')
   );
-  runApp(new Fluttergram());
+  runApp(Fluttergram());
 }
 
 Future<Null> _ensureLoggedIn(BuildContext context) async {
@@ -118,21 +118,21 @@ Future<void> tryCreateUserRecord(BuildContext context) async {
 
     String userName = await Navigator.push(
       context,
-      new MaterialPageRoute(
-          builder: (context) => new Center(
-                child: new Scaffold(
-                    appBar: new AppBar(
-                      leading: new Container(),
-                      title: new Text('Fill out missing data',
-                          style: new TextStyle(
+      MaterialPageRoute(
+          builder: (context) => Center(
+                child: Scaffold(
+                    appBar: AppBar(
+                      leading: Container(),
+                      title: Text('Fill out missing data',
+                          style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold)),
                       backgroundColor: Colors.white,
                     ),
-                    body: new ListView(
+                    body: ListView(
                       children: <Widget>[
-                        new Container(
-                          child: new CreateAccount(),
+                        Container(
+                          child: CreateAccount(),
                         ),
                       ],
                     )),
@@ -154,7 +154,7 @@ Future<void> tryCreateUserRecord(BuildContext context) async {
     userRecord = await ref.document(user.id).get();
   }
 
-  currentUserModel = new User.fromDocument(userRecord);
+  currentUserModel = User.fromDocument(userRecord);
   return null;
 }
 
@@ -162,9 +162,9 @@ class Fluttergram extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'Fluttergram',
-      theme: new ThemeData(
+      theme: ThemeData(
           // This is the theme of your application.
           //
           // Try running your application with "flutter run". You'll see the
@@ -175,8 +175,8 @@ class Fluttergram extends StatelessWidget {
           // counter didn't reset back to zero; the application is not restarted.
           primarySwatch: Colors.blue,
           buttonColor: Colors.pink,
-          primaryIconTheme: new IconThemeData(color: Colors.black)),
-      home: new HomePage(title: 'Fluttergram'),
+          primaryIconTheme: IconThemeData(color: Colors.black)),
+      home: HomePage(title: 'Fluttergram'),
     );
   }
 }
@@ -186,7 +186,7 @@ class HomePage extends StatefulWidget {
   final String title;
 
   @override
-  _HomePageState createState() => new _HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
 PageController pageController;
@@ -197,23 +197,23 @@ class _HomePageState extends State<HomePage> {
   bool setupNotifications = false;
 
   Scaffold buildLoginPage() {
-    return new Scaffold(
-      body: new Center(
-        child: new Padding(
+    return Scaffold(
+      body: Center(
+        child: Padding(
           padding: const EdgeInsets.only(top: 240.0),
-          child: new Column(
+          child: Column(
             children: <Widget>[
-              new Text(
+              Text(
                 'Fluttergram',
-                style: new TextStyle(
+                style: TextStyle(
                     fontSize: 60.0,
                     fontFamily: "Billabong",
                     color: Colors.black),
               ),
-              new Padding(padding: const EdgeInsets.only(bottom: 100.0)),
-              new GestureDetector(
+              Padding(padding: const EdgeInsets.only(bottom: 100.0)),
+              GestureDetector(
                 onTap: login,
-                child: new Image.asset(
+                child: Image.asset(
                   "assets/images/google_signin_button.png",
                   width: 225.0,
                 ),
@@ -237,57 +237,57 @@ class _HomePageState extends State<HomePage> {
 
     return (googleSignIn.currentUser == null || currentUserModel == null)
         ? buildLoginPage()
-        : new Scaffold(
-            body: new PageView(
+        : Scaffold(
+            body: PageView(
               children: [
-                new Container(
+                Container(
                   color: Colors.white,
-                  child: new Feed(),
+                  child: Feed(),
                 ),
-                new Container(color: Colors.white, child: new SearchPage()),
-                new Container(
+                Container(color: Colors.white, child: SearchPage()),
+                Container(
                   color: Colors.white,
-                  child: new Uploader(),
+                  child: Uploader(),
                 ),
-                new Container(
-                    color: Colors.white, child: new ActivityFeedPage()),
-                new Container(
+                Container(
+                    color: Colors.white, child: ActivityFeedPage()),
+                Container(
                     color: Colors.white,
-                    child: new ProfilePage(
+                    child: ProfilePage(
                       userId: googleSignIn.currentUser.id,
                     )),
               ],
               controller: pageController,
-              physics: new NeverScrollableScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               onPageChanged: onPageChanged,
             ),
-            bottomNavigationBar: new CupertinoTabBar(
+            bottomNavigationBar: CupertinoTabBar(
               activeColor: Colors.orange,
               items: <BottomNavigationBarItem>[
-                new BottomNavigationBarItem(
-                    icon: new Icon(Icons.home,
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.home,
                         color: (_page == 0) ? Colors.black : Colors.grey),
-                    title: new Container(height: 0.0),
+                    title: Container(height: 0.0),
                     backgroundColor: Colors.white),
-                new BottomNavigationBarItem(
-                    icon: new Icon(Icons.search,
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.search,
                         color: (_page == 1) ? Colors.black : Colors.grey),
-                    title: new Container(height: 0.0),
+                    title: Container(height: 0.0),
                     backgroundColor: Colors.white),
-                new BottomNavigationBarItem(
-                    icon: new Icon(Icons.add_circle,
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.add_circle,
                         color: (_page == 2) ? Colors.black : Colors.grey),
-                    title: new Container(height: 0.0),
+                    title: Container(height: 0.0),
                     backgroundColor: Colors.white),
-                new BottomNavigationBarItem(
-                    icon: new Icon(Icons.star,
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.star,
                         color: (_page == 3) ? Colors.black : Colors.grey),
-                    title: new Container(height: 0.0),
+                    title: Container(height: 0.0),
                     backgroundColor: Colors.white),
-                new BottomNavigationBarItem(
-                    icon: new Icon(Icons.person,
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.person,
                         color: (_page == 4) ? Colors.black : Colors.grey),
-                    title: new Container(height: 0.0),
+                    title: Container(height: 0.0),
                     backgroundColor: Colors.white),
               ],
               onTap: navigationTapped,
@@ -331,7 +331,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    pageController = new PageController();
+    pageController = PageController();
   }
 
   @override

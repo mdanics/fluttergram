@@ -8,7 +8,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Feed extends StatefulWidget {
-  _Feed createState() => new _Feed();
+  _Feed createState() => _Feed();
 }
 
 class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
@@ -22,13 +22,13 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
 
   buildFeed() {
     if (feedData != null) {
-      return new ListView(
+      return ListView(
         children: feedData,
       );
     } else {
-      return new Container(
+      return Container(
           alignment: FractionalOffset.center,
-          child: new CircularProgressIndicator());
+          child: CircularProgressIndicator());
     }
   }
 
@@ -36,15 +36,15 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
   Widget build(BuildContext context) {
     super.build(context); // reloads state when opened again
 
-    return new Scaffold(
-      appBar: new AppBar(
+    return Scaffold(
+      appBar: AppBar(
         title: const Text('Fluttergram',
             style: const TextStyle(
                 fontFamily: "Billabong", color: Colors.black, fontSize: 35.0)),
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
-      body: new RefreshIndicator(
+      body: RefreshIndicator(
         onRefresh: _refresh,
         child: buildFeed(),
       ),
@@ -83,7 +83,7 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
     String userId = googleSignIn.currentUser.id.toString();
     var url =
         'https://us-central1-mp-rps.cloudfunctions.net/getFeed?uid=' + userId;
-    var httpClient = new HttpClient();
+    var httpClient = HttpClient();
 
     List<ImagePost> listOfPosts;
     String result;
@@ -115,7 +115,7 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
     List<ImagePost> listOfPosts = [];
 
     for (var postData in feedData) {
-      listOfPosts.add(new ImagePost.fromJSON(postData));
+      listOfPosts.add(ImagePost.fromJSON(postData));
     }
 
     return listOfPosts;

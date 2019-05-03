@@ -13,7 +13,7 @@ import 'location.dart';
 import 'package:geocoder/geocoder.dart';
 
 class Uploader extends StatefulWidget {
-  _Uploader createState() => new _Uploader();
+  _Uploader createState() => _Uploader();
 }
 
 class _Uploader extends State<Uploader> {
@@ -21,9 +21,9 @@ class _Uploader extends State<Uploader> {
   //Strings required to save address
   Address address;
 
-  Map<String, double> currentLocation = new Map();
-  TextEditingController descriptionController = new TextEditingController();
-  TextEditingController locationController = new TextEditingController();
+  Map<String, double> currentLocation = Map();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
 
   bool uploading = false;
 
@@ -46,44 +46,44 @@ class _Uploader extends State<Uploader> {
 
   Widget build(BuildContext context) {
     return file == null
-        ? new IconButton(
-            icon: new Icon(Icons.file_upload),
+        ? IconButton(
+            icon: Icon(Icons.file_upload),
             onPressed: () => {_selectImage(context)})
-        : new Scaffold(
+        : Scaffold(
             resizeToAvoidBottomPadding: false,
-            appBar: new AppBar(
+            appBar: AppBar(
               backgroundColor: Colors.white70,
-              leading: new IconButton(
-                  icon: new Icon(Icons.arrow_back, color: Colors.black),
+              leading: IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.black),
                   onPressed: clearImage),
               title: const Text(
                 'Post to',
                 style: const TextStyle(color: Colors.black),
               ),
               actions: <Widget>[
-                new FlatButton(
+                FlatButton(
                     onPressed: postImage,
-                    child: new Text(
+                    child: Text(
                       "Post",
-                      style: new TextStyle(
+                      style: TextStyle(
                           color: Colors.blueAccent,
                           fontWeight: FontWeight.bold,
                           fontSize: 20.0),
                     ))
               ],
             ),
-            body: new ListView(
+            body: ListView(
               children: <Widget>[
-                new PostForm(
+                PostForm(
                   imageFile: file,
                   descriptionController: descriptionController,
                   locationController: locationController,
                   loading: uploading,
                 ),
-                new Divider(), //scroll view where we will show location to users
+                Divider(), //scroll view where we will show location to users
                 (address == null)
                     ? Container()
-                    : new SingleChildScrollView(
+                    : SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         padding: EdgeInsets.only(right: 5.0, left: 5.0),
                         child: Row(
@@ -110,19 +110,19 @@ class _Uploader extends State<Uploader> {
           locationController.text = locationName;
         },
         child: Center(
-          child: new Container(
+          child: Container(
             //width: 100.0,
             height: 30.0,
             padding: EdgeInsets.only(left: 8.0, right: 8.0),
             margin: EdgeInsets.only(right: 3.0, left: 3.0),
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.grey[200],
-              borderRadius: new BorderRadius.circular(5.0),
+              borderRadius: BorderRadius.circular(5.0),
             ),
-            child: new Center(
-              child: new Text(
+            child: Center(
+              child: Text(
                 locationName,
-                style: new TextStyle(color: Colors.grey),
+                style: TextStyle(color: Colors.grey),
               ),
             ),
           ),
@@ -139,10 +139,10 @@ class _Uploader extends State<Uploader> {
       barrierDismissible: false, // user must tap button!
 
       builder: (BuildContext context) {
-        return new SimpleDialog(
+        return SimpleDialog(
           title: const Text('Create a Post'),
           children: <Widget>[
-            new SimpleDialogOption(
+            SimpleDialogOption(
                 child: const Text('Take a photo'),
                 onPressed: () async {
                   Navigator.pop(context);
@@ -152,7 +152,7 @@ class _Uploader extends State<Uploader> {
                     file = imageFile;
                   });
                 }),
-            new SimpleDialogOption(
+            SimpleDialogOption(
                 child: const Text('Choose from Gallery'),
                 onPressed: () async {
                   Navigator.of(context).pop();
@@ -162,7 +162,7 @@ class _Uploader extends State<Uploader> {
                     file = imageFile;
                   });
                 }),
-            new SimpleDialogOption(
+            SimpleDialogOption(
               child: const Text("Cancel"),
               onPressed: () {
                 Navigator.pop(context);
@@ -178,7 +178,7 @@ class _Uploader extends State<Uploader> {
     print('starting compression');
     final tempDir = await getTemporaryDirectory();
     final path = tempDir.path;
-    int rand = new Math.Random().nextInt(10000);
+    int rand = Math.Random().nextInt(10000);
 
     Im.Image image = Im.decodeImage(file.readAsBytesSync());
     Im.copyResize(image, 500);
@@ -186,7 +186,7 @@ class _Uploader extends State<Uploader> {
 //    image.format = Im.Image.RGBA;
 //    Im.Image newim = Im.remapColors(image, alpha: Im.LUMINANCE);
 
-    var newim2 = new File('$path/img_$rand.jpg')
+    var newim2 = File('$path/img_$rand.jpg')
       ..writeAsBytesSync(Im.encodeJpg(image, quality: 85));
 
     setState(() {
@@ -232,51 +232,51 @@ class PostForm extends StatelessWidget {
       this.locationController});
 
   Widget build(BuildContext context) {
-    return new Column(
+    return Column(
       children: <Widget>[
         loading
-            ? new LinearProgressIndicator()
-            : new Padding(padding: new EdgeInsets.only(top: 0.0)),
-        new Divider(),
-        new Row(
+            ? LinearProgressIndicator()
+            : Padding(padding: EdgeInsets.only(top: 0.0)),
+        Divider(),
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            new CircleAvatar(
-              backgroundImage: new NetworkImage(currentUserModel.photoUrl),
+            CircleAvatar(
+              backgroundImage: NetworkImage(currentUserModel.photoUrl),
             ),
-            new Container(
+            Container(
               width: 250.0,
-              child: new TextField(
+              child: TextField(
                 controller: descriptionController,
-                decoration: new InputDecoration(
+                decoration: InputDecoration(
                     hintText: "Write a caption...", border: InputBorder.none),
               ),
             ),
-            new Container(
+            Container(
               height: 45.0,
               width: 45.0,
-              child: new AspectRatio(
+              child: AspectRatio(
                 aspectRatio: 487 / 451,
-                child: new Container(
-                  decoration: new BoxDecoration(
-                      image: new DecorationImage(
+                child: Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
                     fit: BoxFit.fill,
                     alignment: FractionalOffset.topCenter,
-                    image: new FileImage(imageFile),
+                    image: FileImage(imageFile),
                   )),
                 ),
               ),
             ),
           ],
         ),
-        new Divider(),
-        new ListTile(
-          leading: new Icon(Icons.pin_drop),
-          title: new Container(
+        Divider(),
+        ListTile(
+          leading: Icon(Icons.pin_drop),
+          title: Container(
             width: 250.0,
-            child: new TextField(
+            child: TextField(
               controller: locationController,
-              decoration: new InputDecoration(
+              decoration: InputDecoration(
                   hintText: "Where was this photo taken?",
                   border: InputBorder.none),
             ),
@@ -288,7 +288,7 @@ class PostForm extends StatelessWidget {
 }
 
 Future<String> uploadImage(var imageFile) async {
-  var uuid = new Uuid().v1();
+  var uuid = Uuid().v1();
   StorageReference ref = FirebaseStorage.instance.ref().child("post_$uuid.jpg");
   StorageUploadTask uploadTask = ref.putFile(imageFile);
 
@@ -307,7 +307,7 @@ void postToFireStore(
     "mediaUrl": mediaUrl,
     "description": description,
     "ownerId": googleSignIn.currentUser.id,
-    "timestamp": new DateTime.now().toString(),
+    "timestamp": DateTime.now().toString(),
   }).then((DocumentReference doc) {
     String docId = doc.documentID;
     reference.document(docId).updateData({"postId": docId});
