@@ -6,6 +6,7 @@ import 'dart:async';
 import 'profile_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'comment_screen.dart';
+import 'package:flare_flutter/flare_actor.dart';
 
 class ImagePost extends StatefulWidget {
   const ImagePost(
@@ -144,13 +145,16 @@ class _ImagePost extends State<ImagePost> {
           ),
           showHeart
               ? new Positioned(
-                  child: new Opacity(
-                      opacity: 0.85,
-                      child: new Icon(
-                        FontAwesomeIcons.solidHeart,
-                        size: 80.0,
-                        color: Colors.white,
-                      )),
+                  child: Container(
+                    width: 150,
+                    height: 150,
+                    child: new Opacity(
+                        opacity: 0.85,
+                        child: new FlareActor("assets/flare/Like.flr",
+                          animation: "Like",
+
+                        )),
+                  ),
                 )
               : new Container()
         ],
@@ -287,7 +291,7 @@ class _ImagePost extends State<ImagePost> {
         likes[userId] = true;
         showHeart = true;
       });
-      new Timer(const Duration(milliseconds: 500), () {
+      new Timer(const Duration(milliseconds: 2000), () {
         setState(() {
           showHeart = false;
         });
