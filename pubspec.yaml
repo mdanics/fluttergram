@@ -20,7 +20,11 @@ dependencies:
   firebase_messaging: ^4.0.0+1
   location: ^2.3.3
   geocoder: ^0.1.2
-  flare_flutter: ^1.5.0
+  flare_flutter:
+    git:
+      url: https://github.com/2d-inc/Flare-Flutter.git
+      path: flare_flutter/
+      ref: dev
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
