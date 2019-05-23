@@ -8,7 +8,7 @@ export const getFeedModule = function(req, res) {
     async function compileFeedPost() {
       const following = await getFollowing(uid, res) as any;
   
-      let listOfPosts = await getAllPosts(following, res);
+      let listOfPosts = await getAllPosts(following, uid, res);
   
       listOfPosts = [].concat.apply([], listOfPosts); // flattens list
   
@@ -18,12 +18,13 @@ export const getFeedModule = function(req, res) {
     compileFeedPost().then().catch();
 }
   
-async function getAllPosts(following, res) {
+async function getAllPosts(following, uid, res) {
     let listOfPosts = [];
   
     for (let user in following){
         listOfPosts.push( await getUserPosts(following[user], res));
     }
+    listOfPosts.push( await getUserPosts(uid, res));
     return listOfPosts; 
 }
   
