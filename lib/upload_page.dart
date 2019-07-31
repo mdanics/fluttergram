@@ -6,9 +6,6 @@ import 'package:uuid/uuid.dart';
 import 'dart:async';
 import 'main.dart';
 import 'dart:io';
-import 'package:image/image.dart' as Im;
-import 'package:path_provider/path_provider.dart';
-import 'dart:math' as Math;
 import 'location.dart';
 import 'package:geocoder/geocoder.dart';
 
@@ -147,7 +144,7 @@ class _Uploader extends State<Uploader> {
                 onPressed: () async {
                   Navigator.pop(context);
                   File imageFile =
-                      await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 1920, maxHeight: 1350);
+                      await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 1920, maxHeight: 1200, imageQuality: 80);
                   setState(() {
                     file = imageFile;
                   });
@@ -157,7 +154,7 @@ class _Uploader extends State<Uploader> {
                 onPressed: () async {
                   Navigator.of(context).pop();
                   File imageFile =
-                      await ImagePicker.pickImage(source: ImageSource.gallery);
+                      await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 1920, maxHeight: 1200, imageQuality: 80);
                   setState(() {
                     file = imageFile;
                   });
@@ -174,27 +171,6 @@ class _Uploader extends State<Uploader> {
     );
   }
 
-  void compressImage() async {
-    print('starting compression');
-    final tempDir = await getTemporaryDirectory();
-    final path = tempDir.path;
-    int rand = Math.Random().nextInt(10000);
-
-    Im.Image image = Im.decodeImage(file.readAsBytesSync());
-    Im.copyResize(image, 500);
-
-//    image.format = Im.Image.RGBA;
-//    Im.Image newim = Im.remapColors(image, alpha: Im.LUMINANCE);
-
-    var newim2 = File('$path/img_$rand.jpg')
-      ..writeAsBytesSync(Im.encodeJpg(image, quality: 85));
-
-    setState(() {
-      file = newim2;
-    });
-    print('done');
-  }
-
   void clearImage() {
     setState(() {
       file = null;
@@ -205,7 +181,6 @@ class _Uploader extends State<Uploader> {
     setState(() {
       uploading = true;
     });
-    compressImage();
     uploadImage(file).then((String data) {
       postToFireStore(
           mediaUrl: data,
@@ -307,7 +282,7 @@ void postToFireStore(
     "mediaUrl": mediaUrl,
     "description": description,
     "ownerId": googleSignIn.currentUser.id,
-    "timestamp": DateTime.now(),
+    "timestamp": DateTime.now().toString(),
   }).then((DocumentReference doc) {
     String docId = doc.documentID;
     reference.document(docId).updateData({"postId": docId});
