@@ -16,7 +16,7 @@ dependencies:
   async: ^2.1.0
   http: ^0.12.0+1
   shared_preferences: ^0.5.1+2
-  cached_network_image: ^0.7.0
+  cached_network_image: ^1.1.1
   firebase_messaging: ^4.0.0+1
   location: ^2.3.3
   geocoder: ^0.1.2
