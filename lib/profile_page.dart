@@ -96,7 +96,7 @@ class _ProfilePage extends State<ProfilePage>
       "userId": currentUserId,
       "type": "follow",
       "userProfileImg": currentUserModel.photoUrl,
-      "timestamp": DateTime.now().toString()
+      "timestamp": DateTime.now()
     });
   }
 

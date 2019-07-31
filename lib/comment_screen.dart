@@ -101,7 +101,7 @@ class _CommentScreenState extends State<CommentScreen> {
         .add({
       "username": currentUserModel.username,
       "comment": comment,
-      "timestamp": DateTime.now().toString(),
+      "timestamp": DateTime.now(),
       "avatarUrl": currentUserModel.photoUrl,
       "userId": currentUserModel.id
     });
@@ -117,7 +117,7 @@ class _CommentScreenState extends State<CommentScreen> {
       "type": "comment",
       "userProfileImg": currentUserModel.photoUrl,
       "commentData": comment,
-      "timestamp": DateTime.now().toString(),
+      "timestamp": DateTime.now(),
       "postId": postId,
       "mediaUrl": postMediaUrl,
     });
