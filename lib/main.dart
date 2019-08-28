@@ -1,33 +1,33 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'feed.dart';
-import 'upload_page.dart';
 import 'dart:async';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io' show Platform;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'profile_page.dart';
-import 'search_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 import 'activity_feed.dart';
 import 'create_account.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'dart:io' show Platform;
+import 'feed.dart';
 import 'models/user.dart';
+import 'profile_page.dart';
+import 'search_page.dart';
+import 'upload_page.dart';
 
 final auth = FirebaseAuth.instance;
 final googleSignIn = GoogleSignIn();
 final ref = Firestore.instance.collection('insta_users');
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-
 User currentUserModel;
 
 Future<void> main() async {
   // enable timestamps in firebase
   Firestore.instance.settings(timestampsInSnapshotsEnabled: true).then((_) {
-    print('[Main] Firestore timestamps in snapshots set');},
-    onError: (_) => print('[Main] Error setting timestamps in snapshots')
-  );
+    print('[Main] Firestore timestamps in snapshots set');
+  }, onError: (_) => print('[Main] Error setting timestamps in snapshots'));
   runApp(Fluttergram());
 }
 
@@ -42,11 +42,9 @@ Future<Null> _ensureLoggedIn(BuildContext context) async {
   }
 
   if (await auth.currentUser() == null) {
-
     final GoogleSignInAccount googleUser = await googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth = await googleUser
-        .authentication;
-
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
@@ -67,9 +65,8 @@ Future<Null> _silentLogin(BuildContext context) async {
 
   if (await auth.currentUser() == null && user != null) {
     final GoogleSignInAccount googleUser = await googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth = await googleUser
-        .authentication;
-
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
@@ -78,8 +75,6 @@ Future<Null> _silentLogin(BuildContext context) async {
 
     await auth.signInWithCredential(credential);
   }
-
-
 }
 
 Future<Null> _setUpNotifications() async {
@@ -101,6 +96,7 @@ Future<Null> _setUpNotifications() async {
 
       Firestore.instance
           .collection("insta_users")
+          // TODO: unhandled exception
           .document(currentUserModel.id)
           .updateData({"androidNotificationToken": token});
     });
@@ -148,7 +144,9 @@ Future<void> tryCreateUserRecord(BuildContext context) async {
         "displayName": user.displayName,
         "bio": "",
         "followers": {},
-        "following": {user.id: true}, // add current user so they can see their own posts in feed,
+        "following": {
+          user.id: true
+        }, // add current user so they can see their own posts in feed,
       });
     }
     userRecord = await ref.document(user.id).get();
@@ -249,8 +247,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.white,
                   child: Uploader(),
                 ),
-                Container(
-                    color: Colors.white, child: ActivityFeedPage()),
+                Container(color: Colors.white, child: ActivityFeedPage()),
                 Container(
                     color: Colors.white,
                     child: ProfilePage(

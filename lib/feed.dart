@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
-import 'image_post.dart';
 import 'dart:async';
-import 'main.dart';
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'image_post.dart';
+import 'main.dart';
 
 class Feed extends StatefulWidget {
   _Feed createState() => _Feed();
@@ -81,7 +83,8 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
 
     String userId = googleSignIn.currentUser.id.toString();
     var url =
-        'https://us-central1-mp-rps.cloudfunctions.net/getFeed?uid=' + userId;
+        'https://us-central1-fluttergram-sample.cloudfunctions.net/getFeed?uid=' +
+            userId;
     var httpClient = HttpClient();
 
     List<ImagePost> listOfPosts;

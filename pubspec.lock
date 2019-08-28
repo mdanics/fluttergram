@@ -42,7 +42,7 @@ packages:
       name: cloud_firestore
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.7+2"
+    version: "0.12.9+1"
   collection:
     dependency: transitive
     description:
@@ -77,28 +77,28 @@ packages:
       name: firebase_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.3"
+    version: "0.11.1+12"
   firebase_core:
     dependency: transitive
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.1+1"
+    version: "0.4.0+9"
   firebase_messaging:
     dependency: "direct main"
     description:
       name: firebase_messaging
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0+1"
+    version: "5.1.4"
   firebase_storage:
     dependency: "direct main"
     description:
       name: firebase_storage
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0+1"
+    version: "3.0.6"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -278,5 +278,5 @@ packages:
     source: hosted
     version: "3.3.1"
 sdks:
-  dart: ">=2.1.0 <3.0.0"
-  flutter: ">=1.2.1 <2.0.0"
+  dart: ">=2.2.0 <3.0.0"
+  flutter: ">=1.5.0 <2.0.0"
