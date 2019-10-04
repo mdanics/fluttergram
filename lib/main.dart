@@ -36,6 +36,10 @@ Future<Null> _ensureLoggedIn(BuildContext context) async {
   if (user == null) {
     user = await googleSignIn.signInSilently();
   }
+
+else if (user != null){
+	print("oho");
+}
   if (user == null) {
     await googleSignIn.signIn();
     await tryCreateUserRecord(context);
