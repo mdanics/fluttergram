@@ -63,7 +63,7 @@ $ cd fluttergram/
 #### 3. Setup the firebase app
 
 1. You'll need to create a Firebase instance. Follow the instructions at https://console.firebase.google.com.
-2. Once your Firebase instance is created, you'll need to enable anonymous authentication.
+2. Once your Firebase instance is created, you'll need to enable Google authentication.
 
 * Go to the Firebase Console for your new instance.
 * Click "Authentication" in the left-hand menu
