@@ -20,6 +20,18 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.7019780124-8d9k97bo7jd6gn2fdm8pahj260br014j</string>
+				<string>com.googleusercontent.apps.7019780124-lrego1vac3jl8a6egvo8efe56o8v2po0</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -49,36 +61,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-
-    <key>NSCameraUsageDescription</key>
-    <string>Used to allow the user to take a photo to upload as a post</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Used to allow the user to select a photo to upload as a post</string>
-
-    <!-- Location access section  -->
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Your location required to post </string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Your location required to post</string>
-
-    <!-- Google Sign-in Section -->
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <!-- TODO Replace this value: -->
-                <!-- Copied from GoogleServices-Info.plist key REVERSE_CLIENT_ID -->
-                <string>com.googleusercontent.apps.7019780124-8d9k97bo7jd6gn2fdm8pahj260br014j</string>
-            </array>
-        </dict>
-    </array>
-    <!-- End of the Google Sign-in Section -->
-
-
-
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Your location required to post </string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location required to post</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

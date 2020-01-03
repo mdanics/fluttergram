@@ -23,6 +23,9 @@ final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 User currentUserModel;
 
 Future<void> main() async {
+
+  WidgetsFlutterBinding.ensureInitialized(); // after upgrading flutter this is now necessary
+
   // enable timestamps in firebase
   Firestore.instance.settings(timestampsInSnapshotsEnabled: true).then((_) {
     print('[Main] Firestore timestamps in snapshots set');},
@@ -262,7 +265,7 @@ class _HomePageState extends State<HomePage> {
               onPageChanged: onPageChanged,
             ),
             bottomNavigationBar: CupertinoTabBar(
-              activeColor: Colors.orange,
+              backgroundColor: Colors.white,
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                     icon: Icon(Icons.home,

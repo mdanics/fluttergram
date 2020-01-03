@@ -4,22 +4,21 @@ description: A new Flutter application.
 dependencies:
   flutter:
     sdk: flutter
-  cloud_firestore: ^0.9.7+2
-  image_picker: ^0.6.0+2
-  firebase_storage: ^2.1.0+1
-  firebase_auth: ^0.8.3
-  google_sign_in: ^4.0.1+1
-  uuid: ^2.0.0
-  image: ^2.0.7
-  path_provider: ^0.5.0+1
-  font_awesome_flutter: ^8.4.0
-  async: ^2.1.0
+  cloud_firestore: ^0.12.9
+  image_picker: ^0.6.1
+  firebase_storage: ^3.0.4
+  firebase_auth: ^0.14.0
+  google_sign_in: ^4.0.4
+  uuid: ^2.0.2
+  image: ^2.1.4
+  font_awesome_flutter: ^8.5.0
+  async: ^2.3.0
   http: ^0.12.0+1
-  shared_preferences: ^0.5.1+2
-  cached_network_image: ^0.7.0
-  firebase_messaging: ^4.0.0+1
-  location: ^2.3.3
-  geocoder: ^0.1.2
+  shared_preferences: ^0.5.3+4
+  cached_network_image: ^2.0.0
+  firebase_messaging: ^5.1.2
+  location: ^2.3.5
+  geocoder: ^0.2.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
