@@ -80,7 +80,7 @@ _**If this does not work**  and you get the error `Error: Error parsing triggers
 
 _You may need to create the neccessary index by running `firebase functions:log` and then clicking the link_
 
-_**If you are getting no errors, but an empty feed** You must follow users with posts as the getFeed function only returns posts from people you follow._
+_**If you are getting no errors, but an empty feed** You must post photos or follow users with posts as the getFeed function only returns your own posts & posts from people you follow._
 
 
 
