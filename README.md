@@ -119,13 +119,12 @@ Double check install instructions for both
 
 # What's Next?
  - [x] Notificaitons for likes, comments, follows, etc
+ - [X] Animations (heart when liking image) [(#77)](https://github.com/mdanics/fluttergram/pull/77)
  - [ ] Improve Caching of Profiles, Images, Etc.
  - [ ] Better post creation, add filters to your image
  - [ ] Custom Camera Implementation
- - [ ] Animations (heart when liking image)
  - [ ] Firebase Security Rules
  - [ ] Delete Posts
- - [ ] Registration without Google SignIn
  - [ ] Direct Messaging
  - [ ] Stories
  - [ ] Clean up code
