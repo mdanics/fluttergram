@@ -10,7 +10,7 @@ class CommentScreen extends StatefulWidget {
 
   const CommentScreen({this.postId, this.postOwner, this.postMediaUrl});
   @override
-  _CommentScreenState createState() => new _CommentScreenState(
+  _CommentScreenState createState() => _CommentScreenState(
       postId: this.postId,
       postOwner: this.postOwner,
       postMediaUrl: this.postMediaUrl);
@@ -21,17 +21,17 @@ class _CommentScreenState extends State<CommentScreen> {
   final String postOwner;
   final String postMediaUrl;
 
-  final TextEditingController _commentController = new TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
 
   _CommentScreenState({this.postId, this.postOwner, this.postMediaUrl});
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
           "Comments",
-          style: new TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
       ),
@@ -40,20 +40,20 @@ class _CommentScreenState extends State<CommentScreen> {
   }
 
   Widget buildPage() {
-    return new Column(
+    return Column(
       children: [
-        new Expanded(
+        Expanded(
           child:
             buildComments(),
         ),
-        new Divider(),
-        new ListTile(
-          title: new TextFormField(
+        Divider(),
+        ListTile(
+          title: TextFormField(
             controller: _commentController,
-            decoration: new InputDecoration(labelText: 'Write a comment...'),
+            decoration: InputDecoration(labelText: 'Write a comment...'),
             onFieldSubmitted: addComment,
           ),
-          trailing: new OutlineButton(onPressed: (){addComment(_commentController.text);}, borderSide: BorderSide.none, child: new Text("Post"),),
+          trailing: OutlineButton(onPressed: (){addComment(_commentController.text);}, borderSide: BorderSide.none, child: Text("Post"),),
         ),
 
       ],
@@ -63,15 +63,15 @@ class _CommentScreenState extends State<CommentScreen> {
 
 
   Widget buildComments() {
-    return new FutureBuilder<List<Comment>>(
+    return FutureBuilder<List<Comment>>(
         future: getComments(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
-            return new Container(
+            return Container(
                 alignment: FractionalOffset.center,
-                child: new CircularProgressIndicator());
+                child: CircularProgressIndicator());
 
-          return new ListView(
+          return ListView(
             children: snapshot.data,
           );
         });
@@ -86,7 +86,7 @@ class _CommentScreenState extends State<CommentScreen> {
         .collection("comments")
         .getDocuments();
     data.documents.forEach((DocumentSnapshot doc) {
-      comments.add(new Comment.fromDocument(doc));
+      comments.add(Comment.fromDocument(doc));
     });
 
     return comments;
@@ -101,7 +101,7 @@ class _CommentScreenState extends State<CommentScreen> {
         .add({
       "username": currentUserModel.username,
       "comment": comment,
-      "timestamp": new DateTime.now().toString(),
+      "timestamp": DateTime.now().toString(),
       "avatarUrl": currentUserModel.photoUrl,
       "userId": currentUserModel.id
     });
@@ -117,7 +117,7 @@ class _CommentScreenState extends State<CommentScreen> {
       "type": "comment",
       "userProfileImg": currentUserModel.photoUrl,
       "commentData": comment,
-      "timestamp": new DateTime.now().toString(),
+      "timestamp": DateTime.now().toString(),
       "postId": postId,
       "mediaUrl": postMediaUrl,
     });
@@ -139,7 +139,7 @@ class Comment extends StatelessWidget {
       this.timestamp});
 
   factory Comment.fromDocument(DocumentSnapshot document) {
-    return new Comment(
+    return Comment(
       username: document['username'],
       userId: document['userId'],
       comment: document["comment"],
@@ -150,15 +150,15 @@ class Comment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Column(
+    return Column(
       children: <Widget>[
-        new ListTile(
-          title: new Text(comment),
-          leading: new CircleAvatar(
-            backgroundImage: new NetworkImage(avatarUrl),
+        ListTile(
+          title: Text(comment),
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(avatarUrl),
           ),
         ),
-        new Divider(),
+        Divider(),
       ],
     );
   }

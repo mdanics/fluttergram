@@ -19,7 +19,7 @@ class ImagePost extends StatefulWidget {
       this.ownerId});
 
   factory ImagePost.fromDocument(DocumentSnapshot document) {
-    return new ImagePost(
+    return ImagePost(
       username: document['username'],
       location: document['location'],
       mediaUrl: document['mediaUrl'],
@@ -31,7 +31,7 @@ class ImagePost extends StatefulWidget {
   }
 
   factory ImagePost.fromJSON(Map data) {
-    return new ImagePost(
+    return ImagePost(
       username: data['username'],
       location: data['location'],
       mediaUrl: data['mediaUrl'],
@@ -66,7 +66,7 @@ class ImagePost extends StatefulWidget {
   final String postId;
   final String ownerId;
 
-  _ImagePost createState() => new _ImagePost(
+  _ImagePost createState() => _ImagePost(
         mediaUrl: this.mediaUrl,
         username: this.username,
         location: this.location,
@@ -91,7 +91,7 @@ class _ImagePost extends State<ImagePost> {
 
   bool showHeart = false;
 
-  TextStyle boldStyle = new TextStyle(
+  TextStyle boldStyle = TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.bold,
   );
@@ -119,8 +119,8 @@ class _ImagePost extends State<ImagePost> {
       icon = FontAwesomeIcons.heart;
     }
 
-    return new GestureDetector(
-        child: new Icon(
+    return GestureDetector(
+        child: Icon(
           icon,
           size: 25.0,
           color: color,
@@ -131,13 +131,13 @@ class _ImagePost extends State<ImagePost> {
   }
 
   GestureDetector buildLikeableImage() {
-    return new GestureDetector(
+    return GestureDetector(
       onDoubleTap: () => _likePost(postId),
-      child: new Stack(
+      child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-//          new FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: mediaUrl),
-          new CachedNetworkImage(
+//          FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: mediaUrl),
+          CachedNetworkImage(
             imageUrl: mediaUrl,
             fit: BoxFit.fitWidth,
             placeholder: (context, url) => loadingPlaceHolder,
@@ -155,7 +155,7 @@ class _ImagePost extends State<ImagePost> {
                         )),
                   ),
                 )
-              : new Container()
+              : Container()
         ],
       ),
     );
@@ -163,10 +163,10 @@ class _ImagePost extends State<ImagePost> {
 
   buildPostHeader({String ownerId}) {
     if (ownerId == null) {
-      return new Text("owner error");
+      return Text("owner error");
     }
 
-    return new FutureBuilder(
+    return FutureBuilder(
         future: Firestore.instance
             .collection('insta_users')
             .document(ownerId)
@@ -180,18 +180,18 @@ class _ImagePost extends State<ImagePost> {
             username = snapshot.data.data['username'];
           }
 
-          return new ListTile(
-            leading: new CircleAvatar(
-              backgroundImage: new CachedNetworkImageProvider(imageUrl),
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(imageUrl),
               backgroundColor: Colors.grey,
             ),
-            title: new GestureDetector(
-              child: new Text(username, style: boldStyle),
+            title: GestureDetector(
+              child: Text(username, style: boldStyle),
               onTap: () {
                 openProfile(context, ownerId);
               },
             ),
-            subtitle: new Text(this.location),
+            subtitle: Text(this.location),
             trailing: const Icon(Icons.more_vert),
           );
         });
@@ -199,25 +199,25 @@ class _ImagePost extends State<ImagePost> {
 
   Container loadingPlaceHolder = Container(
     height: 400.0,
-    child: new Center(child: new CircularProgressIndicator()),
+    child: Center(child: CircularProgressIndicator()),
   );
 
   @override
   Widget build(BuildContext context) {
     liked = (likes[googleSignIn.currentUser.id.toString()] == true);
 
-    return new Column(
+    return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         buildPostHeader(ownerId: ownerId),
         buildLikeableImage(),
-        new Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            new Padding(padding: const EdgeInsets.only(left: 20.0, top: 40.0)),
+            Padding(padding: const EdgeInsets.only(left: 20.0, top: 40.0)),
             buildLikeIcon(),
-            new Padding(padding: const EdgeInsets.only(right: 20.0)),
-            new GestureDetector(
+            Padding(padding: const EdgeInsets.only(right: 20.0)),
+            GestureDetector(
                 child: const Icon(
                   FontAwesomeIcons.comment,
                   size: 25.0,
@@ -231,27 +231,27 @@ class _ImagePost extends State<ImagePost> {
                 }),
           ],
         ),
-        new Row(
+        Row(
           children: <Widget>[
-            new Container(
+            Container(
               margin: const EdgeInsets.only(left: 20.0),
-              child: new Text(
+              child: Text(
                 "$likeCount likes",
                 style: boldStyle,
               ),
             )
           ],
         ),
-        new Row(
+        Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new Container(
+            Container(
                 margin: const EdgeInsets.only(left: 20.0),
-                child: new Text(
+                child: Text(
                   "$username ",
                   style: boldStyle,
                 )),
-            new Expanded(child: new Text(description)),
+            Expanded(child: Text(description)),
           ],
         )
       ],
@@ -310,7 +310,7 @@ class _ImagePost extends State<ImagePost> {
       "type": "like",
       "userProfileImg": currentUserModel.photoUrl,
       "mediaUrl": mediaUrl,
-      "timestamp": new DateTime.now().toString(),
+      "timestamp": DateTime.now().toString(),
       "postId": postId,
     });
   }
@@ -333,19 +333,19 @@ class ImagePostFromId extends StatelessWidget {
   getImagePost() async {
     var document =
         await Firestore.instance.collection('insta_posts').document(id).get();
-    return new ImagePost.fromDocument(document);
+    return ImagePost.fromDocument(document);
   }
 
   @override
   Widget build(BuildContext context) {
-    return new FutureBuilder(
+    return FutureBuilder(
         future: getImagePost(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
-            return new Container(
+            return Container(
                 alignment: FractionalOffset.center,
                 padding: const EdgeInsets.only(top: 10.0),
-                child: new CircularProgressIndicator());
+                child: CircularProgressIndicator());
           return snapshot.data;
         });
   }
@@ -354,8 +354,8 @@ class ImagePostFromId extends StatelessWidget {
 void goToComments(
     {BuildContext context, String postId, String ownerId, String mediaUrl}) {
   Navigator.of(context)
-      .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
-    return new CommentScreen(
+      .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
+    return CommentScreen(
       postId: postId,
       postOwner: ownerId,
       postMediaUrl: mediaUrl,

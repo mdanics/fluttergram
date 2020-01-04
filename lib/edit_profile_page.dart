@@ -1,24 +1,23 @@
 import "package:flutter/material.dart";
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'main.dart'; //for currentuser & google signin instance
 import 'models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfilePage extends StatelessWidget {
-  TextEditingController nameController = new TextEditingController();
-  TextEditingController bioController = new TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController bioController = TextEditingController();
 
-  changeProfilePhoto(BuildContext Context) {
+  changeProfilePhoto(BuildContext parentContext) {
     return showDialog(
-      context: Context,
+      context: parentContext,
       builder: (BuildContext context) {
-        return new AlertDialog(
-          title: new Text('Change Photo'),
-          content: new SingleChildScrollView(
-            child: new ListBody(
+        return AlertDialog(
+          title: Text('Change Photo'),
+          content: SingleChildScrollView(
+            child: ListBody(
               children: <Widget>[
-                new Text(
+                Text(
                     'Changing your profile photo has not been implemented yet'),
               ],
             ),
@@ -39,19 +38,19 @@ class EditProfilePage extends StatelessWidget {
   }
 
   Widget buildTextField({String name, TextEditingController controller}) {
-    return new Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        new Padding(
+        Padding(
           padding: const EdgeInsets.only(top: 12.0),
           child: Text(
             name,
-            style: new TextStyle(color: Colors.grey),
+            style: TextStyle(color: Colors.grey),
           ),
         ),
-        new TextField(
+        TextField(
           controller: controller,
-          decoration: new InputDecoration(
+          decoration: InputDecoration(
             hintText: name,
           ),
         ),
@@ -61,56 +60,56 @@ class EditProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new FutureBuilder(
+    return FutureBuilder(
         future: Firestore.instance
             .collection('insta_users')
             .document(currentUserModel.id)
             .get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
-            return new Container(
+            return Container(
                 alignment: FractionalOffset.center,
-                child: new CircularProgressIndicator());
+                child: CircularProgressIndicator());
 
-          User user = new User.fromDocument(snapshot.data);
+          User user = User.fromDocument(snapshot.data);
 
           nameController.text = user.displayName;
           bioController.text = user.bio;
 
-          return new Column(
+          return Column(
             children: <Widget>[
-              new Padding(
+              Padding(
                 padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
-                child: new CircleAvatar(
+                child: CircleAvatar(
                   backgroundImage: NetworkImage(currentUserModel.photoUrl),
                   radius: 50.0,
                 ),
               ),
-              new FlatButton(
+              FlatButton(
                   onPressed: () {
                     changeProfilePhoto(context);
                   },
-                  child: new Text(
+                  child: Text(
                     "Change Photo",
                     style: const TextStyle(
                         color: Colors.blue,
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold),
                   )),
-              new Padding(
+              Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: new Column(
+                child: Column(
                   children: <Widget>[
                     buildTextField(name: "Name", controller: nameController),
                     buildTextField(name: "Bio", controller: bioController),
                   ],
                 ),
               ),
-              new Padding(
+              Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: new MaterialButton(
+                child: MaterialButton(
                     onPressed: () => {_logout(context)},
-                    child: new Text("Logout")
+                    child: Text("Logout")
 
                 )
               )

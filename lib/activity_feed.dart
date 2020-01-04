@@ -6,7 +6,7 @@ import 'main.dart'; //needed for currentuser id
 
 class ActivityFeedPage extends StatefulWidget {
   @override
-  _ActivityFeedPageState createState() => new _ActivityFeedPageState();
+  _ActivityFeedPageState createState() => _ActivityFeedPageState();
 }
 
 class _ActivityFeedPageState extends State<ActivityFeedPage> with AutomaticKeepAliveClientMixin<ActivityFeedPage> {
@@ -14,11 +14,11 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> with AutomaticKeepA
   Widget build(BuildContext context) {
     super.build(context); // reloads state when opened again
 
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
           "Activity Feed",
-          style: new TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
       ),
@@ -27,17 +27,17 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> with AutomaticKeepA
   }
 
   buildActivityFeed() {
-    return new Container(
-      child: new FutureBuilder(
+    return Container(
+      child: FutureBuilder(
           future: getFeed(),
           builder: (context, snapshot) {
             if (!snapshot.hasData)
-              return new Container(
+              return Container(
                   alignment: FractionalOffset.center,
                   padding: const EdgeInsets.only(top: 10.0),
-                  child: new CircularProgressIndicator());
+                  child: CircularProgressIndicator());
             else {
-              return new ListView(children: snapshot.data);
+              return ListView(children: snapshot.data);
             }
           }),
     );
@@ -53,7 +53,7 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> with AutomaticKeepA
         .getDocuments();
 
     for (var doc in snap.documents) {
-      items.add(new ActivityFeedItem.fromDocument(doc));
+      items.add(ActivityFeedItem.fromDocument(doc));
     }
     return items;
   }
@@ -68,7 +68,7 @@ class ActivityFeedItem extends StatelessWidget {
   final String username;
   final String userId;
   final String
-      type; // potetial types include liked photo, follow user, comment on photo
+      type; // types include liked photo, follow user, comment on photo
   final String mediaUrl;
   final String mediaId;
   final String userProfileImg;
@@ -84,7 +84,7 @@ class ActivityFeedItem extends StatelessWidget {
       this.commentData});
 
   factory ActivityFeedItem.fromDocument(DocumentSnapshot document) {
-    return new ActivityFeedItem(
+    return ActivityFeedItem(
       username: document['username'],
       userId: document['userId'],
       type: document['type'],
@@ -95,26 +95,26 @@ class ActivityFeedItem extends StatelessWidget {
     );
   }
 
-  Widget mediaPreview = new Container();
+  Widget mediaPreview = Container();
   String actionText;
 
   void configureItem(BuildContext context) {
     if (type == "like" || type == "comment") {
-      mediaPreview = new GestureDetector(
+      mediaPreview = GestureDetector(
         onTap: () {
           openImage(context, mediaId);
         },
-        child: new Container(
+        child: Container(
           height: 45.0,
           width: 45.0,
-          child: new AspectRatio(
+          child: AspectRatio(
             aspectRatio: 487 / 451,
-            child: new Container(
-              decoration: new BoxDecoration(
-                  image: new DecorationImage(
+            child: Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(
                 fit: BoxFit.fill,
                 alignment: FractionalOffset.topCenter,
-                image: new NetworkImage(mediaUrl),
+                image: NetworkImage(mediaUrl),
               )),
             ),
           ),
@@ -136,18 +136,18 @@ class ActivityFeedItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     configureItem(context);
-    return new Row(
+    return Row(
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        new Padding(
+        Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 15.0),
-          child: new CircleAvatar(
+          child: CircleAvatar(
             radius: 23.0,
-            backgroundImage: new NetworkImage(userProfileImg),
+            backgroundImage: NetworkImage(userProfileImg),
           ),
         ),
         Expanded(
-          child: new Row(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               GestureDetector(
@@ -170,11 +170,11 @@ class ActivityFeedItem extends StatelessWidget {
             ],
           ),
         ),
-        new Container(
-            child: new Align(
-                child: new Padding(
+        Container(
+            child: Align(
+                child: Padding(
                   child: mediaPreview,
-                  padding: new EdgeInsets.all(15.0),
+                  padding: EdgeInsets.all(15.0),
                 ),
                 alignment: AlignmentDirectional.bottomEnd))
       ],
@@ -185,19 +185,19 @@ class ActivityFeedItem extends StatelessWidget {
 openImage(BuildContext context, String imageId) {
   print("the image id is $imageId");
   Navigator.of(context)
-      .push(new MaterialPageRoute<bool>(builder: (BuildContext context) {
-    return new Center(
-      child: new Scaffold(
-          appBar: new AppBar(
-            title: new Text('Photo',
-                style: new TextStyle(
+      .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
+    return Center(
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text('Photo',
+                style: TextStyle(
                     color: Colors.black, fontWeight: FontWeight.bold)),
             backgroundColor: Colors.white,
           ),
-          body: new ListView(
+          body: ListView(
             children: <Widget>[
-              new Container(
-                child: new ImagePostFromId(id: imageId),
+              Container(
+                child: ImagePostFromId(id: imageId),
               ),
             ],
           )),

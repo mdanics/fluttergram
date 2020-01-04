@@ -21,7 +21,7 @@ class User {
       this.following});
 
   factory User.fromDocument(DocumentSnapshot document) {
-    return new User(
+    return User(
       email: document['email'],
       username: document['username'],
       photoUrl: document['photoUrl'],
