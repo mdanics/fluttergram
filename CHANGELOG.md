@@ -1,6 +1,23 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.3] - 2020-01-04
+### Changes
+- Add animation to Heart when liking a post
+- add user's post to their own feed
+- add logout button to edit profile page
+- tabs now keep state after switching pages, improves overall ux
+- Code clean up
+- Dependency bumps 
+- Fixed bugs
+  - remove width constraint on follow button
+  - feed now loads after username selection
+  - fix duplicate username screens on first google signin
+  - fixed error on open + removed useless code
+  - Set maxWidth and maxHeight on pickImage()
+  - added missing keys
+  
+
 ## [1.2.2] - 2018-11-07
 ### Changes
 - New - Location suggestions on upload page 

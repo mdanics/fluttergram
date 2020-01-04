@@ -1,5 +1,6 @@
 name: Fluttergram
 description: A new Flutter application.
+version: 1.2.3+1
 
 dependencies:
   flutter:
