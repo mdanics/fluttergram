@@ -27,7 +27,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // after upgrading flutter this is now necessary
 
   // enable timestamps in firebase
-  Firestore.instance.settings(timestampsInSnapshotsEnabled: true).then((_) {
+  Firestore.instance.settings().then((_) {
     print('[Main] Firestore timestamps in snapshots set');},
     onError: (_) => print('[Main] Error setting timestamps in snapshots')
   );
