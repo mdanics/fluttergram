@@ -136,7 +136,6 @@ class _ImagePost extends State<ImagePost> {
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-//          FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: mediaUrl),
           CachedNetworkImage(
             imageUrl: mediaUrl,
             fit: BoxFit.fitWidth,
@@ -146,8 +145,8 @@ class _ImagePost extends State<ImagePost> {
           showHeart
               ? Positioned(
                   child: Container(
-                    width: 150,
-                    height: 150,
+                    width: 100,
+                    height: 100,
                     child:  Opacity(
                         opacity: 0.85,
                         child: FlareActor("assets/flare/Like.flr",
