@@ -19,12 +19,15 @@ export const getFeedModule = function(req, res) {
 }
   
 async function getAllPosts(following, uid, res) {
-    let listOfPosts = [];
+    const listOfPosts = [];
   
-    for (let user in following){
+    for (const user in following){
         listOfPosts.push( await getUserPosts(following[user], res));
     }
+
+    // add the current user's posts to the feed so that your own posts appear in your feed
     listOfPosts.push( await getUserPosts(uid, res));
+    
     return listOfPosts; 
 }
   
@@ -33,7 +36,7 @@ function getUserPosts(userId, res){
   
     return posts.get()
     .then(function(querySnapshot) {
-        let listOfPosts = [];
+        const listOfPosts = [];
   
         querySnapshot.forEach(function(doc) {
             listOfPosts.push(doc.data());
@@ -49,7 +52,7 @@ function getFollowing(uid, res){
     return doc.get().then(snapshot => {
       const followings = snapshot.data().following;
       
-      let following_list = [];
+      const following_list = [];
   
       for (const following in followings) {
         if (followings[following] === true){

@@ -14,19 +14,21 @@ exports.getFeedModule = function (req, res) {
     function compileFeedPost() {
         return __awaiter(this, void 0, void 0, function* () {
             const following = yield getFollowing(uid, res);
-            let listOfPosts = yield getAllPosts(following, res);
+            let listOfPosts = yield getAllPosts(following, uid, res);
             listOfPosts = [].concat.apply([], listOfPosts); // flattens list
             res.send(listOfPosts);
         });
     }
     compileFeedPost().then().catch();
 };
-function getAllPosts(following, res) {
+function getAllPosts(following, uid, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        let listOfPosts = [];
-        for (let user in following) {
+        const listOfPosts = [];
+        for (const user in following) {
             listOfPosts.push(yield getUserPosts(following[user], res));
         }
+        // add the current user's posts to the feed so that your own posts appear in your feed
+        listOfPosts.push(yield getUserPosts(uid, res));
         return listOfPosts;
     });
 }
@@ -34,7 +36,7 @@ function getUserPosts(userId, res) {
     const posts = admin.firestore().collection("insta_posts").where("ownerId", "==", userId).orderBy("timestamp");
     return posts.get()
         .then(function (querySnapshot) {
-        let listOfPosts = [];
+        const listOfPosts = [];
         querySnapshot.forEach(function (doc) {
             listOfPosts.push(doc.data());
         });
@@ -45,7 +47,7 @@ function getFollowing(uid, res) {
     const doc = admin.firestore().doc(`insta_users/${uid}`);
     return doc.get().then(snapshot => {
         const followings = snapshot.data().following;
-        let following_list = [];
+        const following_list = [];
         for (const following in followings) {
             if (followings[following] === true) {
                 following_list.push(following);
