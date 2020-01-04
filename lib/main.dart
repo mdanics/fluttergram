@@ -151,7 +151,7 @@ Future<void> tryCreateUserRecord(BuildContext context) async {
         "displayName": user.displayName,
         "bio": "",
         "followers": {},
-        "following": {user.id: true}, // add current user so they can see their own posts in feed,
+        "following": {},
       });
     }
     userRecord = await ref.document(user.id).get();

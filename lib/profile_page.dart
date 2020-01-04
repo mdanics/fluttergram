@@ -400,9 +400,6 @@ class _ProfilePage extends State<ProfilePage>
       }
     }
 
-    // hacky fix to enable a user's post to appear in their feed without skewing the follower/following count
-    if (followings[profileId] != null && followings[profileId]) count -= 1;
-
     followings.forEach(countValues);
 
     return count;
