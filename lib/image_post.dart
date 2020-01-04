@@ -6,6 +6,7 @@ import 'dart:async';
 import 'profile_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'comment_screen.dart';
+import 'package:flare_flutter/flare_actor.dart';
 
 class ImagePost extends StatefulWidget {
   const ImagePost(
@@ -135,7 +136,6 @@ class _ImagePost extends State<ImagePost> {
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-//          FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: mediaUrl),
           CachedNetworkImage(
             imageUrl: mediaUrl,
             fit: BoxFit.fitWidth,
@@ -144,13 +144,15 @@ class _ImagePost extends State<ImagePost> {
           ),
           showHeart
               ? Positioned(
-                  child: Opacity(
-                      opacity: 0.85,
-                      child: Icon(
-                        FontAwesomeIcons.solidHeart,
-                        size: 80.0,
-                        color: Colors.white,
-                      )),
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    child:  Opacity(
+                        opacity: 0.85,
+                        child: FlareActor("assets/flare/Like.flr",
+                          animation: "Like",
+                        )),
+                  ),
                 )
               : Container()
         ],
@@ -287,7 +289,7 @@ class _ImagePost extends State<ImagePost> {
         likes[userId] = true;
         showHeart = true;
       });
-      Timer(const Duration(milliseconds: 500), () {
+      Timer(const Duration(milliseconds: 2000), () {
         setState(() {
           showHeart = false;
         });
