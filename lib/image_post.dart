@@ -144,13 +144,13 @@ class _ImagePost extends State<ImagePost> {
             errorWidget: (context, url, error) => Icon(Icons.error),
           ),
           showHeart
-              ? new Positioned(
+              ? Positioned(
                   child: Container(
                     width: 150,
                     height: 150,
-                    child: new Opacity(
+                    child:  Opacity(
                         opacity: 0.85,
-                        child: new FlareActor("assets/flare/Like.flr",
+                        child: FlareActor("assets/flare/Like.flr",
                           animation: "Like",
                         )),
                   ),
@@ -290,7 +290,7 @@ class _ImagePost extends State<ImagePost> {
         likes[userId] = true;
         showHeart = true;
       });
-      new Timer(const Duration(milliseconds: 2000), () {
+      Timer(const Duration(milliseconds: 2000), () {
         setState(() {
           showHeart = false;
         });
