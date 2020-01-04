@@ -171,28 +171,26 @@ class _ImagePost extends State<ImagePost> {
             .document(ownerId)
             .get(),
         builder: (context, snapshot) {
-          String imageUrl = " ";
-          String username = "  ";
 
           if (snapshot.data != null) {
-            imageUrl = snapshot.data.data['photoUrl'];
-            username = snapshot.data.data['username'];
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundImage: CachedNetworkImageProvider(snapshot.data.data['photoUrl']),
+                backgroundColor: Colors.grey,
+              ),
+              title: GestureDetector(
+                child: Text(snapshot.data.data['username'], style: boldStyle),
+                onTap: () {
+                  openProfile(context, ownerId);
+                },
+              ),
+              subtitle: Text(this.location),
+              trailing: const Icon(Icons.more_vert),
+            );
           }
 
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(imageUrl),
-              backgroundColor: Colors.grey,
-            ),
-            title: GestureDetector(
-              child: Text(username, style: boldStyle),
-              onTap: () {
-                openProfile(context, ownerId);
-              },
-            ),
-            subtitle: Text(this.location),
-            trailing: const Icon(Icons.more_vert),
-          );
+          // snapshot data is null here
+          return Container();
         });
   }
 

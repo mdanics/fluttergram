@@ -234,7 +234,7 @@ class _HomePageState extends State<HomePage> {
       silentLogin(context);
     }
 
-    if (setupNotifications == false) {
+    if (setupNotifications == false && currentUserModel != null) {
       setUpNotifications();
     }
 
