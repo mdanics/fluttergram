@@ -6,7 +6,6 @@ A working Instagram clone written in Flutter using Firebase / Firestore
 
 I update Fluttergram with new features and bugs fixes, but the apk may be behind master. Take a look at the [changelog](/CHANGELOG.md) to see the most recent additions to the apk.
 
-
 ## Features
 
  * Custom photo feed based on who you follow (using firebase cloud functions)
@@ -21,7 +20,6 @@ I update Fluttergram with new features and bugs fixes, but the apk may be behind
    * Add your own bio
  * Activity Feed showing recent likes / comments of your posts + new followers
 
-
 ## Screenshots
 <p>
 <img src="https://user-images.githubusercontent.com/10066840/45931079-61844e00-bf36-11e8-80d5-e02f8123db59.gif" alt="feed example" width="250">
@@ -34,7 +32,7 @@ I update Fluttergram with new features and bugs fixes, but the apk may be behind
 
 ## Dependencies
 
-* [Flutter](https://flutter.io/)
+* [Flutter](https://flutter.dev/)
 * [Firestore](https://github.com/flutter/plugins/tree/master/packages/cloud_firestore)
 * [Image Picker](https://github.com/flutter/plugins/tree/master/packages/image_picker)
 * [Google Sign In](https://github.com/flutter/plugins/tree/master/packages/google_sign_in)
@@ -50,8 +48,7 @@ I update Fluttergram with new features and bugs fixes, but the apk may be behind
 
 ## Getting started
 
-
-#### 1. [Setup Flutter](https://flutter.io/setup/)
+#### 1. [Setup Flutter](https://flutter.dev/docs/get-started/install)
 
 #### 2. Clone the repo
 
@@ -82,8 +79,6 @@ _You may need to create the neccessary index by running `firebase functions:log`
 
 _**If you are getting no errors, but an empty feed** You must post photos or follow users with posts as the getFeed function only returns your own posts & posts from people you follow._
 
-
-
 4. Enable the Firebase Database
 * Go to the Firebase Console
 * Click "Database" in the left-hand menu
@@ -103,7 +98,6 @@ keytool -exportcert -list -v \
 * In the Firebase console, in the settings of your Android app, add your SHA-1 key by clicking "Add Fingerprint".
 * Follow instructions to download google-services.json
 * place `google-services.json` into `/android/app/`.
-
 
 6. (skip if not running on iOS)
 
