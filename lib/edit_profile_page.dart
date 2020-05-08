@@ -3,30 +3,35 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'main.dart'; //for currentuser & google signin instance
 import 'models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfilePage extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
+  File _image;
+  String imagelink = "";
 
-  changeProfilePhoto(BuildContext parentContext) {
-    return showDialog(
-      context: parentContext,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Change Photo'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(
-                    'Changing your profile photo has not been implemented yet'),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = image;
+      print('Image Path $_image');
+    });
+    uploadPic();
   }
 
+  Future uploadPic() async{
+    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child("${widget.userid}/profile");
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+    StorageTaskSnapshot taskSnapshot=await uploadTask.onComplete;
+    String docUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    setState(() {
+      imagelink = docUrl;
+    });
+  }
+  
   applyChanges() {
     Firestore.instance
         .collection('insta_users')
@@ -34,6 +39,7 @@ class EditProfilePage extends StatelessWidget {
         .updateData({
       "displayName": nameController.text,
       "bio": bioController.text,
+       "photourl": imagelink,
     });
   }
 
@@ -87,7 +93,7 @@ class EditProfilePage extends StatelessWidget {
               ),
               FlatButton(
                   onPressed: () {
-                    changeProfilePhoto(context);
+                    getImage;
                   },
                   child: Text(
                     "Change Photo",
