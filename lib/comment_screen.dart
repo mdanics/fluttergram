@@ -55,10 +55,8 @@ class _CommentScreenState extends State<CommentScreen> {
           ),
           trailing: OutlineButton(onPressed: (){addComment(_commentController.text);}, borderSide: BorderSide.none, child: Text("Post"),),
         ),
-
       ],
     );
-
   }
 
 
@@ -88,7 +86,6 @@ class _CommentScreenState extends State<CommentScreen> {
     data.documents.forEach((DocumentSnapshot doc) {
       comments.add(Comment.fromDocument(doc));
     });
-
     return comments;
   }
 
@@ -101,7 +98,7 @@ class _CommentScreenState extends State<CommentScreen> {
         .add({
       "username": currentUserModel.username,
       "comment": comment,
-      "timestamp": DateTime.now(),
+      "timestamp": Timestamp.now(),
       "avatarUrl": currentUserModel.photoUrl,
       "userId": currentUserModel.id
     });
@@ -117,7 +114,7 @@ class _CommentScreenState extends State<CommentScreen> {
       "type": "comment",
       "userProfileImg": currentUserModel.photoUrl,
       "commentData": comment,
-      "timestamp": DateTime.now(),
+      "timestamp": Timestamp.now(),
       "postId": postId,
       "mediaUrl": postMediaUrl,
     });
@@ -129,7 +126,7 @@ class Comment extends StatelessWidget {
   final String userId;
   final String avatarUrl;
   final String comment;
-  final String timestamp;
+  final Timestamp timestamp;
 
   Comment(
       {this.username,
