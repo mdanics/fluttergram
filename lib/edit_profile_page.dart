@@ -28,10 +28,10 @@ class EditProfilePage extends StatelessWidget {
   }
 
   applyChanges() {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection('insta_users')
-        .document(currentUserModel.id)
-        .updateData({
+        .doc(currentUserModel.id)
+        .update({
       "displayName": nameController.text,
       "bio": bioController.text,
     });
@@ -61,9 +61,9 @@ class EditProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Firestore.instance
+        future: FirebaseFirestore.instance
             .collection('insta_users')
-            .document(currentUserModel.id)
+            .doc(currentUserModel.id)
             .get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
@@ -106,13 +106,10 @@ class EditProfilePage extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: MaterialButton(
-                    onPressed: () => {_logout(context)},
-                    child: Text("Logout")
-
-                )
-              )
+                  padding: const EdgeInsets.all(16.0),
+                  child: MaterialButton(
+                      onPressed: () => {_logout(context)},
+                      child: Text("Logout")))
             ],
           );
         });
