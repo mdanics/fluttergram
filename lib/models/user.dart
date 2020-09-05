@@ -22,14 +22,14 @@ class User {
 
   factory User.fromDocument(DocumentSnapshot document) {
     return User(
-      email: document['email'],
-      username: document['username'],
-      photoUrl: document['photoUrl'],
-      id: document.documentID,
-      displayName: document['displayName'],
-      bio: document['bio'],
-      followers: document['followers'],
-      following: document['following'],
+      email: document.data()['email'],
+      username: document.data()['username'],
+      photoUrl: document.data()['photoUrl'],
+      id: document.id,
+      displayName: document.data()['displayName'],
+      bio: document.data()['bio'],
+      followers: document.data()['followers'],
+      following: document.data()['following'],
     );
   }
 }
