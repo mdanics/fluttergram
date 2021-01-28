@@ -5,6 +5,8 @@ import 'image_post.dart';
 import 'dart:async';
 import 'edit_profile_page.dart';
 import 'models/user.dart';
+import 'constants.dart';
+import 'user_search_item.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({this.userId});
@@ -22,9 +24,76 @@ class _ProfilePage extends State<ProfilePage>
   bool isFollowing = false;
   bool followButtonClicked = false;
   int postCount = 0;
-  int followerCount = 0;
-  int followingCount = 0;
+  List<String> followerIds = [];
+  List<String> followingIds = [];
+
   _ProfilePage(this.profileId);
+
+  seeFollowing() {
+    makeFollowersView("Following", followingIds);
+  }
+
+  seeFollowers() {
+    makeFollowersView("Followers", followerIds);
+  }
+
+  makeFollowersView(String title, List<String> collection) {
+    Navigator.of(context)
+        .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
+      return Center(
+        child: Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.maybePop(context);
+                },
+              ),
+              title: Text(title,
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold)),
+              backgroundColor: Colors.white,
+            ),
+            body: buildFollowersListView(collection)),
+      );
+    }));
+  }
+
+  Widget buildFollowersListView(List<String> ids) {
+    Future<QuerySnapshot> docs = Firestore.instance
+        .collection(usersCollection)
+        .where("id", whereIn: ids)
+        .getDocuments();
+
+    return FutureBuilder<QuerySnapshot>(
+        future: docs,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<UserSearchItem> userSearchItems = [];
+            snapshot.data.documents.forEach((DocumentSnapshot doc) {
+              User user = User.fromDocument(doc);
+              UserSearchItem searchItem = UserSearchItem(user);
+              userSearchItems.add(searchItem);
+            });
+
+            return ListView(
+              children: userSearchItems,
+            );
+          } else {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: Text(
+                  'No results',
+                  style: TextStyle(
+                      fontSize: 40.0,
+                      color: Colors.black45),
+                ),
+              ),
+            );
+          }
+        });
+  }
 
   editProfile() {
     EditProfilePage editPage = EditProfilePage();
@@ -74,12 +143,12 @@ class _ProfilePage extends State<ProfilePage>
       followButtonClicked = true;
     });
 
-    Firestore.instance.document("insta_users/$profileId").updateData({
+    Firestore.instance.document("$usersCollection/$profileId").updateData({
       'followers.$currentUserId': true
       //firestore plugin doesnt support deleting, so it must be nulled / falsed
     });
 
-    Firestore.instance.document("insta_users/$currentUserId").updateData({
+    Firestore.instance.document("$usersCollection/$currentUserId").updateData({
       'following.$profileId': true
       //firestore plugin doesnt support deleting, so it must be nulled / falsed
     });
@@ -128,34 +197,37 @@ class _ProfilePage extends State<ProfilePage>
   Widget build(BuildContext context) {
     super.build(context); // reloads state when opened again
 
-    Column buildStatColumn(String label, int number) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            number.toString(),
-            style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
-          ),
-          Container(
-              margin: const EdgeInsets.only(top: 4.0),
-              child: Text(
-                label,
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w400),
-              ))
-        ],
+    FlatButton buildStatColumn(String label, int number, Function buttonCallback) {
+      return FlatButton(
+        onPressed: buttonCallback,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              number.toString(),
+              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+            ),
+            Container(
+                margin: const EdgeInsets.only(top: 4.0),
+                child: Text(
+                  label,
+                  style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w400),
+                ))
+          ],
+        ),
       );
     }
 
     Container buildFollowButton(
         {String text,
-        Color backgroundcolor,
-        Color textColor,
-        Color borderColor,
-        Function function}) {
+          Color backgroundcolor,
+          Color textColor,
+          Color borderColor,
+          Function function}) {
       return Container(
         padding: EdgeInsets.only(top: 2.0),
         child: FlatButton(
@@ -264,39 +336,39 @@ class _ProfilePage extends State<ProfilePage>
 
       return Container(
           child: FutureBuilder<List<ImagePost>>(
-        future: getPosts(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData)
-            return Container(
-                alignment: FractionalOffset.center,
-                padding: const EdgeInsets.only(top: 10.0),
-                child: CircularProgressIndicator());
-          else if (view == "grid") {
-            // build the grid
-            return GridView.count(
-                crossAxisCount: 3,
-                childAspectRatio: 1.0,
+            future: getPosts(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData)
+                return Container(
+                    alignment: FractionalOffset.center,
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: CircularProgressIndicator());
+              else if (view == "grid") {
+                // build the grid
+                return GridView.count(
+                    crossAxisCount: 3,
+                    childAspectRatio: 1.0,
 //                    padding: const EdgeInsets.all(0.5),
-                mainAxisSpacing: 1.5,
-                crossAxisSpacing: 1.5,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                children: snapshot.data.map((ImagePost imagePost) {
-                  return GridTile(child: ImageTile(imagePost));
-                }).toList());
-          } else if (view == "feed") {
-            return Column(
-                children: snapshot.data.map((ImagePost imagePost) {
-              return imagePost;
-            }).toList());
-          }
-        },
-      ));
+                    mainAxisSpacing: 1.5,
+                    crossAxisSpacing: 1.5,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: snapshot.data.map((ImagePost imagePost) {
+                      return GridTile(child: ImageTile(imagePost));
+                    }).toList());
+              } else if (view == "feed") {
+                return Column(
+                    children: snapshot.data.map((ImagePost imagePost) {
+                      return imagePost;
+                    }).toList());
+              }
+            },
+          ));
     }
 
     return StreamBuilder(
         stream: Firestore.instance
-            .collection('insta_users')
+            .collection(usersCollection)
             .document(profileId)
             .snapshots(),
         builder: (context, snapshot) {
@@ -312,6 +384,9 @@ class _ProfilePage extends State<ProfilePage>
               followButtonClicked == false) {
             isFollowing = true;
           }
+
+          followerIds = getFollowingIds(user.followers);
+          followingIds = getFollowingIds(user.following);
 
           return Scaffold(
               appBar: AppBar(
@@ -341,18 +416,16 @@ class _ProfilePage extends State<ProfilePage>
                                   Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                    MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
-                                      buildStatColumn("posts", postCount),
-                                      buildStatColumn("followers",
-                                          _countFollowings(user.followers)),
-                                      buildStatColumn("following",
-                                          _countFollowings(user.following)),
+                                      buildStatColumn("posts", postCount, () => {}),
+                                      buildStatColumn("followers", followerIds.length, seeFollowers),
+                                      buildStatColumn("following", followingIds.length, seeFollowing),
                                     ],
                                   ),
                                   Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                       children: <Widget>[
                                         buildProfileFollowButton(user)
                                       ]),
@@ -391,18 +464,11 @@ class _ProfilePage extends State<ProfilePage>
     });
   }
 
-  int _countFollowings(Map followings) {
-    int count = 0;
-
-    void countValues(key, value) {
-      if (value) {
-        count += 1;
-      }
-    }
-
-    followings.forEach(countValues);
-
-    return count;
+  List<String> getFollowingIds(Map followings) {
+    List<String> followersId = [];
+    followings.removeWhere((key, value) => !value);
+    followings.forEach((k, v) => followersId.add(k));
+    return followersId;
   }
 
   // ensures state is kept when switching pages

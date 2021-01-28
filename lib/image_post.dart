@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'main.dart';
 import 'dart:async';
 import 'profile_page.dart';
+import 'constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'comment_screen.dart';
 import 'package:flare_flutter/flare_actor.dart';
@@ -167,7 +168,7 @@ class _ImagePost extends State<ImagePost> {
 
     return FutureBuilder(
         future: Firestore.instance
-            .collection('insta_users')
+            .collection(usersCollection)
             .document(ownerId)
             .get(),
         builder: (context, snapshot) {

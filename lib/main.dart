@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'profile_page.dart';
 import 'search_page.dart';
 import 'activity_feed.dart';
+import 'constants.dart';
 import 'create_account.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:io' show Platform;
@@ -16,7 +17,7 @@ import 'models/user.dart';
 
 final auth = FirebaseAuth.instance;
 final googleSignIn = GoogleSignIn();
-final ref = Firestore.instance.collection('insta_users');
+final ref = Firestore.instance.collection(usersCollection);
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
 
@@ -103,7 +104,7 @@ Future<Null> _setUpNotifications() async {
       print("Firebase Messaging Token: " + token);
 
       Firestore.instance
-          .collection("insta_users")
+          .collection(usersCollection)
           .document(currentUserModel.id)
           .updateData({"androidNotificationToken": token});
     });

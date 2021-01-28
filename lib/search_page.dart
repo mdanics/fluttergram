@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import "profile_page.dart"; // needed to import for openProfile function
 import 'models/user.dart';
+import 'constants.dart';
+import 'user_search_item.dart';
 
 class SearchPage extends StatefulWidget {
   _SearchPage createState() => _SearchPage();
@@ -39,7 +41,7 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin<S
 
   void submit(String searchValue) async {
     Future<QuerySnapshot> users = Firestore.instance
-        .collection("insta_users")
+        .collection(usersCollection)
         .where('displayName', isGreaterThanOrEqualTo: searchValue)
         .getDocuments();
 
@@ -56,47 +58,20 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin<S
       body: userDocs == null
           ? Text("")
           : FutureBuilder<QuerySnapshot>(
-              future: userDocs,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return buildSearchResults(snapshot.data.documents);
-                } else {
-                  return Container(
-                      alignment: FractionalOffset.center,
-                      child: CircularProgressIndicator());
-                }
-              }),
+          future: userDocs,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return buildSearchResults(snapshot.data.documents);
+            } else {
+              return Container(
+                  alignment: FractionalOffset.center,
+                  child: CircularProgressIndicator());
+            }
+          }),
     );
   }
 
   // ensures state is kept when switching pages
   @override
   bool get wantKeepAlive => true;
-}
-
-class UserSearchItem extends StatelessWidget {
-  final User user;
-
-  const UserSearchItem(this.user);
-
-  @override
-  Widget build(BuildContext context) {
-    TextStyle boldStyle = TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.bold,
-    );
-
-    return GestureDetector(
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(user.photoUrl),
-            backgroundColor: Colors.grey,
-          ),
-          title: Text(user.username, style: boldStyle),
-          subtitle: Text(user.displayName),
-        ),
-        onTap: () {
-          openProfile(context, user.id);
-        });
-  }
 }
