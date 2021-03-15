@@ -84,14 +84,15 @@ class ActivityFeedItem extends StatelessWidget {
       this.commentData});
 
   factory ActivityFeedItem.fromDocument(DocumentSnapshot document) {
+    var data = document.data();
     return ActivityFeedItem(
-      username: document['username'],
-      userId: document['userId'],
-      type: document['type'],
-      mediaUrl: document['mediaUrl'],
-      mediaId: document['postId'],
-      userProfileImg: document['userProfileImg'],
-      commentData: document["commentData"],
+      username: data['username'],
+      userId: data['userId'],
+      type: data['type'],
+      mediaUrl: data['mediaUrl'],
+      mediaId: data['postId'],
+      userProfileImg: data['userProfileImg'],
+      commentData: data["commentData"],
     );
   }
 
