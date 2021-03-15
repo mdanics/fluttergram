@@ -46,8 +46,8 @@
 
             <!-- Theme to apply as soon as Flutter begins rendering frames -->
             <meta-data
-                android:name="io.flutter.embedding.android.NormalTheme"
-                android:resource="@style/NormalTheme"
+                android:name="io.flutter.embedding.android.LaunchTheme"
+                android:resource="@style/LaunchTheme"
                 />
         </activity>
         <meta-data

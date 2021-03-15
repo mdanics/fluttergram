@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'feed.dart';
 import 'upload_page.dart';
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart' as FBA;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -181,6 +182,7 @@ class _HomePageState extends State<HomePage> {
   int _page = 0;
   bool triedSilentLogin = false;
   bool setupNotifications = false;
+  bool firebaseInitialized = false;
 
   Scaffold buildLoginPage() {
     return Scaffold(
@@ -220,6 +222,8 @@ class _HomePageState extends State<HomePage> {
     if (setupNotifications == false && currentUserModel != null) {
       setUpNotifications();
     }
+
+    if (!firebaseInitialized) return CircularProgressIndicator();
 
     return (googleSignIn.currentUser == null || currentUserModel == null)
         ? buildLoginPage()
@@ -317,6 +321,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    Firebase.initializeApp().then((_) {
+     setState(() {
+       firebaseInitialized= true;
+     }); 
+    });
     pageController = PageController();
   }
 

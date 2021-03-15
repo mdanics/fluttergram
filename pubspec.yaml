@@ -8,6 +8,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  firebase_core: ^1.0.1
   cloud_firestore: ^1.0.1
   image_picker: ^0.7.2+1
   firebase_storage: ^8.0.0

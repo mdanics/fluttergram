@@ -175,11 +175,11 @@ class _ImagePost extends State<ImagePost> {
           if (snapshot.data != null) {
             return ListTile(
               leading: CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(snapshot.data.data['photoUrl']),
+                backgroundImage: CachedNetworkImageProvider(snapshot.data.data()['photoUrl']),
                 backgroundColor: Colors.grey,
               ),
               title: GestureDetector(
-                child: Text(snapshot.data.data['username'], style: boldStyle),
+                child: Text(snapshot.data.data()['username'], style: boldStyle),
                 onTap: () {
                   openProfile(context, ownerId);
                 },
