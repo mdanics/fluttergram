@@ -45,14 +45,14 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> with AutomaticKeepA
 
   getFeed() async {
     List<ActivityFeedItem> items = [];
-    var snap = await Firestore.instance
+    var snap = await FirebaseFirestore.instance
         .collection('insta_a_feed')
-        .document(currentUserModel.id)
+        .doc(currentUserModel.id)
         .collection("items")
         .orderBy("timestamp")
-        .getDocuments();
+        .get();
 
-    for (var doc in snap.documents) {
+    for (var doc in snap.docs) {
       items.add(ActivityFeedItem.fromDocument(doc));
     }
     return items;
@@ -84,14 +84,15 @@ class ActivityFeedItem extends StatelessWidget {
       this.commentData});
 
   factory ActivityFeedItem.fromDocument(DocumentSnapshot document) {
+    var data = document.data();
     return ActivityFeedItem(
-      username: document['username'],
-      userId: document['userId'],
-      type: document['type'],
-      mediaUrl: document['mediaUrl'],
-      mediaId: document['postId'],
-      userProfileImg: document['userProfileImg'],
-      commentData: document["commentData"],
+      username: data['username'],
+      userId: data['userId'],
+      type: data['type'],
+      mediaUrl: data['mediaUrl'],
+      mediaId: data['postId'],
+      userProfileImg: data['userProfileImg'],
+      commentData: data["commentData"],
     );
   }
 

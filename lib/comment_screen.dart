@@ -90,12 +90,12 @@ class _CommentScreenState extends State<CommentScreen> {
   Future<List<Comment>> getComments() async {
     List<Comment> comments = [];
 
-    QuerySnapshot data = await Firestore.instance
+    QuerySnapshot data = await FirebaseFirestore.instance
         .collection("insta_comments")
-        .document(postId)
+        .doc(postId)
         .collection("comments")
-        .getDocuments();
-    data.documents.forEach((DocumentSnapshot doc) {
+        .get();
+    data.docs.forEach((DocumentSnapshot doc) {
       comments.add(Comment.fromDocument(doc));
     });
     return comments;
@@ -103,9 +103,9 @@ class _CommentScreenState extends State<CommentScreen> {
 
   addComment(String comment) {
     _commentController.clear();
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("insta_comments")
-        .document(postId)
+        .doc(postId)
         .collection("comments")
         .add({
       "username": currentUserModel.username,
@@ -116,9 +116,9 @@ class _CommentScreenState extends State<CommentScreen> {
     });
 
     //adds to postOwner's activity feed
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("insta_a_feed")
-        .document(postOwner)
+        .doc(postOwner)
         .collection("items")
         .add({
       "username": currentUserModel.username,
@@ -159,12 +159,13 @@ class Comment extends StatelessWidget {
       this.timestamp});
 
   factory Comment.fromDocument(DocumentSnapshot document) {
+    var data = document.data();
     return Comment(
-      username: document['username'],
-      userId: document['userId'],
-      comment: document["comment"],
-      timestamp: document["timestamp"],
-      avatarUrl: document["avatarUrl"],
+      username: data['username'],
+      userId: data['userId'],
+      comment: data["comment"],
+      timestamp: data["timestamp"],
+      avatarUrl: data["avatarUrl"],
     );
   }
 

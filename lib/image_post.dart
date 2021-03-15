@@ -25,7 +25,7 @@ class ImagePost extends StatefulWidget {
       mediaUrl: document['mediaUrl'],
       likes: document['likes'],
       description: document['description'],
-      postId: document.documentID,
+      postId: document.id,
       ownerId: document['ownerId'],
     );
   }
@@ -96,7 +96,7 @@ class _ImagePost extends State<ImagePost> {
     fontWeight: FontWeight.bold,
   );
 
-  var reference = Firestore.instance.collection('insta_posts');
+  var reference = FirebaseFirestore.instance.collection('insta_posts');
 
   _ImagePost(
       {this.mediaUrl,
@@ -166,20 +166,20 @@ class _ImagePost extends State<ImagePost> {
     }
 
     return FutureBuilder(
-        future: Firestore.instance
+        future: FirebaseFirestore.instance
             .collection('insta_users')
-            .document(ownerId)
+            .doc(ownerId)
             .get(),
         builder: (context, snapshot) {
 
           if (snapshot.data != null) {
             return ListTile(
               leading: CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(snapshot.data.data['photoUrl']),
+                backgroundImage: CachedNetworkImageProvider(snapshot.data.data()['photoUrl']),
                 backgroundColor: Colors.grey,
               ),
               title: GestureDetector(
-                child: Text(snapshot.data.data['username'], style: boldStyle),
+                child: Text(snapshot.data.data()['username'], style: boldStyle),
                 onTap: () {
                   openProfile(context, ownerId);
                 },
@@ -261,7 +261,7 @@ class _ImagePost extends State<ImagePost> {
 
     if (_liked) {
       print('removing like');
-      reference.document(postId).updateData({
+      reference.doc(postId).update({
         'likes.$userId': false
         //firestore plugin doesnt support deleting, so it must be nulled / falsed
       });
@@ -277,7 +277,7 @@ class _ImagePost extends State<ImagePost> {
 
     if (!_liked) {
       print('liking');
-      reference.document(postId).updateData({'likes.$userId': true});
+      reference.doc(postId).update({'likes.$userId': true});
 
       addActivityFeedItem();
 
@@ -296,12 +296,12 @@ class _ImagePost extends State<ImagePost> {
   }
 
   void addActivityFeedItem() {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("insta_a_feed")
-        .document(ownerId)
+        .doc(ownerId)
         .collection("items")
-        .document(postId)
-        .setData({
+        .doc(postId)
+        .set({
       "username": currentUserModel.username,
       "userId": currentUserModel.id,
       "type": "like",
@@ -313,11 +313,11 @@ class _ImagePost extends State<ImagePost> {
   }
 
   void removeActivityFeedItem() {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("insta_a_feed")
-        .document(ownerId)
+        .doc(ownerId)
         .collection("items")
-        .document(postId)
+        .doc(postId)
         .delete();
   }
 }
@@ -329,7 +329,7 @@ class ImagePostFromId extends StatelessWidget {
 
   getImagePost() async {
     var document =
-        await Firestore.instance.collection('insta_posts').document(id).get();
+        await FirebaseFirestore.instance.collection('insta_posts').doc(id).get();
     return ImagePost.fromDocument(document);
   }
 

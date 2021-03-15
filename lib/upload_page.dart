@@ -21,6 +21,7 @@ class _Uploader extends State<Uploader> {
   Map<String, double> currentLocation = Map();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController locationController = TextEditingController();
+  ImagePicker imagePicker = ImagePicker();
 
   bool uploading = false;
 
@@ -47,7 +48,7 @@ class _Uploader extends State<Uploader> {
             icon: Icon(Icons.file_upload),
             onPressed: () => {_selectImage(context)})
         : Scaffold(
-            resizeToAvoidBottomPadding: false,
+            resizeToAvoidBottomInset: false,
             appBar: AppBar(
               backgroundColor: Colors.white70,
               leading: IconButton(
@@ -143,20 +144,20 @@ class _Uploader extends State<Uploader> {
                 child: const Text('Take a photo'),
                 onPressed: () async {
                   Navigator.pop(context);
-                  File imageFile =
-                      await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 1920, maxHeight: 1200, imageQuality: 80);
+                   PickedFile imageFile =
+                      await imagePicker.getImage(source: ImageSource.camera, maxWidth: 1920, maxHeight: 1200, imageQuality: 80);
                   setState(() {
-                    file = imageFile;
+                    file = File(imageFile.path);
                   });
                 }),
             SimpleDialogOption(
                 child: const Text('Choose from Gallery'),
                 onPressed: () async {
                   Navigator.of(context).pop();
-                  File imageFile =
-                      await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 1920, maxHeight: 1200, imageQuality: 80);
+                  PickedFile imageFile =
+                      await imagePicker.getImage(source: ImageSource.gallery, maxWidth: 1920, maxHeight: 1200, imageQuality: 80);
                   setState(() {
-                    file = imageFile;
+                    file = File(imageFile.path);
                   });
                 }),
             SimpleDialogOption(
@@ -264,16 +265,16 @@ class PostForm extends StatelessWidget {
 
 Future<String> uploadImage(var imageFile) async {
   var uuid = Uuid().v1();
-  StorageReference ref = FirebaseStorage.instance.ref().child("post_$uuid.jpg");
-  StorageUploadTask uploadTask = ref.putFile(imageFile);
+  Reference ref = FirebaseStorage.instance.ref().child("post_$uuid.jpg");
+  UploadTask uploadTask = ref.putFile(imageFile);
 
-  String downloadUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+  String downloadUrl = await (await uploadTask).ref.getDownloadURL();
   return downloadUrl;
 }
 
 void postToFireStore(
     {String mediaUrl, String location, String description}) async {
-  var reference = Firestore.instance.collection('insta_posts');
+  var reference = FirebaseFirestore.instance.collection('insta_posts');
 
   reference.add({
     "username": currentUserModel.username,
@@ -284,7 +285,7 @@ void postToFireStore(
     "ownerId": googleSignIn.currentUser.id,
     "timestamp": DateTime.now(),
   }).then((DocumentReference doc) {
-    String docId = doc.documentID;
-    reference.document(docId).updateData({"postId": docId});
+    String docId = doc.id;
+    reference.doc(docId).update({"postId": docId});
   });
 }

@@ -3,8 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'feed.dart';
 import 'upload_page.dart';
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as FBA;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'profile_page.dart';
 import 'search_page.dart';
@@ -14,10 +15,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:io' show Platform;
 import 'models/user.dart';
 
-final auth = FirebaseAuth.instance;
+final auth = FBA.FirebaseAuth.instance;
 final googleSignIn = GoogleSignIn();
-final ref = Firestore.instance.collection('insta_users');
-final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+final ref = FirebaseFirestore.instance.collection('insta_users');
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
 
 User currentUserModel;
@@ -26,11 +27,6 @@ Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized(); // after upgrading flutter this is now necessary
 
-  // enable timestamps in firebase
-  Firestore.instance.settings().then((_) {
-    print('[Main] Firestore timestamps in snapshots set');},
-    onError: (_) => print('[Main] Error setting timestamps in snapshots')
-  );
   runApp(Fluttergram());
 }
 
@@ -44,14 +40,13 @@ Future<Null> _ensureLoggedIn(BuildContext context) async {
     await tryCreateUserRecord(context);
   }
 
-  if (await auth.currentUser() == null) {
+  if (auth.currentUser == null) {
 
     final GoogleSignInAccount googleUser = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser
         .authentication;
 
-
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final FBA.GoogleAuthCredential credential = FBA.GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
@@ -68,13 +63,13 @@ Future<Null> _silentLogin(BuildContext context) async {
     await tryCreateUserRecord(context);
   }
 
-  if (await auth.currentUser() == null && user != null) {
+  if (await auth.currentUser == null && user != null) {
     final GoogleSignInAccount googleUser = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser
         .authentication;
 
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final FBA.GoogleAuthCredential credential = FBA.GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
@@ -87,25 +82,14 @@ Future<Null> _silentLogin(BuildContext context) async {
 
 Future<Null> _setUpNotifications() async {
   if (Platform.isAndroid) {
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print('on message $message');
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print('on resume $message');
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print('on launch $message');
-      },
-    );
 
     _firebaseMessaging.getToken().then((token) {
       print("Firebase Messaging Token: " + token);
 
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection("insta_users")
-          .document(currentUserModel.id)
-          .updateData({"androidNotificationToken": token});
+          .doc(currentUserModel.id)
+          .update({"androidNotificationToken": token});
     });
   }
 }
@@ -115,7 +99,7 @@ Future<void> tryCreateUserRecord(BuildContext context) async {
   if (user == null) {
     return null;
   }
-  DocumentSnapshot userRecord = await ref.document(user.id).get();
+  DocumentSnapshot userRecord = await ref.doc(user.id).get();
   if (userRecord.data == null) {
     // no user record exists, time to create
 
@@ -143,7 +127,7 @@ Future<void> tryCreateUserRecord(BuildContext context) async {
     );
 
     if (userName != null || userName.length != 0) {
-      ref.document(user.id).setData({
+      ref.doc(user.id).set({
         "id": user.id,
         "username": userName,
         "photoUrl": user.photoUrl,
@@ -154,7 +138,7 @@ Future<void> tryCreateUserRecord(BuildContext context) async {
         "following": {},
       });
     }
-    userRecord = await ref.document(user.id).get();
+    userRecord = await ref.doc(user.id).get();
   }
 
   currentUserModel = User.fromDocument(userRecord);
@@ -198,6 +182,7 @@ class _HomePageState extends State<HomePage> {
   int _page = 0;
   bool triedSilentLogin = false;
   bool setupNotifications = false;
+  bool firebaseInitialized = false;
 
   Scaffold buildLoginPage() {
     return Scaffold(
@@ -237,6 +222,14 @@ class _HomePageState extends State<HomePage> {
     if (setupNotifications == false && currentUserModel != null) {
       setUpNotifications();
     }
+
+    if (!firebaseInitialized) return CircularProgressIndicator();
+
+    auth.authStateChanges().listen((event) {
+      if (event == null) {
+        silentLogin(context);
+      }
+    });
 
     return (googleSignIn.currentUser == null || currentUserModel == null)
         ? buildLoginPage()
@@ -334,6 +327,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    Firebase.initializeApp().then((_) {
+     setState(() {
+       firebaseInitialized= true;
+     });
+    });
     pageController = PageController();
   }
 
