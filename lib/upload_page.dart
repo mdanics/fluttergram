@@ -48,7 +48,7 @@ class _Uploader extends State<Uploader> {
             icon: Icon(Icons.file_upload),
             onPressed: () => {_selectImage(context)})
         : Scaffold(
-            resizeToAvoidBottomPadding: false,
+            resizeToAvoidBottomInset: false,
             appBar: AppBar(
               backgroundColor: Colors.white70,
               leading: IconButton(
