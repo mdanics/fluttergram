@@ -4,7 +4,8 @@ import 'feed.dart';
 import 'upload_page.dart';
 import 'dart:async';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as FBA;
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'profile_page.dart';
 import 'search_page.dart';
@@ -14,7 +15,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:io' show Platform;
 import 'models/user.dart';
 
-final auth = FirebaseAuth.instance;
+final auth = FBA.FirebaseAuth.instance;
 final googleSignIn = GoogleSignIn();
 final ref = FirebaseFirestore.instance.collection('insta_users');
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -39,14 +40,13 @@ Future<Null> _ensureLoggedIn(BuildContext context) async {
     await tryCreateUserRecord(context);
   }
 
-  if (await auth.currentUser() == null) {
+  if (auth.currentUser == null) {
 
     final GoogleSignInAccount googleUser = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser
         .authentication;
 
-
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final FBA.GoogleAuthCredential credential = FBA.GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
@@ -63,13 +63,13 @@ Future<Null> _silentLogin(BuildContext context) async {
     await tryCreateUserRecord(context);
   }
 
-  if (await auth.currentUser() == null && user != null) {
+  if (await auth.currentUser == null && user != null) {
     final GoogleSignInAccount googleUser = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser
         .authentication;
 
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final FBA.GoogleAuthCredential credential = FBA.GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
