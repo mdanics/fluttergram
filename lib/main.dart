@@ -225,6 +225,12 @@ class _HomePageState extends State<HomePage> {
 
     if (!firebaseInitialized) return CircularProgressIndicator();
 
+    auth.authStateChanges().listen((event) {
+      if (event == null) {
+        silentLogin(context);
+      }
+    });
+
     return (googleSignIn.currentUser == null || currentUserModel == null)
         ? buildLoginPage()
         : Scaffold(
@@ -324,7 +330,7 @@ class _HomePageState extends State<HomePage> {
     Firebase.initializeApp().then((_) {
      setState(() {
        firebaseInitialized= true;
-     }); 
+     });
     });
     pageController = PageController();
   }
