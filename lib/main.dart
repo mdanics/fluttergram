@@ -5,7 +5,6 @@ import 'upload_page.dart';
 import 'dart:async';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart' as FBA;
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'profile_page.dart';
 import 'search_page.dart';
@@ -18,7 +17,7 @@ import 'models/user.dart';
 final auth = FBA.FirebaseAuth.instance;
 final googleSignIn = GoogleSignIn();
 final ref = FirebaseFirestore.instance.collection('insta_users');
-final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
 
 User currentUserModel;
@@ -82,17 +81,6 @@ Future<Null> _silentLogin(BuildContext context) async {
 
 Future<Null> _setUpNotifications() async {
   if (Platform.isAndroid) {
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print('on message $message');
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print('on resume $message');
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print('on launch $message');
-      },
-    );
 
     _firebaseMessaging.getToken().then((token) {
       print("Firebase Messaging Token: " + token);
