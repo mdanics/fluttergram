@@ -16,7 +16,7 @@ import 'models/user.dart';
 
 final auth = FirebaseAuth.instance;
 final googleSignIn = GoogleSignIn();
-final ref = Firestore.instance.collection('insta_users');
+final ref = FirebaseFirestore.instance.collection('insta_users');
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
 
@@ -26,11 +26,6 @@ Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized(); // after upgrading flutter this is now necessary
 
-  // enable timestamps in firebase
-  Firestore.instance.settings().then((_) {
-    print('[Main] Firestore timestamps in snapshots set');},
-    onError: (_) => print('[Main] Error setting timestamps in snapshots')
-  );
   runApp(Fluttergram());
 }
 
@@ -102,10 +97,10 @@ Future<Null> _setUpNotifications() async {
     _firebaseMessaging.getToken().then((token) {
       print("Firebase Messaging Token: " + token);
 
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection("insta_users")
-          .document(currentUserModel.id)
-          .updateData({"androidNotificationToken": token});
+          .doc(currentUserModel.id)
+          .update({"androidNotificationToken": token});
     });
   }
 }
@@ -115,7 +110,7 @@ Future<void> tryCreateUserRecord(BuildContext context) async {
   if (user == null) {
     return null;
   }
-  DocumentSnapshot userRecord = await ref.document(user.id).get();
+  DocumentSnapshot userRecord = await ref.doc(user.id).get();
   if (userRecord.data == null) {
     // no user record exists, time to create
 
@@ -143,7 +138,7 @@ Future<void> tryCreateUserRecord(BuildContext context) async {
     );
 
     if (userName != null || userName.length != 0) {
-      ref.document(user.id).setData({
+      ref.doc(user.id).set({
         "id": user.id,
         "username": userName,
         "photoUrl": user.photoUrl,
@@ -154,7 +149,7 @@ Future<void> tryCreateUserRecord(BuildContext context) async {
         "following": {},
       });
     }
-    userRecord = await ref.document(user.id).get();
+    userRecord = await ref.doc(user.id).get();
   }
 
   currentUserModel = User.fromDocument(userRecord);

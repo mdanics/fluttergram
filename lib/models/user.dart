@@ -25,7 +25,7 @@ class User {
       email: document['email'],
       username: document['username'],
       photoUrl: document['photoUrl'],
-      id: document.documentID,
+      id: document.id,
       displayName: document['displayName'],
       bio: document['bio'],
       followers: document['followers'],

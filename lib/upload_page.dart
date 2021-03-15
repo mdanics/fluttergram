@@ -273,7 +273,7 @@ Future<String> uploadImage(var imageFile) async {
 
 void postToFireStore(
     {String mediaUrl, String location, String description}) async {
-  var reference = Firestore.instance.collection('insta_posts');
+  var reference = FirebaseFirestore.instance.collection('insta_posts');
 
   reference.add({
     "username": currentUserModel.username,
@@ -284,7 +284,7 @@ void postToFireStore(
     "ownerId": googleSignIn.currentUser.id,
     "timestamp": DateTime.now(),
   }).then((DocumentReference doc) {
-    String docId = doc.documentID;
-    reference.document(docId).updateData({"postId": docId});
+    String docId = doc.id;
+    reference.doc(docId).update({"postId": docId});
   });
 }

@@ -74,23 +74,23 @@ class _ProfilePage extends State<ProfilePage>
       followButtonClicked = true;
     });
 
-    Firestore.instance.document("insta_users/$profileId").updateData({
+    FirebaseFirestore.instance.doc("insta_users/$profileId").update({
       'followers.$currentUserId': true
       //firestore plugin doesnt support deleting, so it must be nulled / falsed
     });
 
-    Firestore.instance.document("insta_users/$currentUserId").updateData({
+    FirebaseFirestore.instance.doc("insta_users/$currentUserId").update({
       'following.$profileId': true
       //firestore plugin doesnt support deleting, so it must be nulled / falsed
     });
 
     //updates activity feed
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("insta_a_feed")
-        .document(profileId)
+        .doc(profileId)
         .collection("items")
-        .document(currentUserId)
-        .setData({
+        .doc(currentUserId)
+        .set({
       "ownerId": profileId,
       "username": currentUserModel.username,
       "userId": currentUserId,
@@ -106,21 +106,21 @@ class _ProfilePage extends State<ProfilePage>
       followButtonClicked = true;
     });
 
-    Firestore.instance.document("insta_users/$profileId").updateData({
+    FirebaseFirestore.instance.doc("insta_users/$profileId").update({
       'followers.$currentUserId': false
       //firestore plugin doesnt support deleting, so it must be nulled / falsed
     });
 
-    Firestore.instance.document("insta_users/$currentUserId").updateData({
+    FirebaseFirestore.instance.doc("insta_users/$currentUserId").update({
       'following.$profileId': false
       //firestore plugin doesnt support deleting, so it must be nulled / falsed
     });
 
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("insta_a_feed")
-        .document(profileId)
+        .doc(profileId)
         .collection("items")
-        .document(currentUserId)
+        .doc(currentUserId)
         .delete();
   }
 
@@ -247,16 +247,16 @@ class _ProfilePage extends State<ProfilePage>
     Container buildUserPosts() {
       Future<List<ImagePost>> getPosts() async {
         List<ImagePost> posts = [];
-        var snap = await Firestore.instance
+        var snap = await FirebaseFirestore.instance
             .collection('insta_posts')
             .where('ownerId', isEqualTo: profileId)
             .orderBy("timestamp")
-            .getDocuments();
-        for (var doc in snap.documents) {
+            .get();
+        for (var doc in snap.docs) {
           posts.add(ImagePost.fromDocument(doc));
         }
         setState(() {
-          postCount = snap.documents.length;
+          postCount = snap.docs.length;
         });
 
         return posts.reversed.toList();
@@ -295,9 +295,9 @@ class _ProfilePage extends State<ProfilePage>
     }
 
     return StreamBuilder(
-        stream: Firestore.instance
+        stream: FirebaseFirestore.instance
             .collection('insta_users')
-            .document(profileId)
+            .doc(profileId)
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
