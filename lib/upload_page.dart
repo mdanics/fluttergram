@@ -21,6 +21,7 @@ class _Uploader extends State<Uploader> {
   Map<String, double> currentLocation = Map();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController locationController = TextEditingController();
+  ImagePicker imagePicker = ImagePicker();
 
   bool uploading = false;
 
@@ -143,20 +144,20 @@ class _Uploader extends State<Uploader> {
                 child: const Text('Take a photo'),
                 onPressed: () async {
                   Navigator.pop(context);
-                  File imageFile =
-                      await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 1920, maxHeight: 1200, imageQuality: 80);
+                   PickedFile imageFile =
+                      await imagePicker.getImage(source: ImageSource.camera, maxWidth: 1920, maxHeight: 1200, imageQuality: 80);
                   setState(() {
-                    file = imageFile;
+                    file = File(imageFile.path);
                   });
                 }),
             SimpleDialogOption(
                 child: const Text('Choose from Gallery'),
                 onPressed: () async {
                   Navigator.of(context).pop();
-                  File imageFile =
-                      await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 1920, maxHeight: 1200, imageQuality: 80);
+                  PickedFile imageFile =
+                      await imagePicker.getImage(source: ImageSource.gallery, maxWidth: 1920, maxHeight: 1200, imageQuality: 80);
                   setState(() {
-                    file = imageFile;
+                    file = File(imageFile.path);
                   });
                 }),
             SimpleDialogOption(
