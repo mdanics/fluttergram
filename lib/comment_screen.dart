@@ -159,12 +159,13 @@ class Comment extends StatelessWidget {
       this.timestamp});
 
   factory Comment.fromDocument(DocumentSnapshot document) {
+    var data = document.data();
     return Comment(
-      username: document['username'],
-      userId: document['userId'],
-      comment: document["comment"],
-      timestamp: document["timestamp"],
-      avatarUrl: document["avatarUrl"],
+      username: data['username'],
+      userId: data['userId'],
+      comment: data["comment"],
+      timestamp: data["timestamp"],
+      avatarUrl: data["avatarUrl"],
     );
   }
 
