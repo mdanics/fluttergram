@@ -100,7 +100,7 @@ Future<void> tryCreateUserRecord(BuildContext context) async {
     return null;
   }
   DocumentSnapshot userRecord = await ref.doc(user.id).get();
-  if (userRecord.data == null) {
+  if (userRecord.data() == null) {
     // no user record exists, time to create
 
     String userName = await Navigator.push(
