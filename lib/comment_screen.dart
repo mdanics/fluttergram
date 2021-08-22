@@ -46,8 +46,7 @@ class _CommentScreenState extends State<CommentScreen> {
     return Column(
       children: [
         Expanded(
-          child:
-            buildComments(),
+          child: buildComments(),
         ),
         Divider(),
         ListTile(
@@ -56,15 +55,20 @@ class _CommentScreenState extends State<CommentScreen> {
             decoration: InputDecoration(labelText: 'Write a comment...'),
             onFieldSubmitted: addComment,
           ),
-          trailing: OutlineButton(onPressed: (){addComment(_commentController.text);}, borderSide: BorderSide.none, child: Text("Post"),),
+          trailing: OutlineButton(
+            onPressed: () {
+              addComment(_commentController.text);
+            },
+            borderSide: BorderSide.none,
+            child: Text("Post"),
+          ),
         ),
       ],
     );
   }
 
-
   Widget buildComments() {
-    if (this.didFetchComments == false){
+    if (this.didFetchComments == false) {
       return FutureBuilder<List<Comment>>(
           future: getComments(),
           builder: (context, snapshot) {
@@ -75,15 +79,14 @@ class _CommentScreenState extends State<CommentScreen> {
 
             this.didFetchComments = true;
             this.fetchedComments = snapshot.data;
+
             return ListView(
               children: snapshot.data,
             );
           });
     } else {
       // for optimistic updating
-      return ListView(
-        children: this.fetchedComments
-      );
+      return ListView(children: this.fetchedComments);
     }
   }
 
@@ -98,6 +101,7 @@ class _CommentScreenState extends State<CommentScreen> {
     data.docs.forEach((DocumentSnapshot doc) {
       comments.add(Comment.fromDocument(doc));
     });
+
     return comments;
   }
 
@@ -133,14 +137,16 @@ class _CommentScreenState extends State<CommentScreen> {
 
     // add comment to the current listview for an optimistic update
     setState(() {
-      fetchedComments = List.from(fetchedComments)..add(Comment(
-          username: currentUserModel.username,
-          comment: comment,
-          timestamp: Timestamp.now(),
-          avatarUrl: currentUserModel.photoUrl,
-          userId: currentUserModel.id
-      ));
+      fetchedComments = List.from(fetchedComments)
+        ..add(Comment(
+            username: currentUserModel.username,
+            comment: comment,
+            timestamp: Timestamp.now(),
+            avatarUrl: currentUserModel.photoUrl,
+            userId: currentUserModel.id));
     });
+    print('AAAAAAAAAA');
+    print(fetchedComments);
   }
 }
 

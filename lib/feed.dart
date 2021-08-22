@@ -81,7 +81,8 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
 
     String userId = googleSignIn.currentUser.id.toString();
     var url =
-        'https://us-central1-mp-rps.cloudfunctions.net/getFeed?uid=' + userId;
+        'https://us-central1-fluttergram-6a60a.cloudfunctions.net/getFeed?uid=' +
+            userId;
     var httpClient = HttpClient();
 
     List<ImagePost> listOfPosts;

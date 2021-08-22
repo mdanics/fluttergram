@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-const notificationHandler_1 = require("./lib/notificationHandler");
-const getFeed_1 = require("./lib/getFeed");
+const notificationHandler_1 = require("./notificationHandler");
+const getFeed_1 = require("./getFeed");
 admin.initializeApp();
 exports.notificationHandler = functions.firestore.document("/insta_a_feed/{userId}/items/{activityFeedItem}")
     .onCreate((snapshot, context) => __awaiter(this, void 0, void 0, function* () {

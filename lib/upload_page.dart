@@ -144,8 +144,11 @@ class _Uploader extends State<Uploader> {
                 child: const Text('Take a photo'),
                 onPressed: () async {
                   Navigator.pop(context);
-                   PickedFile imageFile =
-                      await imagePicker.getImage(source: ImageSource.camera, maxWidth: 1920, maxHeight: 1200, imageQuality: 80);
+                  PickedFile imageFile = await imagePicker.getImage(
+                      source: ImageSource.camera,
+                      maxWidth: 1920,
+                      maxHeight: 1200,
+                      imageQuality: 80);
                   setState(() {
                     file = File(imageFile.path);
                   });
@@ -154,8 +157,11 @@ class _Uploader extends State<Uploader> {
                 child: const Text('Choose from Gallery'),
                 onPressed: () async {
                   Navigator.of(context).pop();
-                  PickedFile imageFile =
-                      await imagePicker.getImage(source: ImageSource.gallery, maxWidth: 1920, maxHeight: 1200, imageQuality: 80);
+                  PickedFile imageFile = await imagePicker.getImage(
+                      source: ImageSource.gallery,
+                      maxWidth: 1920,
+                      maxHeight: 1200,
+                      imageQuality: 80);
                   setState(() {
                     file = File(imageFile.path);
                   });

@@ -27,44 +27,10 @@ class _ProfilePage extends State<ProfilePage>
   _ProfilePage(this.profileId);
 
   editProfile() {
-    EditProfilePage editPage = EditProfilePage();
-
-    Navigator.of(context)
-        .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
-      return Center(
-        child: Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.maybePop(context);
-                },
-              ),
-              title: Text('Edit Profile',
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold)),
-              backgroundColor: Colors.white,
-              actions: <Widget>[
-                IconButton(
-                    icon: Icon(
-                      Icons.check,
-                      color: Colors.blueAccent,
-                    ),
-                    onPressed: () {
-                      editPage.applyChanges();
-                      Navigator.maybePop(context);
-                    })
-              ],
-            ),
-            body: ListView(
-              children: <Widget>[
-                Container(
-                  child: editPage,
-                ),
-              ],
-            )),
-      );
-    }));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => EditProfilePage()),
+    );
   }
 
   followUser() {
@@ -167,9 +133,9 @@ class _ProfilePage extends State<ProfilePage>
                   borderRadius: BorderRadius.circular(5.0)),
               alignment: Alignment.center,
               child: Text(text,
-                  style: TextStyle(
-                      color: textColor, fontWeight: FontWeight.bold)),
-              width: 250.0,
+                  style:
+                      TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+              width: MediaQuery.of(context).size.width * 0.6,
               height: 27.0,
             )),
       );
