@@ -3,11 +3,12 @@
 *   - geoLocation => To get Address from the location coordinates
  */
 import 'package:flutter/services.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
 
 getUserLocation() async {
-  LocationData currentLocation;
+  LocationData? currentLocation;
   String error;
   Location location = Location();
   try {
@@ -23,8 +24,8 @@ getUserLocation() async {
     }
     currentLocation = null;
   }
-  final coordinates = Coordinates(
-      currentLocation.latitude, currentLocation.longitude);
+  final coordinates =
+      Coordinates(currentLocation!.latitude!, currentLocation.longitude!);
   var addresses =
       await Geocoder.local.findAddressesFromCoordinates(coordinates);
   var first = addresses.first;

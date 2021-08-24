@@ -4,9 +4,9 @@ import "dart:async";
 import "main.dart"; //for current user
 
 class CommentScreen extends StatefulWidget {
-  final String postId;
-  final String postOwner;
-  final String postMediaUrl;
+  final String? postId;
+  final String? postOwner;
+  final String? postMediaUrl;
 
   const CommentScreen({this.postId, this.postOwner, this.postMediaUrl});
   @override
@@ -17,12 +17,12 @@ class CommentScreen extends StatefulWidget {
 }
 
 class _CommentScreenState extends State<CommentScreen> {
-  final String postId;
-  final String postOwner;
-  final String postMediaUrl;
+  final String? postId;
+  final String? postOwner;
+  final String? postMediaUrl;
 
   bool didFetchComments = false;
-  List<Comment> fetchedComments = [];
+  List<Comment>? fetchedComments = [];
 
   final TextEditingController _commentController = TextEditingController();
 
@@ -80,12 +80,12 @@ class _CommentScreenState extends State<CommentScreen> {
             this.fetchedComments = snapshot.data;
 
             return ListView(
-              children: snapshot.data,
+              children: snapshot.data!,
             );
           });
     } else {
       // for optimistic updating
-      return ListView(children: this.fetchedComments);
+      return ListView(children: this.fetchedComments!);
     }
   }
 
@@ -111,11 +111,11 @@ class _CommentScreenState extends State<CommentScreen> {
         .doc(postId)
         .collection("comments")
         .add({
-      "username": currentUserModel.username,
+      "username": currentUserModel!.username,
       "comment": comment,
       "timestamp": Timestamp.now(),
-      "avatarUrl": currentUserModel.photoUrl,
-      "userId": currentUserModel.id
+      "avatarUrl": currentUserModel!.photoUrl,
+      "userId": currentUserModel!.id
     });
     //adds to postOwner's activity feed
     FirebaseFirestore.instance
@@ -123,10 +123,10 @@ class _CommentScreenState extends State<CommentScreen> {
         .doc(postOwner)
         .collection("items")
         .add({
-      "username": currentUserModel.username,
-      "userId": currentUserModel.id,
+      "username": currentUserModel!.username,
+      "userId": currentUserModel!.id,
       "type": "comment",
-      "userProfileImg": currentUserModel.photoUrl,
+      "userProfileImg": currentUserModel!.photoUrl,
       "commentData": comment,
       "timestamp": Timestamp.now(),
       "postId": postId,
@@ -135,13 +135,13 @@ class _CommentScreenState extends State<CommentScreen> {
 
     // add comment to the current listview for an optimistic update
     setState(() {
-      fetchedComments = List.from(fetchedComments)
+      fetchedComments = List.from(fetchedComments!)
         ..add(Comment(
-            username: currentUserModel.username,
+            username: currentUserModel!.username,
             comment: comment,
             timestamp: Timestamp.now(),
-            avatarUrl: currentUserModel.photoUrl,
-            userId: currentUserModel.id));
+            avatarUrl: currentUserModel!.photoUrl,
+            userId: currentUserModel!.id));
     });
     print('AAAAAAAAAA');
     print(fetchedComments);
@@ -149,11 +149,11 @@ class _CommentScreenState extends State<CommentScreen> {
 }
 
 class Comment extends StatelessWidget {
-  final String username;
-  final String userId;
-  final String avatarUrl;
-  final String comment;
-  final Timestamp timestamp;
+  final String? username;
+  final String? userId;
+  final String? avatarUrl;
+  final String? comment;
+  final Timestamp? timestamp;
 
   Comment(
       {this.username,
@@ -163,13 +163,12 @@ class Comment extends StatelessWidget {
       this.timestamp});
 
   factory Comment.fromDocument(DocumentSnapshot document) {
-    var data = document.data();
     return Comment(
-      username: data['username'],
-      userId: data['userId'],
-      comment: data["comment"],
-      timestamp: data["timestamp"],
-      avatarUrl: data["avatarUrl"],
+      username: document.get('username'),
+      userId: document.get('userId'),
+      comment: document.get("comment"),
+      timestamp: document.get("timestamp"),
+      avatarUrl: document.get("avatarUrl"),
     );
   }
 
@@ -178,9 +177,9 @@ class Comment extends StatelessWidget {
     return Column(
       children: <Widget>[
         ListTile(
-          title: Text(comment),
+          title: Text(comment!),
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(avatarUrl),
+            backgroundImage: NetworkImage(avatarUrl!),
           ),
         ),
         Divider(),

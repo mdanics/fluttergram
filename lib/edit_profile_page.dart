@@ -9,27 +9,27 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class EditProfilePage extends StatefulWidget {
-  EditProfilePage({Key key}) : super(key: key);
+  EditProfilePage({Key? key}) : super(key: key);
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  File imageFile;
+  File? imageFile;
   ImagePicker imagePicker = ImagePicker();
   String profilePicURL = '';
 
   final TextEditingController nameController =
-      TextEditingController(text: currentUserModel.displayName);
+      TextEditingController(text: currentUserModel!.displayName);
   final TextEditingController bioController =
-      TextEditingController(text: currentUserModel.bio);
+      TextEditingController(text: currentUserModel!.bio);
 
   Future<String> uploadImage() async {
     var uuid = Uuid().v1();
     Reference ref =
         FirebaseStorage.instance.ref().child("profilePic_$uuid.jpg");
-    UploadTask uploadTask = ref.putFile(imageFile);
+    UploadTask uploadTask = ref.putFile(imageFile!);
 
     String downloadUrl = await (await uploadTask).ref.getDownloadURL();
     setState(() {
@@ -53,13 +53,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 child: const Text('Take a photo'),
                 onPressed: () async {
                   Navigator.pop(context);
-                  PickedFile pickerFile = await imagePicker.getImage(
+                  // ignore: deprecated_member_use
+                  PickedFile? pickerFile = await imagePicker.getImage(
                       source: ImageSource.camera,
                       maxWidth: 1920,
                       maxHeight: 1200,
                       imageQuality: 80);
                   setState(() {
-                    imageFile = File(pickerFile.path);
+                    imageFile = File(pickerFile!.path);
                   });
 
                   print('AAAAAAAAAAA');
@@ -68,13 +69,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 child: const Text('Choose from Gallery'),
                 onPressed: () async {
                   Navigator.of(context).pop();
-                  PickedFile pickerFile = await imagePicker.getImage(
+                  // ignore: deprecated_member_use
+                  PickedFile? pickerFile = await imagePicker.getImage(
                       source: ImageSource.gallery,
                       maxWidth: 1920,
                       maxHeight: 1200,
                       imageQuality: 80);
                   setState(() {
-                    imageFile = File(pickerFile.path);
+                    imageFile = File(pickerFile!.path);
                   });
 
                   print('AAAAAAAAAAA');
@@ -97,7 +99,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     FirebaseFirestore.instance
         .collection('insta_users')
-        .doc(currentUserModel.id)
+        .doc(currentUserModel!.id)
         .update({
       "displayName": nameController.text,
       "bio": bioController.text,
@@ -105,7 +107,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     });
   }
 
-  Widget buildTextField({String name, TextEditingController controller}) {
+  Widget buildTextField(
+      {required String name, TextEditingController? controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -153,7 +156,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     });
                     try {
                       await FirebaseStorage.instance
-                          .refFromURL(currentUserModel.photoUrl)
+                          .refFromURL(currentUserModel!.photoUrl!)
                           .delete();
                       applyChanges();
                     } on Exception catch (_) {}
@@ -168,11 +171,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
             Padding(
               padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
               child: CircleAvatar(
-                backgroundImage: imageFile == null
-                    ? NetworkImage(currentUserModel.photoUrl)
+                backgroundImage: (imageFile == null
+                    ? NetworkImage(currentUserModel!.photoUrl!)
                     : FileImage(
-                        imageFile,
-                      ),
+                        imageFile!,
+                      )) as ImageProvider<Object>?,
                 radius: 50.0,
               ),
             ),

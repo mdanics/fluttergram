@@ -38,7 +38,7 @@ class _ActivityFeedPageState extends State<ActivityFeedPage>
                   padding: const EdgeInsets.only(top: 10.0),
                   child: CircularProgressIndicator());
             else {
-              return ListView(children: snapshot.data);
+              return ListView();
             }
           }),
     );
@@ -48,7 +48,7 @@ class _ActivityFeedPageState extends State<ActivityFeedPage>
     List<ActivityFeedItem> items = [];
     var snap = await FirebaseFirestore.instance
         .collection('insta_a_feed')
-        .doc(currentUserModel.id)
+        .doc(currentUserModel!.id)
         .collection("items")
         .orderBy("timestamp")
         .get();
@@ -75,29 +75,28 @@ class ActivityFeedItem extends StatelessWidget {
   final String commentData;
 
   ActivityFeedItem(
-      {this.username,
-      this.userId,
-      this.type,
-      this.mediaUrl,
-      this.mediaId,
-      this.userProfileImg,
-      this.commentData});
+      {required this.username,
+      required this.userId,
+      required this.type,
+      required this.mediaUrl,
+      required this.mediaId,
+      required this.userProfileImg,
+      required this.commentData});
 
   factory ActivityFeedItem.fromDocument(DocumentSnapshot document) {
-    var data = document.data();
     return ActivityFeedItem(
-      username: data['username'],
-      userId: data['userId'],
-      type: data['type'],
-      mediaUrl: data['mediaUrl'],
-      mediaId: data['postId'],
-      userProfileImg: data['userProfileImg'],
-      commentData: data["commentData"],
+      username: document.get('username'),
+      userId: document.get('userId'),
+      type: document.get('type'),
+      mediaUrl: document.get('mediaUrl'),
+      mediaId: document.get('postId'),
+      userProfileImg: document.get('userProfileImg'),
+      commentData: document.get("commentData"),
     );
   }
 
   Widget mediaPreview = Container();
-  String actionText;
+  String actionText = '';
 
   void configureItem(BuildContext context) {
     if (type == "like" || type == "comment") {

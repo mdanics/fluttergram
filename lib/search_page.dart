@@ -9,7 +9,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin<SearchPage>{
-  Future<QuerySnapshot> userDocs;
+  Future<QuerySnapshot>? userDocs;
 
   buildSearchField() {
     return AppBar(
@@ -59,7 +59,7 @@ class _SearchPage extends State<SearchPage> with AutomaticKeepAliveClientMixin<S
               future: userDocs,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return buildSearchResults(snapshot.data.docs);
+                  return buildSearchResults(snapshot.data!.docs);
                 } else {
                   return Container(
                       alignment: FractionalOffset.center,
@@ -89,11 +89,11 @@ class UserSearchItem extends StatelessWidget {
     return GestureDetector(
         child: ListTile(
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(user.photoUrl),
+            backgroundImage: NetworkImage(user.photoUrl!),
             backgroundColor: Colors.grey,
           ),
-          title: Text(user.username, style: boldStyle),
-          subtitle: Text(user.displayName),
+          title: Text(user.username!, style: boldStyle),
+          subtitle: Text(user.displayName!),
         ),
         onTap: () {
           openProfile(context, user.id);

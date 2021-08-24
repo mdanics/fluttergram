@@ -58,13 +58,13 @@ class ImagePost extends StatefulWidget {
     return count;
   }
 
-  final String mediaUrl;
-  final String username;
-  final String location;
-  final String description;
+  final String? mediaUrl;
+  final String? username;
+  final String? location;
+  final String? description;
   final likes;
-  final String postId;
-  final String ownerId;
+  final String? postId;
+  final String? ownerId;
 
   _ImagePost createState() => _ImagePost(
         mediaUrl: this.mediaUrl,
@@ -79,15 +79,15 @@ class ImagePost extends StatefulWidget {
 }
 
 class _ImagePost extends State<ImagePost> {
-  final String mediaUrl;
-  final String username;
-  final String location;
-  final String description;
-  Map likes;
-  int likeCount;
-  final String postId;
-  bool liked;
-  final String ownerId;
+  final String? mediaUrl;
+  final String? username;
+  final String? location;
+  final String? description;
+  Map? likes;
+  int? likeCount;
+  final String? postId;
+  late bool liked;
+  final String? ownerId;
 
   bool showHeart = false;
 
@@ -109,7 +109,7 @@ class _ImagePost extends State<ImagePost> {
       this.ownerId});
 
   GestureDetector buildLikeIcon() {
-    Color color;
+    Color? color;
     IconData icon;
 
     if (liked) {
@@ -137,7 +137,7 @@ class _ImagePost extends State<ImagePost> {
         alignment: Alignment.center,
         children: <Widget>[
           CachedNetworkImage(
-            imageUrl: mediaUrl,
+            imageUrl: mediaUrl!,
             fit: BoxFit.fitWidth,
             placeholder: (context, url) => loadingPlaceHolder,
             errorWidget: (context, url, error) => Icon(Icons.error),
@@ -161,7 +161,7 @@ class _ImagePost extends State<ImagePost> {
     );
   }
 
-  buildPostHeader({String ownerId}) {
+  buildPostHeader({String? ownerId}) {
     if (ownerId == null) {
       return Text("owner error");
     }
@@ -171,21 +171,22 @@ class _ImagePost extends State<ImagePost> {
             .collection('insta_users')
             .doc(ownerId)
             .get(),
-        builder: (context, snapshot) {
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.data != null) {
             return ListTile(
               leading: CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(
-                    snapshot.data.data()['photoUrl']),
+                backgroundImage:
+                    CachedNetworkImageProvider(snapshot.data!['photoUrl']),
                 backgroundColor: Colors.grey,
               ),
               title: GestureDetector(
-                child: Text(snapshot.data.data()['username'], style: boldStyle),
+                child: Text(snapshot.data!['username'], style: boldStyle),
                 onTap: () {
                   openProfile(context, ownerId);
                 },
               ),
-              subtitle: Text(this.location),
+              subtitle: Text(this.location!),
               trailing: const Icon(Icons.more_vert),
             );
           }
@@ -202,7 +203,7 @@ class _ImagePost extends State<ImagePost> {
 
   @override
   Widget build(BuildContext context) {
-    liked = (likes[googleSignIn.currentUser.id.toString()] == true);
+    liked = (likes![googleSignIn.currentUser!.id.toString()] == true);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -249,16 +250,16 @@ class _ImagePost extends State<ImagePost> {
                   "$username ",
                   style: boldStyle,
                 )),
-            Expanded(child: Text(description)),
+            Expanded(child: Text(description!)),
           ],
         )
       ],
     );
   }
 
-  void _likePost(String postId2) {
-    var userId = googleSignIn.currentUser.id;
-    bool _liked = likes[userId] == true;
+  void _likePost(String? postId2) {
+    var userId = googleSignIn.currentUser!.id;
+    bool _liked = likes![userId] == true;
 
     if (_liked) {
       print('removing like');
@@ -268,9 +269,9 @@ class _ImagePost extends State<ImagePost> {
       });
 
       setState(() {
-        likeCount = likeCount - 1;
+        likeCount = likeCount! - 1;
         liked = false;
-        likes[userId] = false;
+        likes![userId] = false;
       });
 
       removeActivityFeedItem();
@@ -283,9 +284,9 @@ class _ImagePost extends State<ImagePost> {
       addActivityFeedItem();
 
       setState(() {
-        likeCount = likeCount + 1;
+        likeCount = likeCount! + 1;
         liked = true;
-        likes[userId] = true;
+        likes![userId] = true;
         showHeart = true;
       });
       Timer(const Duration(milliseconds: 2000), () {
@@ -303,10 +304,10 @@ class _ImagePost extends State<ImagePost> {
         .collection("items")
         .doc(postId)
         .set({
-      "username": currentUserModel.username,
-      "userId": currentUserModel.id,
+      "username": currentUserModel!.username,
+      "userId": currentUserModel!.id,
       "type": "like",
-      "userProfileImg": currentUserModel.photoUrl,
+      "userProfileImg": currentUserModel!.photoUrl,
       "mediaUrl": mediaUrl,
       "timestamp": DateTime.now(),
       "postId": postId,
@@ -324,7 +325,7 @@ class _ImagePost extends State<ImagePost> {
 }
 
 class ImagePostFromId extends StatelessWidget {
-  final String id;
+  final String? id;
 
   const ImagePostFromId({this.id});
 
@@ -346,13 +347,16 @@ class ImagePostFromId extends StatelessWidget {
                 alignment: FractionalOffset.center,
                 padding: const EdgeInsets.only(top: 10.0),
                 child: CircularProgressIndicator());
-          return snapshot.data;
+          return Container();
         });
   }
 }
 
 void goToComments(
-    {BuildContext context, String postId, String ownerId, String mediaUrl}) {
+    {required BuildContext context,
+    String? postId,
+    String? ownerId,
+    String? mediaUrl}) {
   Navigator.of(context)
       .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
     return CommentScreen(

@@ -7,6 +7,7 @@ import 'dart:async';
 import 'main.dart';
 import 'dart:io';
 import 'location.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:geocoder/geocoder.dart';
 
 class Uploader extends StatefulWidget {
@@ -14,9 +15,9 @@ class Uploader extends StatefulWidget {
 }
 
 class _Uploader extends State<Uploader> {
-  File file;
+  File? file;
   //Strings required to save address
-  Address address;
+  Address? address;
 
   Map<String, double> currentLocation = Map();
   TextEditingController descriptionController = TextEditingController();
@@ -86,12 +87,12 @@ class _Uploader extends State<Uploader> {
                         padding: EdgeInsets.only(right: 5.0, left: 5.0),
                         child: Row(
                           children: <Widget>[
-                            buildLocationButton(address.featureName),
-                            buildLocationButton(address.subLocality),
-                            buildLocationButton(address.locality),
-                            buildLocationButton(address.subAdminArea),
-                            buildLocationButton(address.adminArea),
-                            buildLocationButton(address.countryName),
+                            buildLocationButton(address!.featureName ?? ""),
+                            buildLocationButton(address!.subLocality ?? ""),
+                            buildLocationButton(address!.locality ?? ""),
+                            buildLocationButton(address!.subAdminArea ?? ""),
+                            buildLocationButton(address!.adminArea ?? ""),
+                            buildLocationButton(address!.countryName ?? ""),
                           ],
                         ),
                       ),
@@ -102,7 +103,7 @@ class _Uploader extends State<Uploader> {
 
   //method to build buttons with location.
   buildLocationButton(String locationName) {
-    if (locationName != null ?? locationName.isNotEmpty) {
+    if (locationName.isNotEmpty) {
       return InkWell(
         onTap: () {
           locationController.text = locationName;
@@ -144,26 +145,28 @@ class _Uploader extends State<Uploader> {
                 child: const Text('Take a photo'),
                 onPressed: () async {
                   Navigator.pop(context);
-                  PickedFile imageFile = await imagePicker.getImage(
+                  // ignore: deprecated_member_use
+                  PickedFile? imageFile = await imagePicker.getImage(
                       source: ImageSource.camera,
                       maxWidth: 1920,
                       maxHeight: 1200,
                       imageQuality: 80);
                   setState(() {
-                    file = File(imageFile.path);
+                    file = File(imageFile!.path);
                   });
                 }),
             SimpleDialogOption(
                 child: const Text('Choose from Gallery'),
                 onPressed: () async {
                   Navigator.of(context).pop();
-                  PickedFile imageFile = await imagePicker.getImage(
+                  // ignore: deprecated_member_use
+                  PickedFile? imageFile = await imagePicker.getImage(
                       source: ImageSource.gallery,
                       maxWidth: 1920,
                       maxHeight: 1200,
                       imageQuality: 80);
                   setState(() {
-                    file = File(imageFile.path);
+                    file = File(imageFile!.path);
                   });
                 }),
             SimpleDialogOption(
@@ -204,9 +207,9 @@ class _Uploader extends State<Uploader> {
 
 class PostForm extends StatelessWidget {
   final imageFile;
-  final TextEditingController descriptionController;
-  final TextEditingController locationController;
-  final bool loading;
+  final TextEditingController? descriptionController;
+  final TextEditingController? locationController;
+  final bool? loading;
   PostForm(
       {this.imageFile,
       this.descriptionController,
@@ -216,7 +219,7 @@ class PostForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        loading
+        loading!
             ? LinearProgressIndicator()
             : Padding(padding: EdgeInsets.only(top: 0.0)),
         Divider(),
@@ -224,7 +227,7 @@ class PostForm extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             CircleAvatar(
-              backgroundImage: NetworkImage(currentUserModel.photoUrl),
+              backgroundImage: NetworkImage(currentUserModel!.photoUrl!),
             ),
             Container(
               width: 250.0,
@@ -279,16 +282,16 @@ Future<String> uploadImage(var imageFile) async {
 }
 
 void postToFireStore(
-    {String mediaUrl, String location, String description}) async {
+    {String? mediaUrl, String? location, String? description}) async {
   var reference = FirebaseFirestore.instance.collection('insta_posts');
 
   reference.add({
-    "username": currentUserModel.username,
+    "username": currentUserModel!.username,
     "location": location,
     "likes": {},
     "mediaUrl": mediaUrl,
     "description": description,
-    "ownerId": googleSignIn.currentUser.id,
+    "ownerId": googleSignIn.currentUser!.id,
     "timestamp": DateTime.now(),
   }).then((DocumentReference doc) {
     String docId = doc.id;

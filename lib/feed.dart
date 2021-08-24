@@ -11,7 +11,7 @@ class Feed extends StatefulWidget {
 }
 
 class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
-  List<ImagePost> feedData;
+  List<ImagePost>? feedData;
 
   @override
   void initState() {
@@ -22,7 +22,7 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
   buildFeed() {
     if (feedData != null) {
       return ListView(
-        children: feedData,
+        children: feedData!,
       );
     } else {
       return Container(
@@ -60,7 +60,7 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
 
   _loadFeed() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String json = prefs.getString("feed");
+    String? json = prefs.getString("feed");
 
     if (json != null) {
       List<Map<String, dynamic>> data =
@@ -79,13 +79,13 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    String userId = googleSignIn.currentUser.id.toString();
+    String userId = googleSignIn.currentUser!.id.toString();
     var url =
         'https://us-central1-fluttergram-6a60a.cloudfunctions.net/getFeed?uid=' +
             userId;
     var httpClient = HttpClient();
 
-    List<ImagePost> listOfPosts;
+    List<ImagePost>? listOfPosts;
     String result;
     try {
       var request = await httpClient.getUrl(Uri.parse(url));

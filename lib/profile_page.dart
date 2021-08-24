@@ -9,15 +9,15 @@ import 'models/user.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({this.userId});
 
-  final String userId;
+  final String? userId;
 
   _ProfilePage createState() => _ProfilePage(this.userId);
 }
 
 class _ProfilePage extends State<ProfilePage>
     with AutomaticKeepAliveClientMixin<ProfilePage> {
-  final String profileId;
-  String currentUserId = googleSignIn.currentUser.id;
+  final String? profileId;
+  String currentUserId = googleSignIn.currentUser!.id;
   String view = "grid"; // default view
   bool isFollowing = false;
   bool followButtonClicked = false;
@@ -58,10 +58,10 @@ class _ProfilePage extends State<ProfilePage>
         .doc(currentUserId)
         .set({
       "ownerId": profileId,
-      "username": currentUserModel.username,
+      "username": currentUserModel!.username,
       "userId": currentUserId,
       "type": "follow",
-      "userProfileImg": currentUserModel.photoUrl,
+      "userProfileImg": currentUserModel!.photoUrl,
       "timestamp": DateTime.now()
     });
   }
@@ -117,15 +117,15 @@ class _ProfilePage extends State<ProfilePage>
     }
 
     Container buildFollowButton(
-        {String text,
-        Color backgroundcolor,
-        Color textColor,
-        Color borderColor,
-        Function function}) {
+        {required String text,
+        Color? backgroundcolor,
+        Color? textColor,
+        required Color borderColor,
+        Function? function}) {
       return Container(
         padding: EdgeInsets.only(top: 2.0),
         child: TextButton(
-            onPressed: function,
+            onPressed: function as void Function()?,
             child: Container(
               decoration: BoxDecoration(
                   color: backgroundcolor,
@@ -247,12 +247,12 @@ class _ProfilePage extends State<ProfilePage>
                 crossAxisSpacing: 1.5,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                children: snapshot.data.map((ImagePost imagePost) {
+                children: snapshot.data!.map((ImagePost imagePost) {
                   return GridTile(child: ImageTile(imagePost));
                 }).toList());
           } else if (view == "feed") {
             return Column(
-                children: snapshot.data.map((ImagePost imagePost) {
+                children: snapshot.data!.map((ImagePost imagePost) {
               return imagePost;
             }).toList());
           } else {
@@ -270,16 +270,17 @@ class _ProfilePage extends State<ProfilePage>
             .collection('insta_users')
             .doc(profileId)
             .snapshots(),
-        builder: (context, snapshot) {
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (!snapshot.hasData)
             return Container(
                 alignment: FractionalOffset.center,
                 child: CircularProgressIndicator());
 
-          User user = User.fromDocument(snapshot.data);
+          User user = User.fromDocument(snapshot.data!);
 
-          if (user.followers.containsKey(currentUserId) &&
-              user.followers[currentUserId] &&
+          if (user.followers!.containsKey(currentUserId) &&
+              user.followers![currentUserId] &&
               followButtonClicked == false) {
             isFollowing = true;
           }
@@ -287,7 +288,7 @@ class _ProfilePage extends State<ProfilePage>
           return Scaffold(
               appBar: AppBar(
                 title: Text(
-                  user.username,
+                  user.username!,
                   style: const TextStyle(color: Colors.black),
                 ),
                 backgroundColor: Colors.white,
@@ -303,7 +304,7 @@ class _ProfilePage extends State<ProfilePage>
                             CircleAvatar(
                               radius: 40.0,
                               backgroundColor: Colors.grey,
-                              backgroundImage: NetworkImage(user.photoUrl),
+                              backgroundImage: NetworkImage(user.photoUrl!),
                             ),
                             Expanded(
                               flex: 1,
@@ -316,9 +317,9 @@ class _ProfilePage extends State<ProfilePage>
                                     children: <Widget>[
                                       buildStatColumn("posts", postCount),
                                       buildStatColumn("followers",
-                                          _countFollowings(user.followers)),
+                                          _countFollowings(user.followers!)),
                                       buildStatColumn("following",
-                                          _countFollowings(user.following)),
+                                          _countFollowings(user.following!)),
                                     ],
                                   ),
                                   Row(
@@ -336,13 +337,13 @@ class _ProfilePage extends State<ProfilePage>
                             alignment: Alignment.centerLeft,
                             padding: const EdgeInsets.only(top: 15.0),
                             child: Text(
-                              user.displayName,
+                              user.displayName!,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             )),
                         Container(
                           alignment: Alignment.centerLeft,
                           padding: const EdgeInsets.only(top: 1.0),
-                          child: Text(user.bio),
+                          child: Text(user.bio!),
                         ),
                       ],
                     ),
@@ -411,11 +412,11 @@ class ImageTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () => clickedImage(context),
-        child: Image.network(imagePost.mediaUrl, fit: BoxFit.cover));
+        child: Image.network(imagePost.mediaUrl!, fit: BoxFit.cover));
   }
 }
 
-void openProfile(BuildContext context, String userId) {
+void openProfile(BuildContext context, String? userId) {
   Navigator.of(context)
       .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
     return ProfilePage(userId: userId);

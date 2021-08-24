@@ -20,7 +20,7 @@ final googleSignIn = GoogleSignIn();
 final ref = FirebaseFirestore.instance.collection('insta_users');
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-User currentUserModel;
+User? currentUserModel;
 
 Future<void> main() async {
   WidgetsFlutterBinding
@@ -30,7 +30,7 @@ Future<void> main() async {
 }
 
 Future<Null> _ensureLoggedIn(BuildContext context) async {
-  GoogleSignInAccount user = googleSignIn.currentUser;
+  GoogleSignInAccount? user = googleSignIn.currentUser;
   if (user == null) {
     user = await googleSignIn.signInSilently();
   }
@@ -40,7 +40,8 @@ Future<Null> _ensureLoggedIn(BuildContext context) async {
   }
 
   if (auth.currentUser == null) {
-    final GoogleSignInAccount googleUser = await googleSignIn.signIn();
+    final GoogleSignInAccount googleUser =
+        await (googleSignIn.signIn() as FutureOr<GoogleSignInAccount>);
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
 
@@ -48,14 +49,14 @@ Future<Null> _ensureLoggedIn(BuildContext context) async {
         FBA.GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
-    );
+    ) as FBA.GoogleAuthCredential;
 
     await auth.signInWithCredential(credential);
   }
 }
 
 Future<Null> _silentLogin(BuildContext context) async {
-  GoogleSignInAccount user = googleSignIn.currentUser;
+  GoogleSignInAccount? user = googleSignIn.currentUser;
 
   if (user == null) {
     user = await googleSignIn.signInSilently();
@@ -63,7 +64,8 @@ Future<Null> _silentLogin(BuildContext context) async {
   }
 
   if (auth.currentUser == null && user != null) {
-    final GoogleSignInAccount googleUser = await googleSignIn.signIn();
+    final GoogleSignInAccount googleUser =
+        await (googleSignIn.signIn() as FutureOr<GoogleSignInAccount>);
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
 
@@ -71,7 +73,7 @@ Future<Null> _silentLogin(BuildContext context) async {
         FBA.GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
-    );
+    ) as FBA.GoogleAuthCredential;
 
     await auth.signInWithCredential(credential);
   }
@@ -80,18 +82,18 @@ Future<Null> _silentLogin(BuildContext context) async {
 Future<Null> _setUpNotifications() async {
   if (Platform.isAndroid) {
     _firebaseMessaging.getToken().then((token) {
-      print("Firebase Messaging Token: " + token);
+      print("Firebase Messaging Token: " + token!);
 
       FirebaseFirestore.instance
           .collection("insta_users")
-          .doc(currentUserModel.id)
+          .doc(currentUserModel!.id)
           .update({"androidNotificationToken": token});
     });
   }
 }
 
 Future<void> tryCreateUserRecord(BuildContext context) async {
-  GoogleSignInAccount user = googleSignIn.currentUser;
+  GoogleSignInAccount? user = googleSignIn.currentUser;
   if (user == null) {
     return null;
   }
@@ -99,7 +101,7 @@ Future<void> tryCreateUserRecord(BuildContext context) async {
   if (userRecord.data() == null) {
     // no user record exists, time to create
 
-    String userName = await Navigator.push(
+    String? userName = await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => Center(
@@ -122,7 +124,7 @@ Future<void> tryCreateUserRecord(BuildContext context) async {
               )),
     );
 
-    if (userName != null || userName.length != 0) {
+    if (userName != null || userName!.length != 0) {
       ref.doc(user.id).set({
         "id": user.id,
         "username": userName,
@@ -165,14 +167,14 @@ class Fluttergram extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
-  final String title;
+  HomePage({Key? key, this.title}) : super(key: key);
+  final String? title;
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-PageController pageController;
+PageController? pageController;
 
 class _HomePageState extends State<HomePage> {
   int _page = 0;
@@ -245,7 +247,7 @@ class _HomePageState extends State<HomePage> {
                 Container(
                     color: Colors.white,
                     child: ProfilePage(
-                      userId: googleSignIn.currentUser.id,
+                      userId: googleSignIn.currentUser!.id,
                     )),
               ],
               controller: pageController,
@@ -305,7 +307,7 @@ class _HomePageState extends State<HomePage> {
 
   void navigationTapped(int page) {
     //Animating Page
-    pageController.jumpToPage(page);
+    pageController!.jumpToPage(page);
   }
 
   void onPageChanged(int page) {
@@ -328,6 +330,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     super.dispose();
-    pageController.dispose();
+    pageController!.dispose();
   }
 }
