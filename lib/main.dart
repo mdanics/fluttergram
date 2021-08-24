@@ -20,12 +20,11 @@ final googleSignIn = GoogleSignIn();
 final ref = FirebaseFirestore.instance.collection('insta_users');
 final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-
 User currentUserModel;
 
 Future<void> main() async {
-
-  WidgetsFlutterBinding.ensureInitialized(); // after upgrading flutter this is now necessary
+  WidgetsFlutterBinding
+      .ensureInitialized(); // after upgrading flutter this is now necessary
 
   runApp(Fluttergram());
 }
@@ -41,12 +40,12 @@ Future<Null> _ensureLoggedIn(BuildContext context) async {
   }
 
   if (auth.currentUser == null) {
-
     final GoogleSignInAccount googleUser = await googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth = await googleUser
-        .authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
-    final FBA.GoogleAuthCredential credential = FBA.GoogleAuthProvider.credential(
+    final FBA.GoogleAuthCredential credential =
+        FBA.GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
@@ -63,26 +62,23 @@ Future<Null> _silentLogin(BuildContext context) async {
     await tryCreateUserRecord(context);
   }
 
-  if (await auth.currentUser == null && user != null) {
+  if (auth.currentUser == null && user != null) {
     final GoogleSignInAccount googleUser = await googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth = await googleUser
-        .authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
-
-    final FBA.GoogleAuthCredential credential = FBA.GoogleAuthProvider.credential(
+    final FBA.GoogleAuthCredential credential =
+        FBA.GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
     await auth.signInWithCredential(credential);
   }
-
-
 }
 
 Future<Null> _setUpNotifications() async {
   if (Platform.isAndroid) {
-
     _firebaseMessaging.getToken().then((token) {
       print("Firebase Messaging Token: " + token);
 
@@ -245,8 +241,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.white,
                   child: Uploader(),
                 ),
-                Container(
-                    color: Colors.white, child: ActivityFeedPage()),
+                Container(color: Colors.white, child: ActivityFeedPage()),
                 Container(
                     color: Colors.white,
                     child: ProfilePage(
@@ -263,27 +258,22 @@ class _HomePageState extends State<HomePage> {
                 BottomNavigationBarItem(
                     icon: Icon(Icons.home,
                         color: (_page == 0) ? Colors.black : Colors.grey),
-                    title: Container(height: 0.0),
                     backgroundColor: Colors.white),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.search,
                         color: (_page == 1) ? Colors.black : Colors.grey),
-                    title: Container(height: 0.0),
                     backgroundColor: Colors.white),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.add_circle,
                         color: (_page == 2) ? Colors.black : Colors.grey),
-                    title: Container(height: 0.0),
                     backgroundColor: Colors.white),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.star,
                         color: (_page == 3) ? Colors.black : Colors.grey),
-                    title: Container(height: 0.0),
                     backgroundColor: Colors.white),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.person,
                         color: (_page == 4) ? Colors.black : Colors.grey),
-                    title: Container(height: 0.0),
                     backgroundColor: Colors.white),
               ],
               onTap: navigationTapped,
@@ -328,9 +318,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     Firebase.initializeApp().then((_) {
-     setState(() {
-       firebaseInitialized= true;
-     });
+      setState(() {
+        firebaseInitialized = true;
+      });
     });
     pageController = PageController();
   }

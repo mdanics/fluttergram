@@ -55,11 +55,10 @@ class _CommentScreenState extends State<CommentScreen> {
             decoration: InputDecoration(labelText: 'Write a comment...'),
             onFieldSubmitted: addComment,
           ),
-          trailing: OutlineButton(
+          trailing: OutlinedButton(
             onPressed: () {
               addComment(_commentController.text);
             },
-            borderSide: BorderSide.none,
             child: Text("Post"),
           ),
         ),
@@ -118,7 +117,6 @@ class _CommentScreenState extends State<CommentScreen> {
       "avatarUrl": currentUserModel.photoUrl,
       "userId": currentUserModel.id
     });
-
     //adds to postOwner's activity feed
     FirebaseFirestore.instance
         .collection("insta_a_feed")

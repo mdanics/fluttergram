@@ -124,7 +124,7 @@ class _ProfilePage extends State<ProfilePage>
         Function function}) {
       return Container(
         padding: EdgeInsets.only(top: 2.0),
-        child: FlatButton(
+        child: TextButton(
             onPressed: function,
             child: Container(
               decoration: BoxDecoration(
@@ -232,12 +232,12 @@ class _ProfilePage extends State<ProfilePage>
           child: FutureBuilder<List<ImagePost>>(
         future: getPosts(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData)
+          if (!snapshot.hasData) {
             return Container(
                 alignment: FractionalOffset.center,
                 padding: const EdgeInsets.only(top: 10.0),
                 child: CircularProgressIndicator());
-          else if (view == "grid") {
+          } else if (view == "grid") {
             // build the grid
             return GridView.count(
                 crossAxisCount: 3,
@@ -255,6 +255,11 @@ class _ProfilePage extends State<ProfilePage>
                 children: snapshot.data.map((ImagePost imagePost) {
               return imagePost;
             }).toList());
+          } else {
+            return Container(
+                alignment: FractionalOffset.center,
+                padding: const EdgeInsets.only(top: 10.0),
+                child: CircularProgressIndicator());
           }
         },
       ));

@@ -4,11 +4,9 @@ import "package:flutter/material.dart";
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import 'main.dart'; //for currentuser & google signin instance
-import 'models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EditProfilePage extends StatefulWidget {
   EditProfilePage({Key key}) : super(key: key);
@@ -178,7 +176,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 radius: 50.0,
               ),
             ),
-            FlatButton(
+            TextButton(
                 onPressed: () {
                   changeProfilePhoto(context);
                 },

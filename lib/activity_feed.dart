@@ -9,7 +9,8 @@ class ActivityFeedPage extends StatefulWidget {
   _ActivityFeedPageState createState() => _ActivityFeedPageState();
 }
 
-class _ActivityFeedPageState extends State<ActivityFeedPage> with AutomaticKeepAliveClientMixin<ActivityFeedPage> {
+class _ActivityFeedPageState extends State<ActivityFeedPage>
+    with AutomaticKeepAliveClientMixin<ActivityFeedPage> {
   @override
   Widget build(BuildContext context) {
     super.build(context); // reloads state when opened again
@@ -61,14 +62,13 @@ class _ActivityFeedPageState extends State<ActivityFeedPage> with AutomaticKeepA
   // ensures state is kept when switching pages
   @override
   bool get wantKeepAlive => true;
-
 }
 
+// ignore: must_be_immutable
 class ActivityFeedItem extends StatelessWidget {
   final String username;
   final String userId;
-  final String
-      type; // types include liked photo, follow user, comment on photo
+  final String type; // types include liked photo, follow user, comment on photo
   final String mediaUrl;
   final String mediaId;
   final String userProfileImg;

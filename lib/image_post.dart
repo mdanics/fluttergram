@@ -147,9 +147,10 @@ class _ImagePost extends State<ImagePost> {
                   child: Container(
                     width: 100,
                     height: 100,
-                    child:  Opacity(
+                    child: Opacity(
                         opacity: 0.85,
-                        child: FlareActor("assets/flare/Like.flr",
+                        child: FlareActor(
+                          "assets/flare/Like.flr",
                           animation: "Like",
                         )),
                   ),
@@ -171,11 +172,11 @@ class _ImagePost extends State<ImagePost> {
             .doc(ownerId)
             .get(),
         builder: (context, snapshot) {
-
           if (snapshot.data != null) {
             return ListTile(
               leading: CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(snapshot.data.data()['photoUrl']),
+                backgroundImage: CachedNetworkImageProvider(
+                    snapshot.data.data()['photoUrl']),
                 backgroundColor: Colors.grey,
               ),
               title: GestureDetector(
@@ -328,8 +329,10 @@ class ImagePostFromId extends StatelessWidget {
   const ImagePostFromId({this.id});
 
   getImagePost() async {
-    var document =
-        await FirebaseFirestore.instance.collection('insta_posts').doc(id).get();
+    var document = await FirebaseFirestore.instance
+        .collection('insta_posts')
+        .doc(id)
+        .get();
     return ImagePost.fromDocument(document);
   }
 

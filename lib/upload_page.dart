@@ -59,7 +59,7 @@ class _Uploader extends State<Uploader> {
                 style: const TextStyle(color: Colors.black),
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                     onPressed: postImage,
                     child: Text(
                       "Post",

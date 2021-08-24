@@ -506,13 +506,13 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "Fluttergram",
+      "name": "fluttergram",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.10"
     }
   ],
-  "generated": "2021-08-19T17:52:13.037727Z",
+  "generated": "2021-08-24T06:48:57.137666Z",
   "generator": "pub",
   "generatorVersion": "2.13.4"
 }
