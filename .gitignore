@@ -9,3 +9,6 @@ ios/.generated/
 packages
 .flutter-plugins
 functions/node_modules/
+.dart_tool/
+.github/
+.flutter-plugins-dependencies
