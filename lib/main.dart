@@ -219,7 +219,7 @@ class _HomePageState extends State<HomePage> {
       silentLogin(context);
     }
 
-    if (setupNotifications == false && currentUserModel != null) {
+    if (setupNotifications == false) {
       setUpNotifications();
     }
 
@@ -231,7 +231,7 @@ class _HomePageState extends State<HomePage> {
       }
     });
 
-    return (googleSignIn.currentUser == null || currentUserModel == null)
+    return (googleSignIn.currentUser == null)
         ? buildLoginPage()
         : Scaffold(
             body: PageView(

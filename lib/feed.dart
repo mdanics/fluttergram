@@ -20,16 +20,10 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
   }
 
   buildFeed() {
-    if (feedData != null) {
-      return ListView(
-        children: feedData,
-      );
-    } else {
-      return Container(
-          alignment: FractionalOffset.center,
-          child: CircularProgressIndicator());
+    return ListView(
+      children: feedData,
+    );
     }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,17 +56,13 @@ class _Feed extends State<Feed> with AutomaticKeepAliveClientMixin<Feed> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String json = prefs.getString("feed");
 
-    if (json != null) {
-      List<Map<String, dynamic>> data =
-          jsonDecode(json).cast<Map<String, dynamic>>();
-      List<ImagePost> listOfPosts = _generateFeed(data);
-      setState(() {
-        feedData = listOfPosts;
-      });
-    } else {
-      _getFeed();
+    List<Map<String, dynamic>> data =
+        jsonDecode(json).cast<Map<String, dynamic>>();
+    List<ImagePost> listOfPosts = _generateFeed(data);
+    setState(() {
+      feedData = listOfPosts;
+    });
     }
-  }
 
   _getFeed() async {
     print("Staring getFeed");
